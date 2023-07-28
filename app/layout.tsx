@@ -1,9 +1,11 @@
 import Link from "next/link"
-import "./globals.css"
+import Image from "next/image"
+import "@/styles/globals.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Analytics } from "@/components/analytics"
 import { ModeToggle } from "@/components/mode-toggle"
+import ValerioHQLogo from "@/public/valeriohq.svg"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -20,20 +22,31 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ${inter.className}`}
+        className={`antialiased min-h-screen bg-[#EEE6E5] dark:bg-[#022331] text-slate-900 dark:text-slate-50 ${inter.className}`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="max-w-2xl mx-auto py-10 px-4">
             <header>
               <div className="flex items-center justify-between">
-                <ModeToggle />
-                <nav className="ml-auto text-sm font-medium space-x-6">
+                <Link href="/">
+                  <Image src={ValerioHQLogo.src} alt="valeriohq logo" className="w-8" width={32} height={32} />
+                </Link>
+                <nav className="ml-auto text-sm font-medium space-x-6 flex items-center justify-between">
                   <Link href="/">Home</Link>
                   <Link href="/about">About</Link>
+                  <ModeToggle />
                 </nav>
               </div>
             </header>
             <main>{children}</main>
+
+            <div>
+              <footer className="mt-10 text-center text-sm text-slate-700 dark:text-slate-200">
+                <p>
+                  © {new Date().getFullYear()} CC0 - source
+                </p>
+              </footer>
+            </div>
           </div>
           <Analytics />
         </ThemeProvider>

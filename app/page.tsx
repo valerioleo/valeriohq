@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="prose dark:prose-invert prose-a:underline-offset-4 mt-6">
+    <div className="prose dark:prose-invert prose-a:underline-offset-4 mt-6 prose-hr:border-gray-300 prose-hr:dark:border-gray-700">
       <p>
         Spearheading transformative innovation for over a decade, I merge award-winning hacking prowess with entrepreneurial acumen, leading some of the smartest teams in the crypto domain and beyond.
         More in my <Link href="/about">about page</Link>.

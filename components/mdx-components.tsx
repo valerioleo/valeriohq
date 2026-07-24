@@ -1,16 +1,10 @@
 import Image from "next/image"
-import { useMDXComponent } from "next-contentlayer/hooks"
+import { MDXContent } from "@content-collections/mdx/react"
 
 const components = {
   Image,
 }
 
-interface MdxProps {
-  code: string
-}
-
-export function Mdx({ code }: MdxProps) {
-  const Component = useMDXComponent(code)
-
-  return <Component components={components} />
+export function Mdx({ code }: { code: string }) {
+  return <MDXContent code={code} components={components} />
 }

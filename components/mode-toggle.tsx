@@ -1,26 +1,32 @@
 "use client"
 
+import * as React from "react"
 import { useTheme } from "next-themes"
 import { Moon, Sun } from "lucide-react"
-import { useEffect } from "react"
+
+import { cn } from "@/lib/utils"
+import { navItemClass } from "@/components/nav-link"
 
 export function ModeToggle() {
-  const { setTheme, theme, systemTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
 
-  useEffect(() => {
-    setTheme(systemTheme || 'light')
-  }, [])
+  React.useEffect(() => setMounted(true), [])
+
+  const isDark = mounted && resolvedTheme === "dark"
 
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="border rounded-md w-6 h-6 flex items-center justify-center">
-      <span className="sr-only">Toggle mode</span>
-      {
-        theme === 'light'
-          ? <Moon className="w-4 h-4" />
-          : <Sun className="w-4 h-4" />
-      }
+      type="button"
+      aria-label="Toggle theme"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className={cn(
+        navItemClass,
+        "w-8 justify-center text-muted-foreground hover:text-foreground [&_svg]:size-[15px]"
+      )}
+    >
+      {isDark ? <Sun /> : <Moon />}
+      <span className="sr-only">Toggle theme</span>
     </button>
   )
 }

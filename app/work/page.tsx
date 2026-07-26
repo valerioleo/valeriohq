@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { allProjects } from "content-collections"
+import { Code, Globe } from "lucide-react"
 
 import { ProjectLogo } from "@/components/project-logo"
 
@@ -44,6 +45,34 @@ export default function WorkPage() {
                 >
                   {project.title}
                 </Link>
+                {/* Outbound links as icons. The title already goes to the
+                    detail page, so these are the only text-free links. */}
+                <span className="flex items-center gap-2">
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title}: ${project.linkLabel ?? "website"}`}
+                      title={project.linkLabel ?? "Website"}
+                      className="text-muted-foreground transition-colors hover:text-brand"
+                    >
+                      <Globe className="size-[15px]" />
+                    </a>
+                  )}
+                  {project.repo && (
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} source code`}
+                      title="Source"
+                      className="text-muted-foreground transition-colors hover:text-brand"
+                    >
+                      <Code className="size-[15px]" />
+                    </a>
+                  )}
+                </span>
               </h2>
               {project.year && (
                 <span className="shrink-0 font-mono text-xs text-muted-foreground">
@@ -57,41 +86,6 @@ export default function WorkPage() {
                 {project.description}
               </p>
             )}
-
-            {project.stack && project.stack.length > 0 && (
-              <p className="mt-2.5 font-mono text-xs text-muted-foreground/90">
-                {project.stack.join(" · ")}
-              </p>
-            )}
-
-            <div className="mt-3 flex gap-5 font-mono text-xs">
-              <Link
-                href={project.url}
-                className="text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
-              >
-                details
-              </Link>
-              {project.link && (
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-brand"
-                >
-                  live ↗
-                </a>
-              )}
-              {project.repo && (
-                <a
-                  href={project.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-brand"
-                >
-                  source ↗
-                </a>
-              )}
-            </div>
           </li>
         ))}
       </ul>

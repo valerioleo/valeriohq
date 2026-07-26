@@ -48,6 +48,10 @@ const projects = defineCollection({
     role: z.string().optional(),
     stack: z.array(z.string()).optional(),
     link: z.string().optional(),
+    // What `link` actually points at, for the icon's tooltip and its
+    // accessible name. Defaults to "Website"; set it when the link is
+    // something else, e.g. a writeup.
+    linkLabel: z.string().optional(),
     repo: z.string().optional(),
     featured: z.boolean().optional(),
     order: z.number().optional(),

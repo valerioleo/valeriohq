@@ -60,3 +60,9 @@ export function ProjectLogo({
       return null
   }
 }
+
+// Lets callers lay out a fallback when a project has no brand mark
+// (AsyncWrapper is research, not a product, so it has none).
+export function hasProjectLogo(slug: string) {
+  return slug === "raycash" || slug === "zama" || slug === "deployoor"
+}

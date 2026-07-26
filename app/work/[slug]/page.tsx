@@ -2,6 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { allProjects } from "content-collections"
+import { Code, Globe } from "lucide-react"
 
 import { Mdx } from "@/components/mdx-components"
 import { ProjectLogo } from "@/components/project-logo"
@@ -49,15 +50,17 @@ export default async function ProjectPage({ params }: Props) {
           </p>
         )}
         {(project.link || project.repo) && (
-          <div className="mt-5 flex gap-5 font-mono text-xs">
+          <div className="mt-5 flex items-center gap-3">
             {project.link && (
               <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
+                aria-label={`${project.title}: ${project.linkLabel ?? "website"}`}
+                title={project.linkLabel ?? "Website"}
+                className="text-muted-foreground transition-colors hover:text-brand"
               >
-                live ↗
+                <Globe className="size-[18px]" />
               </a>
             )}
             {project.repo && (
@@ -65,9 +68,11 @@ export default async function ProjectPage({ params }: Props) {
                 href={project.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
+                aria-label={`${project.title} source code`}
+                title="Source"
+                className="text-muted-foreground transition-colors hover:text-brand"
               >
-                source ↗
+                <Code className="size-[18px]" />
               </a>
             )}
           </div>

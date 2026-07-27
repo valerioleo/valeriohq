@@ -5,6 +5,11 @@ export const siteConfig = {
 
   name: "Valerio Leo",
   handle: "valeriohq",
+
+  // Where he is. Used by the footer clock, the hero line, the OG cards and
+  // llms.txt, so moving is a two-line change here rather than a grep.
+  location: "Italy",
+  timeZone: "Europe/Rome",
   // TODO(confirm): production domain (valeriohq.com assumed).
   url: "https://valeriohq.com",
   title: "Valerio Leo",

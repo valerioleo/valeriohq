@@ -38,13 +38,7 @@ export default function Home() {
           <Tagline />
         </h1>
         <p className="mt-5 font-sans text-sm text-muted-foreground">
-          Founder of {siteConfig.company}, in London.{" "}
-          <Link
-            href="/about"
-            className="text-brand underline decoration-brand/40 underline-offset-4 transition-colors hover:decoration-brand"
-          >
-            More about me →
-          </Link>
+          Founder of {siteConfig.company}, in {siteConfig.location}.
         </p>
       </section>
 

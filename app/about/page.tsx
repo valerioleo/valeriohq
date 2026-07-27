@@ -17,7 +17,7 @@ export default function AboutPage() {
       <div className="prose mt-8 max-w-none">
         <p>
           I&apos;m a founder and full-stack engineer working on
-          privacy-preserving finance, based in London.
+          privacy-preserving finance, based in {siteConfig.location}.
         </p>
         <p>
           The question I keep coming back to is why everything you do with money

@@ -452,9 +452,15 @@
     font-weight: 400;
   }
 
-  /* shiki dual themes: light colors inline, dark via CSS variables. */
-  .dark .prose pre code span[style*="--shiki-dark"] {
-    color: var(--shiki-dark) !important;
+  /* shiki dual themes. Each token ships BOTH colours as custom properties
+     (--shiki-light / --shiki-dark) and no `color` of its own, so a rule is
+     needed per theme. Miss the light one and code silently renders as flat
+     body text in light mode. */
+  .prose pre code span {
+    color: var(--shiki-light);
+  }
+  .dark .prose pre code span {
+    color: var(--shiki-dark);
   }
 
   .prose figcaption,

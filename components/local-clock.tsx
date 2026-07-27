@@ -2,10 +2,12 @@
 
 import * as React from "react"
 
-// The "live element" signature touch — Valerio is in London; readers are
-// everywhere. Tiny client island, updates every 30s. Renders "London" until
-// hydrated so there's no server/client mismatch.
-export function LondonClock() {
+import { siteConfig } from "@/lib/config"
+
+// The "live element" signature touch. Valerio is in one place, readers are
+// everywhere. Tiny client island, updates every 30s. Renders the place name
+// on its own until hydrated so there's no server/client mismatch.
+export function LocalClock() {
   const [time, setTime] = React.useState<string | null>(null)
 
   React.useEffect(() => {
@@ -13,7 +15,7 @@ export function LondonClock() {
       new Intl.DateTimeFormat("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
-        timeZone: "Europe/London",
+        timeZone: siteConfig.timeZone,
       }).format(new Date())
 
     setTime(format())
@@ -23,7 +25,7 @@ export function LondonClock() {
 
   return (
     <span className="font-mono text-xs tabular-nums" suppressHydrationWarning>
-      {time ? `London ${time}` : "London"}
+      {time ? `${siteConfig.location} ${time}` : siteConfig.location}
     </span>
   )
 }

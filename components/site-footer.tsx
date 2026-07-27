@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/config"
-import { LondonClock } from "@/components/london-clock"
+import { LocalClock } from "@/components/local-clock"
 import { CurrentYear } from "@/components/current-year"
 
 export function SiteFooter() {
@@ -26,7 +26,7 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="flex items-baseline gap-4">
-          <LondonClock />
+          <LocalClock />
           <span>
             © <CurrentYear initial={new Date().getFullYear()} />{" "}
             {siteConfig.name}

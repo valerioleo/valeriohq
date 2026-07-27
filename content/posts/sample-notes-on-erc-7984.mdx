@@ -1,0 +1,34 @@
+---
+title: Notes from implementing ERC-7984
+description: A short list of things the standard gets right, and two places I kept tripping over.
+date: "2026-03-17"
+---
+
+{/* SAMPLE POST — placeholder to preview layout. Delete before launch:
+    rm content/posts/sample-*.mdx */}
+
+Reading a token standard and implementing it are different activities. These
+are the notes I wish I'd had when I started with ERC-7984, the confidential
+token standard.
+
+It gets the core decision right: balances are handles to ciphertexts, and the
+contract never sees a plaintext amount. That sounds obvious once written down,
+but it rules out a whole family of designs where a privileged party can peek
+"just for compliance", and being closed off from that early saved me from
+building something I'd have had to tear out.
+
+The two things I kept getting wrong:
+
+Failure has to be silent, or you leak. If a transfer reverts when the balance
+is too low, the revert tells an observer that the balance was below the
+amount. That's an inequality about a number you spent real effort encrypting.
+The fix is a transfer that always succeeds structurally and moves zero when it
+can't move the requested value, which is deeply strange the first time you
+write it.
+
+Allowances are worse than balances. Everything true about a balance is true
+about an allowance, plus the approval pattern gives an attacker a way to probe
+by watching which spends succeed. I don't think this is fully solved.
+
+Neither of these is a flaw in the standard so much as a place where the old
+ERC-20 muscle memory actively works against you.

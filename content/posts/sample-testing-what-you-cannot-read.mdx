@@ -1,0 +1,53 @@
+---
+title: Testing code whose state you aren't allowed to read
+description: Every assertion I knew how to write assumed I could look at the value. Encrypted state takes that away.
+date: "2026-07-14"
+---
+
+{/* SAMPLE POST — placeholder to preview layout. Delete before launch:
+    rm content/posts/sample-*.mdx */}
+
+The first confidential contract I wrote took an afternoon. The test suite took
+a week, and not because the tests were hard. They were impossible to write the
+way I'd written every test before.
+
+Here is the normal shape of a token test. Move some money, then read the
+balance and check it went where you said.
+
+```solidity
+token.transfer(bob, 100);
+assertEq(token.balanceOf(bob), 100);
+```
+
+Now encrypt the balance. `balanceOf` returns a handle, not a number. The
+handle is meaningless on its own, and the whole point of the system is that
+nobody, including me, can turn it back into a number without the key. My
+assertion has nothing to assert on.
+
+## Three things that did work
+
+Test the transition, not the value. You usually don't need to know that Bob
+has 100. You need to know that Bob's balance changed by exactly what Alice's
+balance changed by, and that the total didn't move. Conservation properties
+survive encryption because they're about relationships.
+
+Decrypt in the harness, never in the contract. The mock FHEVM gives the test
+environment a key the chain doesn't have. That's the right split: your tests
+can see everything, your contract still can't, and nothing in the production
+path depends on the ability to look.
+
+Assert on the failures. When a transfer should revert, it still reverts
+loudly, and custom errors are readable whether or not the amounts are. A
+surprising share of my confidential-token bugs were caught by tests that never
+touched a balance.
+
+> If you can't read the state, test the shape of the change instead of the
+> value of the result.
+
+## What I still find awkward
+
+Debugging. A failing test tells me two ciphertexts differ, which is true and
+useless. I've started dumping the decrypted view from the harness on failure,
+which helps, but it means the debugging path and the production path see
+different worlds. I'm not sure that's avoidable, and I'm not fully comfortable
+with it either.

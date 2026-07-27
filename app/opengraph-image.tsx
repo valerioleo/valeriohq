@@ -54,7 +54,7 @@ export default async function OpengraphImage() {
               <img src={logoSrc} width={52} height={52} alt="" />
               <div style={{ color: "#e0906a" }}>{siteConfig.handle}</div>
             </div>
-            <div style={{ color: "#8aa3ac" }}>london</div>
+            <div style={{ color: "#8aa3ac" }}>{siteConfig.location.toLowerCase()}</div>
           </div>
 
           <div

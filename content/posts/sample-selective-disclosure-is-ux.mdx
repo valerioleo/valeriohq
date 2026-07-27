@@ -1,0 +1,36 @@
+---
+title: Selective disclosure is a UX problem wearing a cryptography costume
+description: The maths for proving one fact about your balance has existed for years. Nobody has made it feel like anything a person would do.
+date: "2026-06-09"
+---
+
+{/* SAMPLE POST — placeholder to preview layout. Delete before launch:
+    rm content/posts/sample-*.mdx */}
+
+"Privacy with compliance" is the phrase everyone reaches for, and it usually
+means a permissioned chain where a small number of parties see everything and
+you're asked to trust their restraint.
+
+The better version already exists in the cryptography. You can prove your
+balance is above a threshold without revealing it. You can hand an auditor a
+view key scoped to one account for one period. You can prove funds didn't come
+from a sanctioned address without publishing where they did come from.
+
+So why does none of it ship? Because every one of those flows terminates in a
+screen that a normal person has to understand, and we have no vocabulary for
+these screens.
+
+Think about what a view key actually is from the user's side. It's a thing you
+give someone that lets them see part of your financial life, forever, unless
+you can revoke it, and if you can revoke it you now have a second thing to
+manage. There is no consumer app in the world that has taught people this
+concept. Compare it to "share location until end of day", which billions of
+people understand, and which is the same idea with better packaging.
+
+I don't think the gap closes with more cryptography. It closes when someone
+designs the disclosure the way Apple designed location permissions: scoped by
+default, obvious in the moment, easy to take back, and visible afterwards in a
+list of who can see what.
+
+That list, the one showing every disclosure you've ever granted and letting
+you pull them back, is the piece I keep sketching and haven't got right yet.

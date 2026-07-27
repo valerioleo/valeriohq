@@ -1,0 +1,31 @@
+---
+title: What a private transfer actually costs
+description: Some rough numbers on FHE gas, latency, and the parts users notice.
+date: "2026-04-30"
+---
+
+{/* SAMPLE POST — placeholder to preview layout. Delete before launch:
+    rm content/posts/sample-*.mdx */}
+
+People ask whether FHE is "fast enough yet" and the honest answer is that the
+question is too coarse. Fast enough for what, and measured by whom?
+
+Three numbers matter, and they behave differently.
+
+Gas is the one everyone quotes. An encrypted addition costs orders of
+magnitude more than a plain one. That sounds fatal until you notice that a
+transfer needs a handful of encrypted operations, not thousands, and that the
+comparison people should make is against a chain's base transaction cost, not
+against `a + b`.
+
+Latency is the one users feel. Not block time, but the round trip from tapping
+send to seeing a state you believe. Anything with an async decryption step
+adds a hop, and a payment that resolves in two stages needs an interface that
+can honestly represent "sent, not yet final" without making people anxious.
+
+Client-side work is the one that surprised me. Encrypting an input in a phone
+browser is not free, and the difference between a flagship phone and a
+four-year-old Android is larger than any of the onchain numbers.
+
+The uncomfortable conclusion is that the cryptography is rarely the
+bottleneck for the experience. The waiting and the explaining are.

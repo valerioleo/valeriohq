@@ -21,7 +21,7 @@ export function GET() {
     "",
     `> ${siteConfig.description}`,
     "",
-    `Founder of ${siteConfig.company} (confidential money on Ethereum). Based in London.`,
+    `Founder of ${siteConfig.company} (confidential money on Ethereum). Based in ${siteConfig.location}.`,
     "",
     "## Writing",
     ...posts.map(

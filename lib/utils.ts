@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// Day-first, London-style: "20 Jul 2026". Reads well in the mono metadata voice.
+// Day-first: "20 Jul 2026". Reads well in the mono metadata voice.
 export function formatDate(input: string): string {
   return new Intl.DateTimeFormat("en-GB", {
     year: "numeric",

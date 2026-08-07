@@ -26,6 +26,16 @@ const posts = defineCollection({
     description: z.string().optional(),
     date: z.string(),
     draft: z.boolean().optional(),
+    // Marks a post that carries a live demo, so the homepage surfaces it in
+    // the "interactive" strip (poster card) rather than the plain essay list.
+    // `featured` promotes one to the live-teaser slot.
+    interactive: z.boolean().optional(),
+    featured: z.boolean().optional(),
+    // For pieces first published elsewhere (X, etc.). When set, the post
+    // page shows a quiet "Originally on X" line and emits rel=canonical so
+    // the original gets the search credit while readers get this design.
+    canonical: z.string().url().optional(),
+    sourceLabel: z.string().optional(),
     content: z.string(),
   }),
   transform: async (doc, ctx) => {
@@ -55,6 +65,11 @@ const projects = defineCollection({
     repo: z.string().optional(),
     featured: z.boolean().optional(),
     order: z.number().optional(),
+    // Groups the Work page by intent, not by license. "product" = shipped &
+    // stood behind; "tool" = reusable open source; "experiment" = built to
+    // learn or play; "role" = worked somewhere. Openness stays an attribute
+    // (the source icon), never a category. Defaults to "product".
+    kind: z.enum(["product", "tool", "experiment", "role"]).optional(),
     // 1 = a full entry with its own page (the work worth reading about).
     // 2 = a one-line mention only; no page is generated, so tier-2 entries
     //     must not be linked internally. Defaults to 1.
@@ -65,7 +80,8 @@ const projects = defineCollection({
     const mdx = await compileMDX(ctx, doc, mdxOptions)
     const slug = doc._meta.path
     const tier = doc.tier ?? 1
-    return { ...doc, slug, tier, url: `/work/${slug}`, mdx }
+    const kind = doc.kind ?? "product"
+    return { ...doc, slug, tier, kind, url: `/work/${slug}`, mdx }
   },
 })
 

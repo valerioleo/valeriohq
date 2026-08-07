@@ -1,0 +1,24 @@
+---
+title: pinkwhale
+description: NFT lending built on Seaport — loans as matched marketplace orders, so repayment and default are just more orders.
+year: "2022–23"
+role: Author
+stack: ["Solidity", "Seaport", "Hardhat", "TypeScript"]
+order: 20
+tier: 1
+kind: experiment
+---
+
+An experiment in how little lending code you need if you lean on someone else's
+settlement layer.
+
+Pinkwhale takes two valid Seaport orders (borrower and lender) that name the
+Pinkwhale contract as the recipient of the collateral NFT. Matching them on
+Seaport escrows the token, then Pinkwhale posts two follow-up orders to cover
+both endings of the loan: a repayment order (borrower buys the NFT back at
+principal + interest before expiry) and a default order (lender claims it for
+free after).
+
+Collection-wide and trait-filtered loans came for free from Seaport's
+consideration model. Never shipped as a product — the point was to see whether
+a marketplace protocol could be bent into a lending one.

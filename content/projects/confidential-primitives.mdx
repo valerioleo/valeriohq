@@ -1,0 +1,24 @@
+---
+title: confidential-primitives
+description: Reusable building blocks for writing confidential smart contracts on FHEVM, so every new contract doesn't start from zero.
+year: "2026"
+role: Author, open source
+stack: ["Solidity", "Zama FHEVM", "ERC-7984"]
+repo: https://github.com/raycashxyz/confidential-primitives
+featured: false
+order: 5
+tier: 1
+kind: tool
+---
+
+{/* PLACEHOLDER BODY — replace with the real writeup when ready. */}
+
+Writing a confidential contract from scratch means re-deriving the same
+patterns every time: how to hold an encrypted balance, how to check a transfer
+without learning the amount, how to grant and revoke the right to decrypt.
+`confidential-primitives` collects those patterns into small, audited pieces you
+can compose, so the interesting part of a contract is the only part you write.
+
+It grew out of the work on [Raycash](/work/raycash) and
+[AsyncWrapper](/work/async-wrapper) — the same primitives kept reappearing, so
+they moved into one place. Open source, and meant to be read.

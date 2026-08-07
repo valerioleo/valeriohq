@@ -1,51 +1,94 @@
 import Link from "next/link"
 import { allPosts, allProjects } from "content-collections"
 
-import { siteConfig } from "@/lib/config"
-import { cn, formatDate } from "@/lib/utils"
-import { ProjectLogo, hasProjectLogo } from "@/components/project-logo"
-
-// Sets the tagline's key clause in Literata italic. Falls back to the plain
-// string if the configured emphasis no longer matches the copy.
-function Tagline() {
-  const { tagline, taglineEmphasis } = siteConfig
-  const at = taglineEmphasis ? tagline.indexOf(taglineEmphasis) : -1
-  if (at === -1) return <>{tagline}</>
-  return (
-    <>
-      {tagline.slice(0, at)}
-      <em>{taglineEmphasis}</em>
-      {tagline.slice(at + taglineEmphasis.length)}
-    </>
-  )
-}
+import { formatDate } from "@/lib/utils"
+import { WorkPill } from "@/components/work-pill"
+import { InteractiveStrip } from "@/components/writing/interactive-strip"
 
 export default function Home() {
-  const posts = allPosts
+  const nonDraft = allPosts
     .filter((p) => !p.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1))
-    .slice(0, 5)
+  // Essays stay a quiet title list; interactive posts get their own strip.
+  const essays = nonDraft.filter((p) => !p.interactive).slice(0, 5)
+  const interactive = nonDraft.filter((p) => p.interactive)
 
-  const projects = allProjects
-    .filter((p) => p.featured && p.tier === 1)
+  // Experiments grow as a homepage list — not hero pills. Newest / highest
+  // priority first via `order`, then year as a tiebreak readers can scan.
+  const experiments = allProjects
+    .filter((p) => p.kind === "experiment")
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 
   return (
     <div className="pb-8 pt-14 sm:pt-20">
-      {/* Hero */}
+      {/* Hero — one paragraph. The work isn't a separate section; it's woven
+          into the sentence as inline pills, so the belief and the résumé read
+          as one thought. */}
       <section>
-        <h1 className="max-w-[26ch] font-serif text-[1.75rem] font-medium leading-[1.35] tracking-[-0.01em] sm:text-[2rem]">
-          <Tagline />
+        <h1 className="max-w-[50ch] font-serif text-lg leading-relaxed">
+          I believe technology is <em>how humans do good</em> — that every
+          problem, underneath, is a technical one. I worked at{" "}
+          <span className="whitespace-nowrap">
+            <WorkPill slug="zama" label="Zama" />,
+          </span>{" "}
+          created{" "}
+          <span className="whitespace-nowrap">
+            <WorkPill slug="deployoor" label="deployoor" />,
+          </span>{" "}
+          and now I&apos;m building{" "}
+          <WorkPill slug="raycash" label="Raycash" />{" "}
+          from Italy —{" "}
+          <Link
+            href="/work"
+            className="underline decoration-border underline-offset-[3px] transition-colors hover:text-brand hover:decoration-brand"
+          >
+            and much more
+          </Link>
+          . Nerding out on the solutions is my life&apos;s work.
         </h1>
-        <p className="mt-5 font-sans text-sm text-muted-foreground">
-          Founder of {siteConfig.company}, in {siteConfig.location}.
-        </p>
       </section>
+
+      {/* Experiments — the growing pile of weekend builds, failed starts, and
+          learning repos. Same quiet list voice as writing; mono ~/ mark so
+          they read as things you can open, not résumé lines. */}
+      {experiments.length > 0 && (
+        <Section title="experiments" href="/work#experiments">
+          <ul>
+            {experiments.map((project) => (
+              <li key={project.url}>
+                <Link
+                  href={project.url}
+                  className="group flex items-baseline justify-between gap-4 border-b border-border/70 py-3.5"
+                >
+                  <span className="min-w-0">
+                    <span className="font-mono text-sm transition-colors group-hover:text-brand">
+                      <span aria-hidden className="text-brand/70">
+                        ~/
+                      </span>
+                      {project.title}
+                    </span>
+                    {project.description && (
+                      <span className="mt-1 block max-w-[52ch] font-sans text-sm leading-relaxed text-muted-foreground">
+                        {project.description}
+                      </span>
+                    )}
+                  </span>
+                  {project.year && (
+                    <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                      {project.year}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       {/* Writing */}
       <Section title="writing" href="/writing">
         <ul>
-          {posts.map((post) => (
+          {essays.map((post) => (
             <li key={post.url}>
               <Link
                 href={post.url}
@@ -66,58 +109,13 @@ export default function Home() {
         </ul>
       </Section>
 
-      {/* Selected work. Each one leads with its brand mark on a quiet banner,
-          so the logos carry the section rather than a wall of text. */}
-      <Section title="selected work" href="/work">
-        <ul className="grid gap-8 sm:grid-cols-2">
-          {projects.map((project, i) => (
-            // The lead project takes the full width, so the row below it
-            // never leaves a hole when the count is odd.
-            <li key={project.url} className={i === 0 ? "sm:col-span-2" : undefined}>
-              <Link href={project.url} className="group block">
-                <div
-                  className={cn(
-                    "flex items-center justify-center rounded-md border border-border/70 bg-muted/40 px-6 transition-colors group-hover:border-brand/40 group-hover:bg-muted/70",
-                    i === 0 ? "h-32" : "h-24"
-                  )}
-                >
-                  {hasProjectLogo(project.slug) ? (
-                    <ProjectLogo
-                      slug={project.slug}
-                      className={cn(
-                        "text-foreground/75 transition-colors group-hover:text-foreground",
-                        i === 0 ? "h-10" : "h-8"
-                      )}
-                    />
-                  ) : (
-                    // No brand mark: set the name instead, so the banner
-                    // still reads as a wordmark rather than an empty box.
-                    <span className="font-serif text-xl text-foreground/70 transition-colors group-hover:text-foreground">
-                      {project.title}
-                    </span>
-                  )}
-                </div>
-
-                <div className="mt-3 flex items-baseline justify-between gap-4">
-                  <h3 className="font-serif transition-colors group-hover:text-brand">
-                    {project.title}
-                  </h3>
-                  {project.year && (
-                    <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                      {project.year}
-                    </span>
-                  )}
-                </div>
-                {project.description && (
-                  <p className="mt-1.5 font-sans text-sm leading-relaxed text-muted-foreground">
-                    {project.description}
-                  </p>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      {/* Interactive writeups — surfaced richer than a title: the featured one
+          carries a live, touchable teaser, the rest are poster cards. */}
+      {interactive.length > 0 && (
+        <Section title="interactive" href="/writing">
+          <InteractiveStrip posts={interactive} />
+        </Section>
+      )}
     </div>
   )
 }

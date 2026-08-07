@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 
-// Shared by every navbar item purely for height + centering, so links, ⌘K
-// and the theme toggle sit on one line. Deliberately carries no border:
-// links look like text, only ⌘K is dressed as a button.
+// Shared by every navbar item purely for height + centering, so links and
+// the theme toggle sit on one line. Deliberately carries no border —
+// everything in the nav reads as text.
 export const navItemClass = "inline-flex h-8 items-center transition-colors"
 
 // Tiny client island so the current section can carry the brand outline.

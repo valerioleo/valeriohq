@@ -3,18 +3,9 @@ import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { Logo } from "@/components/logo"
 import { ModeToggle } from "@/components/mode-toggle"
-import { CommandMenu } from "@/components/command-menu"
 import { NavLink } from "@/components/nav-link"
 
-type Entry = { title: string; url: string }
-
-export function SiteHeader({
-  posts,
-  projects,
-}: {
-  posts: Entry[]
-  projects: Entry[]
-}) {
+export function SiteHeader() {
   return (
     // flex-wrap is a safety net, not decoration: below ~340px the mark and
     // the nav strip can't share a line, so the nav drops to its own row
@@ -29,15 +20,13 @@ export function SiteHeader({
         <span className="hidden text-base sm:inline">{siteConfig.name}</span>
       </Link>
 
-      {/* Nav in the mono metadata voice, lowercase. Links read as text;
-          only ⌘K is dressed as a button, because only ⌘K is one. */}
+      {/* Nav in the mono metadata voice, lowercase. Links read as text. */}
       <nav className="flex items-center gap-1.5 font-mono text-[0.8125rem]">
         {siteConfig.nav.map((item) => (
           <NavLink key={item.href} href={item.href}>
             {item.title.toLowerCase()}
           </NavLink>
         ))}
-        <CommandMenu posts={posts} projects={projects} />
         <ModeToggle />
       </nav>
     </header>

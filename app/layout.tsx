@@ -1,6 +1,5 @@
 import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
-import { allPosts, allProjects } from "content-collections"
 
 import { siteConfig } from "@/lib/config"
 import { fontVariables } from "@/lib/fonts"
@@ -44,11 +43,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const posts = allPosts
-    .filter((p) => !p.draft)
-    .map((p) => ({ title: p.title, url: p.url }))
-  const projects = allProjects.map((p) => ({ title: p.title, url: p.url }))
-
   return (
     // Font variables must live on <html>: Tailwind's @theme tokens
     // (--font-serif etc.) resolve their var() references at :root scope.
@@ -61,7 +55,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="mx-auto flex min-h-screen max-w-2xl flex-col px-5">
-            <SiteHeader posts={posts} projects={projects} />
+            <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
           </div>

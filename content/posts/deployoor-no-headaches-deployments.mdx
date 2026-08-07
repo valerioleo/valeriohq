@@ -1,0 +1,40 @@
+---
+title: Deployoor. No-headaches deployments.
+description: Why I built a tool to deploy a contract once and use a typed, shared contract object everywhere afterwards.
+date: "2026-07-08"
+canonical: https://x.com/valerioHQ/status/2074906197967110534
+sourceLabel: X
+---
+
+{/*
+  PLACEHOLDER BODY — the first paragraph is the real article opening; the rest
+  is stand-in copy so the page renders complete (cover, canonical link, prose,
+  code). Replace everything below the first paragraph with the real article
+  text when ready.
+*/}
+
+I wrote my first smart contract in 2017. It was painful. The tooling was
+immature, there were no useful error messages (a failed call just reverted, no
+reason string), and there was no AI to ask for help.
+
+Placeholder paragraph. The rest of the article goes here — this stand-in text
+exists only so the layout can be judged with real structure: a lead image up
+top, the canonical link back to X, body prose at a comfortable measure, and a
+code block to check the syntax highlighting.
+
+## Deploy once, use everywhere
+
+Placeholder section. `deployoor` turns a deploy into a single typed object you
+can import anywhere — scripts, tests, and the app all read from the same
+source of truth, so an address or ABI can't quietly drift out of sync.
+
+```ts
+import { contract } from "@/generated/deployoor"
+
+// One typed object. Same address + ABI everywhere it's imported.
+const token = contract("ConfidentialToken")
+const balance = await token.read.balanceOf([owner])
+```
+
+Placeholder closing paragraph. Swap this whole body for the real writeup —
+the frontmatter, cover, and canonical wiring are already correct.

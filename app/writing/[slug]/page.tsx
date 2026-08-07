@@ -18,7 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = allPosts.find((p) => p.slug === slug)
   if (!post) return {}
-  return { title: post.title, description: post.description }
+  return {
+    title: post.title,
+    description: post.description,
+    // Point search engines at the original when this was published elsewhere.
+    alternates: post.canonical ? { canonical: post.canonical } : undefined,
+  }
 }
 
 export default async function PostPage({ params }: Props) {
@@ -40,6 +45,19 @@ export default async function PostPage({ params }: Props) {
         {post.description && (
           <p className="mt-4 font-serif text-lg italic leading-relaxed text-muted-foreground">
             {post.description}
+          </p>
+        )}
+        {post.canonical && (
+          <p className="mt-4 font-mono text-xs text-muted-foreground">
+            Originally on{" "}
+            <a
+              href={post.canonical}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+            >
+              {post.sourceLabel ?? "X"} ↗
+            </a>
           </p>
         )}
         <hr className="mb-10 mt-8 w-10 border-t border-brand/50" />

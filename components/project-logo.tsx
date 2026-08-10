@@ -37,10 +37,15 @@ export function ProjectLogo({
     case "zama":
       return (
         <svg
-          viewBox="0 6 13 18"
+          // Tight crop to the Z glyph's real bounds (x 0.9–15, y 7.5–21.4).
+          // The old "0 6 13 18" box clipped the Z's right edge AND padded it
+          // vertically, so the glyph rendered at ~77% of the declared height.
+          // With the tight box the height class means what it says; 0.6em
+          // keeps the mark the same visual size it always had.
+          viewBox="0.9 7.4 14.2 14.1"
           fill="none"
           aria-hidden="true"
-          className={cn(common, "h-[0.78em]", className)}
+          className={cn(common, "h-[0.6em]", className)}
         >
           <defs><clipPath id="7c984da807"><path d="M 17 7.558594 L 26 7.558594 L 26 21.347656 L 17 21.347656 Z M 17 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="8dff481bd8"><path d="M 25 7.558594 L 34 7.558594 L 34 21.347656 L 25 21.347656 Z M 25 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="6bd3878e1e"><path d="M 35 7.558594 L 39 7.558594 L 39 21.347656 L 35 21.347656 Z M 35 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="db70e1b3c9"><path d="M 38 7.558594 L 47 7.558594 L 47 21.347656 L 38 21.347656 Z M 38 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="eb62784195"><path d="M 44 7.558594 L 51 7.558594 L 51 21.347656 L 44 21.347656 Z M 44 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="2406e19430"><path d="M 56 7.558594 L 65 7.558594 L 65 21.347656 L 56 21.347656 Z M 56 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="1b38ce2e4a"><path d="M 64 7.558594 L 72.074219 7.558594 L 72.074219 21.347656 L 64 21.347656 Z M 64 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="e156e43ae1"><path d="M 1 7.558594 L 15 7.558594 L 15 10 L 1 10 Z M 1 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="3c20787571"><path d="M 50 7.558594 L 54 7.558594 L 54 21.347656 L 50 21.347656 Z M 50 7.558594 " clipRule="nonzero"/></clipPath><clipPath id="1041195d9c"><path d="M 0.945312 19 L 15 19 L 15 21.347656 L 0.945312 21.347656 Z M 0.945312 19 " clipRule="nonzero"/></clipPath><clipPath id="0bb5373708"><path d="M 0.945312 9 L 15 9 L 15 20 L 0.945312 20 Z M 0.945312 9 " clipRule="nonzero"/></clipPath></defs><g clipPath="url(#7c984da807)"><path fill="currentColor" d="M 17.082031 21.347656 L 22.398438 7.558594 L 25.058594 7.558594 L 20.023438 21.347656 Z M 17.082031 21.347656 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#8dff481bd8)"><path fill="currentColor" d="M 25.058594 7.558594 L 27.886719 7.558594 L 33.089844 21.347656 L 30.148438 21.347656 Z M 25.058594 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><path fill="currentColor" d="M 22.269531 15.195312 L 27.878906 15.195312 L 28.667969 17.335938 L 21.488281 17.335938 Z M 22.269531 15.195312 " fillOpacity="1" fillRule="nonzero"/><g clipPath="url(#6bd3878e1e)"><path fill="currentColor" d="M 35.917969 7.558594 L 38.859375 7.558594 L 38.859375 21.347656 L 35.917969 21.347656 Z M 35.917969 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#db70e1b3c9)"><path fill="currentColor" d="M 38.859375 7.558594 L 43.046875 21.347656 L 46.328125 21.347656 L 44.742188 18.769531 L 41.234375 7.558594 Z M 38.859375 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#eb62784195)"><path fill="currentColor" d="M 48.078125 7.558594 L 44.742188 18.769531 L 46.328125 21.347656 L 50.625 7.558594 Z M 48.078125 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#2406e19430)"><path fill="currentColor" d="M 56.046875 21.347656 L 61.363281 7.558594 L 64.023438 7.558594 L 58.988281 21.347656 Z M 56.046875 21.347656 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#1b38ce2e4a)"><path fill="currentColor" d="M 64.023438 7.558594 L 66.851562 7.558594 L 72.054688 21.347656 L 69.113281 21.347656 Z M 64.023438 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><path fill="currentColor" d="M 61.234375 15.195312 L 66.84375 15.195312 L 67.632812 17.335938 L 60.453125 17.335938 Z M 61.234375 15.195312 " fillOpacity="1" fillRule="nonzero"/><g clipPath="url(#e156e43ae1)"><path fill="currentColor" d="M 1.269531 7.558594 L 14.761719 7.558594 L 14.761719 9.855469 L 1.269531 9.855469 Z M 1.269531 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#3c20787571)"><path fill="currentColor" d="M 50.625 7.558594 L 53.566406 7.558594 L 53.566406 21.347656 L 50.625 21.347656 Z M 50.625 7.558594 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#1041195d9c)"><path fill="currentColor" d="M 0.960938 19.203125 L 14.996094 19.203125 L 14.996094 21.347656 L 0.960938 21.347656 Z M 0.960938 19.203125 " fillOpacity="1" fillRule="nonzero"/></g><g clipPath="url(#0bb5373708)"><path fill="currentColor" d="M 0.960938 19.203125 L 14.761719 9.855469 L 14.761719 12.628906 L 5.171875 19.203125 Z M 0.960938 19.203125 " fillOpacity="1" fillRule="nonzero"/></g>
         </svg>
@@ -65,4 +70,32 @@ export function ProjectLogo({
 // (AsyncWrapper is research, not a product, so it has none).
 export function hasProjectLogo(slug: string) {
   return slug === "raycash" || slug === "zama" || slug === "deployoor"
+}
+
+// The full-colour brand icon (PNG on a white disc), for the places that want
+// brand recognition rather than the monochrome mark: the hero pills and the
+// /work list rows. Valerio's call — the colour is deliberate variance in an
+// otherwise near-monochrome page, and it will matter more as the work list
+// grows. The white disc is required: the source PNGs assume a light ground.
+// Detail-page headings keep the rust `ProjectLogo` mark; that one is a
+// heading accent, not an identifier.
+export function BrandIcon({
+  slug,
+  className,
+}: {
+  slug: string
+  className?: string
+}) {
+  if (!hasProjectLogo(slug)) return null
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/brands/${slug}.png`}
+      alt=""
+      className={cn(
+        "shrink-0 rounded-full bg-white object-cover",
+        className
+      )}
+    />
+  )
 }

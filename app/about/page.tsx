@@ -34,8 +34,8 @@ export default function AboutPage() {
           , the cryptography company making FHE fast enough to ship, where I was
           Entrepreneur in Residence. The brief I set myself was to find what FHE
           is good for at the scale of ordinary people. It turned out to be
-          banking, which is now {siteConfig.company}, where I co-founded and
-          build full time.
+          banking, which is now {siteConfig.company}, which I co-founded and
+          now build full time.
         </p>
         <p>
           I work across the whole stack. On-chain that means confidential
@@ -82,6 +82,14 @@ export default function AboutPage() {
           .
         </p>
       </div>
+
+      {/* Same asterism close as articles, so every page ends the same way. */}
+      <p
+        aria-hidden
+        className="mt-14 text-center font-serif text-muted-foreground/80"
+      >
+        ⁂
+      </p>
     </div>
   )
 }

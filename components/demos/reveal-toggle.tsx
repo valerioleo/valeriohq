@@ -32,7 +32,7 @@ export function RevealToggle() {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-pressed={open}
-          className="inline-flex shrink-0 items-center gap-2 rounded-md border border-border px-3 py-2 font-mono text-xs transition-colors hover:border-brand hover:text-brand"
+          className="inline-flex min-w-[6.5rem] shrink-0 items-center justify-center gap-2 rounded-md border border-border px-3 py-2 font-mono text-xs transition-colors hover:border-brand hover:text-brand"
         >
           {open ? (
             <LockOpen className="size-3.5" />

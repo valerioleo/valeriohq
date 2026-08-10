@@ -14,12 +14,12 @@ export const siteConfig = {
   url: "https://valeriohq.com",
   title: "Valerio Leo",
   description:
-    "Valerio Leo — founder & engineer. I believe technology is how humans do good. I build private money on Ethereum, plus experiments in AI, NFTs, and developer tooling.",
+    "Valerio Leo, founder & engineer. I believe technology is how humans do good. I build private money on Ethereum, plus experiments in AI, NFTs, and developer tooling.",
 
   // Hero. Not a slogan — a statement of belief. Every problem is, underneath,
   // a technical one; finding the solutions is the whole point.
   tagline:
-    "I believe technology is how humans do good — that every problem, underneath, is a technical one. Nerding out on the solutions is my life's work.",
+    "I believe technology is how humans do good: that every problem, underneath, is a technical one. Nerding out on the solutions is my life's work.",
   // Substring of the tagline set in italic in the hero. Purely presentational;
   // if it stops matching the tagline it is simply ignored.
   taglineEmphasis: "how humans do good",

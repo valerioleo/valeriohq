@@ -27,12 +27,13 @@ export default function WritingPage() {
         </p>
       </header>
 
-      <ul className="mt-10">
+      {/* divide-y: rules between rows only, no stray line under the last. */}
+      <ul className="mt-10 divide-y divide-border/70">
         {posts.map((post) => (
           <li key={post.url}>
             <Link
               href={post.url}
-              className="group flex flex-col gap-1 border-b border-border/70 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+              className="group flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
             >
               <span className="font-serif transition-colors group-hover:text-brand">
                 {post.title}

@@ -49,18 +49,24 @@ export default async function ProjectPage({ params }: Props) {
             {project.description}
           </p>
         )}
+        {/* Outbound links as icon + mono label, no underline: an underlined
+            link here reads as a second hairline next to the rust rule below
+            it. The icon carries the "outbound" signal, the label carries the
+            destination (linkLabel when set, else the bare hostname). */}
         {(project.link || project.repo) && (
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-5 flex items-center gap-5 font-mono text-xs">
             {project.link && (
               <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${project.title}: ${project.linkLabel ?? "website"}`}
-                title={project.linkLabel ?? "Website"}
-                className="text-muted-foreground transition-colors hover:text-brand"
+                className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-brand"
               >
-                <Globe className="size-[18px]" />
+                <Globe className="size-[14px]" />
+                {(
+                  project.linkLabel ??
+                  new URL(project.link).hostname.replace(/^www\./, "")
+                ).toLowerCase()}
               </a>
             )}
             {project.repo && (
@@ -68,11 +74,10 @@ export default async function ProjectPage({ params }: Props) {
                 href={project.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${project.title} source code`}
-                title="Source"
-                className="text-muted-foreground transition-colors hover:text-brand"
+                className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-brand"
               >
-                <Code className="size-[18px]" />
+                <Code className="size-[14px]" />
+                source
               </a>
             )}
           </div>
@@ -85,7 +90,13 @@ export default async function ProjectPage({ params }: Props) {
       </div>
 
       <footer className="mt-14">
-        <p className="font-mono text-xs">
+        <p
+          aria-hidden
+          className="text-center font-serif text-muted-foreground/80"
+        >
+          ⁂
+        </p>
+        <p className="mt-8 font-mono text-xs">
           <Link
             href="/work"
             className="text-muted-foreground transition-colors hover:text-brand"

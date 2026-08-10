@@ -14,7 +14,7 @@ export function DecoyDial() {
   return (
     <DemoFrame
       title="Decoy dial"
-      caption="Bigger crowd, weaker link — but more gas. The finalizer sets the dial."
+      caption="Bigger crowd, weaker link, more gas. The finalizer sets the dial."
     >
       <label className="flex items-baseline justify-between gap-4 font-mono text-xs text-muted-foreground">
         <span>batch size</span>

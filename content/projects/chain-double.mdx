@@ -1,6 +1,6 @@
 ---
 title: chain-double
-description: A protocol that lets L1 NFTs trustlessly reflect actions taken on L2 — IPFS CIDs plus cross-chain message passing.
+description: A protocol that lets L1 NFTs trustlessly reflect actions taken on L2, with IPFS CIDs plus cross-chain message passing.
 year: "2021"
 role: Author, ETHGlobal HackFS
 stack: ["Solidity", "IPFS", "LayerZero", "NFTs"]
@@ -18,7 +18,7 @@ Dynamic NFTs want on-chain interactivity, but L1 gas makes that painful and L2
 markets are thin. Chain Double treats the L2 token as the stunt double: it does
 the heavy lifting (customisation, breeding, state), then a cross-chain message
 pushes a deterministic IPFS CID up to the L1 twin so they stay visually
-identical — without trusting a centralised metadata API.
+identical, without trusting a centralised metadata API.
 
 The trick is that IPFS CIDs are computed from the data itself. A contract that
 can build its metadata on-chain can also derive the CID, then ship that CID

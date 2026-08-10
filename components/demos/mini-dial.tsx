@@ -21,7 +21,7 @@ export function MiniDial() {
         max={16}
         value={n}
         onChange={(e) => setN(Number(e.target.value))}
-        aria-label="Decoys"
+        aria-label="Decoy batch size (drag me)"
         className="mt-2 w-full accent-brand"
       />
       <div className="mt-2 flex flex-wrap gap-1" aria-hidden>

@@ -447,6 +447,16 @@
     font-size: 0.8125rem;
     line-height: 1.7;
   }
+  /* Long lines clip on the 640px prose measure, so code gets a modest
+     breakout past it — the same courtesy DemoFrame's `bleed` extends to
+     demos. 768px is the floor at which the wider block still fits inside
+     the viewport around the centred 672px column; below it, pre stays on
+     the measure and scrolls horizontally. */
+  @media (min-width: 768px) {
+    .prose pre {
+      margin-inline: -2rem;
+    }
+  }
   .prose pre code {
     display: grid; /* lets highlighted lines paint full-width */
     font-weight: 400;

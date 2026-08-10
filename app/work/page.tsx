@@ -4,6 +4,7 @@ import { allProjects } from "content-collections"
 import { Code, Globe } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { BrandIcon } from "@/components/project-logo"
 
 export const metadata: Metadata = {
   title: "Work",
@@ -36,7 +37,7 @@ export default function WorkPage() {
           Work
         </h1>
         <p className="mt-3 max-w-[54ch] font-serif italic leading-relaxed text-muted-foreground">
-          Things I&apos;ve built — products I stand behind, tools I keep
+          Things I&apos;ve built: products I stand behind, tools I keep
           reaching for, and the odd experiment. Most of the code is public, so
           you can check rather than take my word for it.
         </p>
@@ -80,6 +81,12 @@ export default function WorkPage() {
                               : "font-serif text-lg"
                           )}
                         >
+                          {/* Colour anchor where a brand exists — the list
+                              stays scannable as it grows. */}
+                          <BrandIcon
+                            slug={project.slug}
+                            className="size-[1.15em]"
+                          />
                           <Link
                             href={project.url}
                             className="transition-colors hover:text-brand"

@@ -72,13 +72,14 @@ export function hasProjectLogo(slug: string) {
   return slug === "raycash" || slug === "zama" || slug === "deployoor"
 }
 
-// The full-colour brand icon (PNG on a white disc), for the places that want
-// brand recognition rather than the monochrome mark: the hero pills and the
-// /work list rows. Valerio's call — the colour is deliberate variance in an
-// otherwise near-monochrome page, and it will matter more as the work list
-// grows. The white disc is required: the source PNGs assume a light ground.
-// Detail-page headings keep the rust `ProjectLogo` mark; that one is a
-// heading accent, not an identifier.
+// The full-colour brand icon (PNG), for the places that want brand recognition
+// rather than the monochrome mark: the hero pills and the /work list rows.
+// Valerio's call — the colour is deliberate variance in an otherwise
+// near-monochrome page, and it will matter more as the work list grows.
+// No white disc behind the image: `bg-white` + `rounded-full` left a 1px AA
+// halo (loudest on Zama's opaque black square). The PNGs already carry their
+// own ground. Detail-page headings keep the rust `ProjectLogo` mark; that one
+// is a heading accent, not an identifier.
 export function BrandIcon({
   slug,
   className,
@@ -92,10 +93,7 @@ export function BrandIcon({
     <img
       src={`/brands/${slug}.png`}
       alt=""
-      className={cn(
-        "shrink-0 rounded-full bg-white object-cover",
-        className
-      )}
+      className={cn("shrink-0 rounded-full object-cover", className)}
     />
   )
 }

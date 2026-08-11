@@ -25,9 +25,11 @@
   --primary-foreground: #f3edec;
   --secondary: #e1d7d5;
   --secondary-foreground: #24201e;
-  --muted: #e4dad8;
+  /* Deeper than paper on purpose: bright-room reading washes out near-
+     neighbours, and chips (work pills) need a surface that still reads. */
+  --muted: #dacfcb;
   --muted-foreground: #6b615d;
-  --accent: #e4dad8; /* subtle hover surface (shadcn semantics) */
+  --accent: #dacfcb; /* subtle hover surface (shadcn semantics) */
   --accent-foreground: #24201e;
   --destructive: #b4442f;
   --destructive-foreground: #f3edec;

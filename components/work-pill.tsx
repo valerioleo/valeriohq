@@ -30,7 +30,10 @@ export function WorkPill({ slug, label }: { slug: string; label: string }) {
       // rounded end — even left padding is what makes the pill read as
       // homogeneous. The RIGHT side gets more (0.3em) because that edge
       // borders text, and the trailing comma tucks into its corner radius.
-      className="inline-flex -translate-y-[0.09em] items-center gap-1 whitespace-nowrap rounded-full bg-card/70 py-[0.16em] pl-[0.16em] pr-[0.3em] align-middle leading-none transition-colors hover:text-brand"
+      // Surface is muted at 60%: card/70 sat too close to the page in both
+      // themes and the chips nearly vanished. Muted is the step the palette
+      // already reserves for "slightly apart from the page," without a border.
+      className="inline-flex -translate-y-[0.09em] items-center gap-1 whitespace-nowrap rounded-full bg-muted/60 py-[0.16em] pl-[0.16em] pr-[0.3em] align-middle leading-none transition-colors hover:text-brand"
     >
       <BrandIcon slug={slug} className="size-[1.15em]" />
       <span className="-translate-y-[0.065em]">{label}</span>

@@ -90,9 +90,10 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
 
-  /* Type — Direction A: serif body · sans UI · mono metadata. */
+  /* Type — Direction C: Petrona body · Instrument Sans UI · Plex Mono meta.
+     Swapping the reading face is this one line; see lib/fonts.ts. */
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-literata), ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-serif: var(--font-petrona), ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius-sm: 0.125rem;
@@ -207,33 +208,73 @@
 }
 
 /*
- * The blink. A skin-toned eyelid disc sweeps down over the lens and back —
- * the eyeball itself never deforms (squashing it would reveal the sky
- * through the barrel). One 29s cycle, blinks at three uneven points with a
- * double-blink in the middle: intervals of ~12.5s, ~1.2s, ~15.3s. Reads as
- * random; costs zero JS.
+ * The blink. Two skin-toned lids slide across the lens inside a circular
+ * clip — the upper lid (lash line + crease) does most of the travel while
+ * the lower lid rises to meet it, so mid-blink reads as a squint and fully
+ * closed as a curved seam low on the eye, not a flattened disc. The eyeball
+ * itself never deforms (squashing it would reveal the sky through the
+ * barrel). Each blink snaps shut (~100ms), holds a beat (~70ms), reopens
+ * slower (~220ms) — per-segment easings below. One 29s cycle, blinks at
+ * three uneven points with a double-blink in the middle: intervals of
+ * ~12.5s, ~1.2s, ~15.3s. Reads as random; costs zero JS.
  */
-.logo-eyelid {
-  transform: scaleY(0);
-  transform-box: view-box;
-  transform-origin: 533px 166.8px; /* top of the lens — lids close downward */
-  animation: logo-blink 29s ease-in-out infinite;
+.logo-eyelid-upper {
+  animation: logo-blink-upper 29s linear infinite;
 }
-@keyframes logo-blink {
+.logo-eyelid-lower {
+  animation: logo-blink-lower 29s linear infinite;
+}
+/* Open keyframes carry the close easing (their only moving exit segments
+   are open→closed); the later closed keyframes carry the reopen easing.
+   Segments between identical values are flat, so sharing blocks is safe.
+   Both keyframe sets must stay on the same schedule — the lid edges are
+   shaped to seal against each other at full travel. */
+@keyframes logo-blink-upper {
   0%,
   11.5%,
-  12.5%,
+  12.85%,
   54.5%,
-  55.5%,
+  55.85%,
   58.7%,
-  59.7%,
+  60.05%,
   100% {
-    transform: scaleY(0);
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
   }
-  12%,
-  55%,
-  59.2% {
-    transform: scaleY(1);
+  11.85%,
+  54.85%,
+  59.05% {
+    transform: translateY(193px);
+  }
+  12.1%,
+  55.1%,
+  59.3% {
+    transform: translateY(193px);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+}
+@keyframes logo-blink-lower {
+  0%,
+  11.5%,
+  12.85%,
+  54.5%,
+  55.85%,
+  58.7%,
+  60.05%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
+  }
+  11.85%,
+  54.85%,
+  59.05% {
+    transform: translateY(-36px);
+  }
+  12.1%,
+  55.1%,
+  59.3% {
+    transform: translateY(-36px);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
   }
 }
 
@@ -294,7 +335,8 @@
   .route-enter,
   .dialog-overlay[data-state="open"],
   .dialog-panel[data-state="open"],
-  .logo-eyelid,
+  .logo-eyelid-upper,
+  .logo-eyelid-lower,
   .dark .logo-star {
     animation: none !important;
   }
@@ -369,7 +411,11 @@
     --tw-prose-th-borders: var(--border);
     --tw-prose-td-borders: var(--border);
 
-    font-size: 1.0625rem; /* 17px Literata ≈ 68 chars on the 640px measure */
+    /* Originally tuned as "17px Literata ≈ 68 chars on the 640px measure".
+       Petrona runs a little narrower than Literata, so the same 17px sets
+       slightly more than 68 — close enough to leave alone. Retune here if the
+       measure ever feels long. */
+    font-size: 1.0625rem;
     line-height: 1.75;
   }
 
@@ -386,7 +432,8 @@
     text-decoration-color: var(--brand);
   }
 
-  /* Headings: Literata's optical size does the sharpening; weight stays calm. */
+  /* Headings: Petrona varies on weight only (no optical-size axis), so weight
+     alone carries the hierarchy. 500 against a 400 body is enough here. */
   .prose :is(h1, h2, h3, h4) {
     font-weight: 500;
     letter-spacing: -0.01em;

@@ -1,0 +1,168 @@
+---
+title: "Part 2 — AsyncWrapper: an anonymous on-ramp to confidentiality with non-custodial deposit screening"
+description: "Part 2 of 2: how the same two-step wrap that hides the on-ramp gives it a place to screen deposits, without the protocol ever taking custody."
+date: "2026-08-13"
+canonical: https://x.com/valerioHQ/article/2087905625044852813
+sourceLabel: X
+---
+
+[Part 1](/writing/asyncwrapper-anonymous-on-ramp) ended on a question it didn't
+answer. If the on-ramp is anonymous, with encrypted recipients matched against
+a crowd of decoys, how can this add compliance?
+
+Because of the step in the middle. Splitting the wrap into *record* and
+*match-and-mint* opened a gap between "money arrived" and "balance credited",
+and that gap is where a deposit gets screened before it becomes a confidential
+balance. An atomic `wrap()` has no such gap: transfer and mint are one
+transaction, and there is no point in between where a check could run. The same
+deferral that made the on-ramp private is what makes it screenable.
+
+## How privacy and compliance can co-exist
+
+Privacy and compliance are usually presented as opposites. Mixers on one side,
+where they publish nothing and can refuse nobody, so the pool inherits the
+reputation of its worst depositors, and that is what gets them sanctioned.
+Fully public data on the other, auditable by anyone including your company's
+competitors, or the criminals willing to even kidnap you.
+
+But one design exists that can deliver privacy and compliance in one go. It is
+a pool that grants privacy to funds only after screening them. This is the
+concept of **Privacy Pools**: prove your funds belong to a vetted set without
+revealing which deposit is yours.
+
+AsyncWrapper brings the same equilibrium to confidential ERC-7984 tokens, with
+FHE (instead of ZK) and a programmable entry in place of association-set
+proofs. The rest of this post is the machinery of that separation.
+
+## Preventing permissionless privacy
+
+OpenZeppelin's ERC-7984 wrapper is permissionless: anyone can call `wrap()` and
+mint themselves a confidential balance. Our async wrapper does not have such
+functionality.
+
+**A confidential balance can only be created through an entry function gated by
+the operator.** Entry stops being a public function and becomes whatever policy
+the deployment enforces. The async wrapper contract ships no policy of its own;
+leaving the policy design entirely in the hands of the operator.
+
+## Screening happens while the money waits
+
+In our deployment the entry function is restricted to an operator role. A
+depositor sends their funds to a special deposit address (more on it below) for
+the operator to run its checks: KYC, sanctions screening, source of funds,
+whatever the policy requires.
+
+The payer never sends funds to the operator and never calls the contract. They
+send their funds to a **counterfactual address**: a CREATE2 address that is
+fully determined before any code exists at it. Two inputs go into deriving it,
+and both matter later:
+
+```solidity
+// who the money is for (encrypted), and a commitment to a secret they hold
+commitment     = keccak256(secret, recipient);
+depositAddress = create2(keccak256(encryptedRecipient, commitment));
+```
+
+Anyone can compute the address. Nobody can move funds out of it until the
+wrapper deploys code there. The operator watches for the funding transfer,
+screens it, and only if it passes deploys the address and pulls the deposit in:
+
+```solidity
+function initWrap(bytes32 encryptedRecipient, bytes32 commitment, uint256 amount)
+    external
+    onlyOperator
+{
+    address deposit = deployDepositor(encryptedRecipient, commitment);
+    Depositor(deposit).sweepTo(address(this), amount);  // take the funds
+    recordNote(deposit, amount, encryptedRecipient);    // still nothing minted
+}
+```
+
+Funds can sit at that address for as long as screening takes. They are
+committed to a recipient but still outside the pool. An atomic wrap has no
+equivalent of this window. Its compliance check would have to run synchronously
+on-chain, inside the mint, or not at all. Here the decision is made off-chain,
+with all the context an off-chain screen has and a contract never will.
+
+## How the deposit addresses are non-custodial
+
+If the operator could keep those funds stuck, this would become outright
+custody: declining a deposit would mean seizing it. For it to be non-custodial
+means the intended recipient can always get the money, whether the operator
+says no, goes offline, or never acts.
+
+The address construction is what guarantees that. Anyone who can reproduce its
+two inputs can reclaim the funds in one transaction, with no operator involved:
+
+```solidity
+function withdraw(bytes32 secret, address recipient) external {
+    // nothing was stored on-chain, so this works even if initWrap never ran
+    address deposit = deployDepositor(secret, recipient);
+
+    // pays out to `recipient`, never to whoever sent this transaction
+    Depositor(deposit).sweepTo(recipient, token.balanceOf(deposit));
+}
+```
+
+**The operator decides what enters the pool but cannot confiscate what stays
+out.** To a regulator, that is the difference between a screener and a
+custodian.
+
+Recovery is callable by anyone and always pays the recipient, so a relayer can
+run it for a user who has no gas. A declined deposit cannot be stranded.
+
+## Who holds the secret
+
+The contract doesn't care where the secret comes from, and deployments can
+differ here. In [Raycash](/work/raycash), our backend generates it and emails it
+to the recipient along with the address to fund. Both sides hold it: support can
+help a user who lost the email, and every deposit leaves an off-chain record
+with both parties. A deployment that wants the opposite tradeoff lets the
+recipient generate the secret and never transmit it; then nobody else can
+trigger recovery, and nobody can help when it is lost.
+
+Either way, **the secret is not a key to the money**. The recipient's address is
+hashed into the commitment, and the commitment into the deposit address.
+Recompute with a different recipient and you don't redirect the deposit, you
+derive a different address that holds nothing. The only destination the funds
+can ever reach was fixed before they were sent. The worst another secret-holder
+can do is trigger the recovery early, paying gas to send the recipient their own
+money.
+
+## What's public, what's auditable
+
+To an observer: some addresses received cleartext USDC, and some confidential
+mints later happened across decoy batches. The machinery described in
+[part 1](/writing/asyncwrapper-anonymous-on-ramp) severs everything between the
+two: recipients are encrypted, minted amounts are encrypted and can be zero, and
+a spent deposit is indistinguishable from an untouched one.
+
+To the operator: who was screened, what the checks returned, and which deposits
+were admitted or declined, with the off-chain records to back it.
+
+|  | Mixer | Transparent wrapper | AsyncWrapper |
+| --- | --- | --- | --- |
+| Observers can trace deposits to recipients | no | yes | no |
+| Can refuse a deposit at entry | no | no | yes |
+| Protocol takes custody | no | no | no |
+| Screening can strand funds | n/a | n/a | no, funds always recoverable |
+
+A mixer fails compliance and a transparent wrapper fails privacy for the same
+reason: neither has an entry you can put a policy behind.
+
+## This is a v1
+
+The operator gate is only the simplest policy that works. The primitive
+underneath records a note and doesn't care what stands in front of it: an
+association-set proof, a multi-party screen, or an attestation quorum would slot
+in the same way. And this post covers entry only. What a deployment enforces
+after entry, who can hold and receive inside the pool, is a topic for another
+post.
+
+None of those choices touch the core claim: a two-step wrap creates a screening
+window an atomic wrap cannot have, and unconditional recovery keeps that
+screening an admission decision rather than a seizure power.
+
+Encrypting balances was the solved part. The hard part was an entrance that
+observers can't trace and a regulated business can still defend: screened,
+recorded, impossible to trap funds in. We now have all of them.

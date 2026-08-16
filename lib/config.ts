@@ -14,15 +14,19 @@ export const siteConfig = {
   url: "https://valeriohq.com",
   title: "Valerio Leo",
   description:
-    "Valerio Leo, founder & engineer. I believe technology is how humans do good. I build private money on Ethereum, plus experiments in AI, NFTs, and developer tooling.",
+    "Valerio Leo, founder & engineer. A nerd at heart, building mostly in AI, crypto and open source — currently confidential money on Ethereum at Raycash.",
 
-  // Hero. Not a slogan — a statement of belief. Every problem is, underneath,
-  // a technical one; finding the solutions is the whole point.
+  // Hero. Not a slogan — a statement of temperament: the problems worth having
+  // are the ones that stay technical the whole way down.
+  //
+  // NOTE: nothing reads these two today — the hero in app/page.tsx sets its own
+  // copy as JSX so it can weave the work pills into the sentence. Kept in sync
+  // so they don't drift into a lie if something starts consuming them.
   tagline:
-    "I believe technology is how humans do good: that every problem, underneath, is a technical one. Nerding out on the solutions is my life's work.",
+    "I'm a nerd at heart: the problems I like stay technical all the way down. Most of what I build is AI, crypto, and open source.",
   // Substring of the tagline set in italic in the hero. Purely presentational;
   // if it stops matching the tagline it is simply ignored.
-  taglineEmphasis: "how humans do good",
+  taglineEmphasis: "nerd at heart",
 
   links: {
     x: "https://x.com/valeriohq",

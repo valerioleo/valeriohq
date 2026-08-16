@@ -22,8 +22,8 @@ export default async function Image({
   const post = allPosts.find((p) => p.slug === slug)
   const title = post?.title ?? siteConfig.name
 
-  const [literata, plexMono, logo] = await Promise.all([
-    readFile(join(process.cwd(), "assets/fonts/literata-medium.ttf")),
+  const [petrona, plexMono, logo] = await Promise.all([
+    readFile(join(process.cwd(), "assets/fonts/petrona-medium.ttf")),
     readFile(join(process.cwd(), "assets/fonts/plex-mono-regular.ttf")),
     readFile(join(process.cwd(), "public/valeriohq.svg")),
   ])
@@ -70,7 +70,7 @@ export default async function Image({
 
           <div
             style={{
-              fontFamily: "Literata",
+              fontFamily: "Petrona",
               fontSize: title.length > 60 ? 54 : 64,
               color: "#e7eef0",
               lineHeight: 1.2,
@@ -101,7 +101,7 @@ export default async function Image({
     {
       ...size,
       fonts: [
-        { name: "Literata", data: literata, weight: 500, style: "normal" },
+        { name: "Petrona", data: petrona, weight: 500, style: "normal" },
         { name: "IBM Plex Mono", data: plexMono, weight: 400, style: "normal" },
       ],
     }

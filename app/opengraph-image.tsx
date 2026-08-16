@@ -8,11 +8,11 @@ export const alt = siteConfig.name
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
-// OG cards are always the dark card: deep teal + apricot + Literata.
+// OG cards are always the dark card: deep teal + apricot + Petrona.
 // One recognisable artifact in every feed, whatever the reader's theme.
 export default async function OpengraphImage() {
-  const [literata, plexMono, logo] = await Promise.all([
-    readFile(join(process.cwd(), "assets/fonts/literata-medium.ttf")),
+  const [petrona, plexMono, logo] = await Promise.all([
+    readFile(join(process.cwd(), "assets/fonts/petrona-medium.ttf")),
     readFile(join(process.cwd(), "assets/fonts/plex-mono-regular.ttf")),
     readFile(join(process.cwd(), "public/valeriohq.svg")),
   ])
@@ -65,7 +65,7 @@ export default async function OpengraphImage() {
           >
             <div
               style={{
-                fontFamily: "Literata",
+                fontFamily: "Petrona",
                 fontSize: 76,
                 color: "#e7eef0",
                 lineHeight: 1.1,
@@ -76,7 +76,7 @@ export default async function OpengraphImage() {
             </div>
             <div
               style={{
-                fontFamily: "Literata",
+                fontFamily: "Petrona",
                 fontSize: 32,
                 color: "#8aa3ac",
                 marginTop: 28,
@@ -108,7 +108,7 @@ export default async function OpengraphImage() {
     {
       ...size,
       fonts: [
-        { name: "Literata", data: literata, weight: 500, style: "normal" },
+        { name: "Petrona", data: petrona, weight: 500, style: "normal" },
         { name: "IBM Plex Mono", data: plexMono, weight: 400, style: "normal" },
       ],
     }

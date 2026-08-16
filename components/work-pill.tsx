@@ -36,7 +36,12 @@ export function WorkPill({ slug, label }: { slug: string; label: string }) {
       className="inline-flex -translate-y-[0.09em] items-center gap-1 whitespace-nowrap rounded-full bg-muted/60 py-[0.16em] pl-[0.16em] pr-[0.3em] align-middle leading-none transition-colors hover:text-brand"
     >
       <BrandIcon slug={slug} className="size-[1.15em]" />
-      <span className="-translate-y-[0.065em]">{label}</span>
+      {/* The 3px top padding is a correction for the Petrona swap: the em-based
+          lift above was measured against Literata's ascent/descent, and
+          Petrona sits the label higher in its line box. Kept in px because it
+          is a fixed optical nudge, not a proportional one — revisit if the
+          pills ever appear at a size other than the hero's 18px. */}
+      <span className="-translate-y-[0.065em] pt-[3px]">{label}</span>
     </Link>
   )
 }

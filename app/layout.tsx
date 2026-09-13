@@ -1,4 +1,5 @@
 import "@/styles/globals.css"
+import "@/styles/annotations.css"
 import type { Metadata, Viewport } from "next"
 
 import { siteConfig } from "@/lib/config"

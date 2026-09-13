@@ -1,0 +1,20 @@
+/* Hand annotations — vendored neat-annotations, retinted to the house voice.
+   The vendor file is imported first so these .ann rules win the cascade. */
+@import "./neat-annotations.css";
+
+/* Default voice: the site mono in filigrana ink, house tilt. A watermark you
+   notice, not text you read — the same register as the /work marginalia. */
+.ann {
+  --ann-font: var(--font-mono);
+  --ann-color: color-mix(in srgb, var(--muted-foreground) 78%, transparent);
+  --ann-mark: color-mix(in srgb, var(--brand) 9%, transparent);
+  --ann-rotate: -2deg;
+}
+.dark .ann {
+  --ann-mark: color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+/* The one loud one: rust. For the rare annotation that must be read. */
+.ann-brand {
+  --ann-color: var(--brand);
+}

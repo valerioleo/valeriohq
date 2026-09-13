@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { cn } from "@/lib/utils"
 
 // Brand marks for the work entries, inlined rather than loaded as <img> so
@@ -190,10 +192,12 @@ export function BrandIcon({
   }
   if (!hasProjectLogo(slug)) return null
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={`/brands/${slug}.png`}
       alt=""
+      width={24}
+      height={24}
+      sizes="24px"
       className={cn("shrink-0 rounded-full object-cover", className)}
     />
   )

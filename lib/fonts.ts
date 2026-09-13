@@ -23,6 +23,8 @@ export const fontSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-instrument-sans",
   display: "swap",
+  // Supporting UI can load on demand; prioritize the reading face.
+  preload: false,
 })
 
 export const fontSerif = Petrona({

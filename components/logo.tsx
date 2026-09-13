@@ -1,3 +1,14 @@
+import { getImageProps } from "next/image"
+
+// The texture occupies only a few screen pixels inside the SVG. Keep the
+// original asset, but request an appropriately sized version from Next.
+const eyeTexture = getImageProps({
+  src: "/logo-eye-texture.png",
+  alt: "",
+  width: 16,
+  height: 18,
+}).props.src
+
 // The periscope mark, inlined so its parts can move. Generated from
 // public/valeriohq.svg (which stays untouched — OG images and the favicon
 // still read it). The eye texture lives in public/logo-eye-texture.png so
@@ -75,7 +86,7 @@ export function Logo({ className }: { className?: string }) {
       {/* glass texture */}
       <g opacity="0.77">
         <image
-          href="/logo-eye-texture.png"
+          href={eyeTexture}
           x="451.08"
           y="170.52"
           width="108.96"

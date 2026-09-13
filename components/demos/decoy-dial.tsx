@@ -56,13 +56,15 @@ export function DecoyDial() {
           <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
             relative gas
           </dt>
-          <dd className="mt-1 font-mono text-lg tabular-nums">×{n}</dd>
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
-            <div
-              className="h-full rounded-full bg-brand/70 transition-[width] duration-200"
-              style={{ width: `${(n / 32) * 100}%` }}
-            />
-          </div>
+          <dd className="mt-1 font-mono text-lg tabular-nums">
+            ×{n}
+            <div aria-hidden className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
+              <div
+                className="h-full rounded-full bg-brand/70 transition-[width] duration-200"
+                style={{ width: `${(n / 32) * 100}%` }}
+              />
+            </div>
+          </dd>
         </div>
       </dl>
     </DemoFrame>

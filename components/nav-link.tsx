@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 // everything in the nav reads as text.
 export const navItemClass = "inline-flex h-8 items-center transition-colors"
 
-// Tiny client island so the current section can carry the brand outline.
+// Tiny client island so the current section can carry the brand underline.
 export function NavLink({
   href,
   children,
@@ -27,7 +27,7 @@ export function NavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         navItemClass,
-        "px-1.5 underline-offset-[6px]",
+        "underline-offset-[6px]",
         active
           ? "text-foreground underline decoration-brand decoration-[1.5px]"
           : "text-muted-foreground hover:text-foreground"

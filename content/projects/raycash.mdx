@@ -1,8 +1,6 @@
 ---
 title: Raycash
-description: A global money account running on confidential stablecoins. Bank-style balances and payments, encrypted on the chain itself.
-# Not a date claim (launch dates are behind the confidential wall): the mono
-# right-edge tag every sibling row carries, saying only that this is current.
+description: Making confidential money useful, from the product decisions to the code underneath.
 year: "now"
 role: Co-founder & principal engineer
 stack: ["Solidity", "Zama FHEVM", "ERC-7984", "Next.js", "React Native", "viem"]
@@ -13,19 +11,58 @@ tier: 1
 kind: product
 ---
 
-**Your money. Private. Yours.**
+I co-founded Raycash to make confidential money useful in everyday life.
+Balances and transfers are encrypted using Zama’s fully homomorphic
+encryption. The contracts can settle a payment without reading its amount.
 
-Raycash rebuilds the parts of a bank people actually use, a balance, a card, an
-IBAN, money going in and out, except onchain and fully self custodial. The
-difference that changes everything else is that the amounts are encrypted.
-Balances and transfers stay confidential on the chain itself, using Zama's
-fully homomorphic encryption, so the network can check and settle a payment
-without ever seeing how much moved.
+I work across the product and lead the engineering practice behind it:
+a small team building confidential contracts, a web app and a mobile app.
 
-This is a product, not a demo. Confidential token contracts underneath, mobile
-and web apps on top, and the wrap and unwrap flows in between. The
-[developer docs](https://docs.raycash.xyz) are public. The app is in private
-access.
+<RaycashProduct />
 
-> Public overview only. Protocol internals and commercial detail live
-> elsewhere.
+## What I own
+
+Product decisions, technical direction, hiring and delivery. I care about
+what someone needs from a money app, what makes the business work, and what
+we can build well with a small team. That shapes which problems we take on
+and what we leave out.
+
+The experience has to make sense before the cryptography does. A deposit
+needs a clear state; a payment needs a clear outcome. I work across the
+Solidity contracts and the Next.js and React Native apps to connect those
+expectations with what the system actually does.
+
+## Tools before headcount
+
+When something keeps taking engineering time, I look for the tool we’re
+missing. [Deployoor](/work/deployoor) came from repeatedly wiring contract
+deployments into apps and tests. It gives us typed contract objects shared
+across the development flow.
+
+[Confidential-primitives](/work/confidential-primitives) collects the FHEVM
+patterns we kept reusing. We opened the source so other teams can build on the
+same work. The library has been audited by Burrasec.
+
+## Quality lives in the workflow
+
+I favor BDD-first development: describe what a change should do before writing
+it, then make that behavior part of the checks. CI gates should block bad
+releases automatically, rather than depend on someone remembering a checklist.
+
+AI is part of how we write, review and test code. I’m also building my own
+harnesses, agent orchestration and skills, learning how to give these tools
+the context and feedback they need. The work still has to meet the release
+bar, and the product decisions still need judgment.
+
+<ReleaseFlow />
+
+## Work you can inspect
+
+The [AsyncWrapper series](/writing/asyncwrapper-anonymous-on-ramp) explains
+one of the problems underneath the product: getting public tokens into a
+confidential balance, and screening deposits without taking custody. It’s a
+useful example of the design tradeoffs I work through.
+
+The [deployment tooling](https://github.com/raycashxyz/deployoor) and
+[confidential primitives](https://github.com/raycashxyz/confidential-primitives)
+are open source. For the product itself, see [Raycash](https://www.raycash.xyz).

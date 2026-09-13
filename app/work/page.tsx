@@ -1,178 +1,121 @@
+import Link from "next/link"
 import type { Metadata } from "next"
-import { Geist_Mono } from "next/font/google"
 
-import { WorkPill } from "@/components/work-pill"
-
-// The Work page is prose: the story is the structure, the pills are the
-// wayfinding. A reader reads it; a scanner hops pill to pill. Copy is
-// Valerio's own (rewritten 2026-08), humanized — no em dashes, his
-// punctuation, his slang.
-//
-// Open source is a chapter, not a badge. Its three paragraphs are bracketed
-// the way you'd annotate a book, in filigrana ink: a watermark you notice,
-// not text you read. At xl (the container is max-w-2xl, so ~300px of true
-// margin from 1280px up) the bracket and the ~/open-source note sit in the
-// right margin, tilted like a hand-note. Below xl there is no margin, so the
-// bracket flips to the left edge and hangs in the page's px-5 gutter with the
-// label at its top.
-//
-// Geist Mono is the annotation's voice only, declared here so it loads on
-// this route alone. Pills stay in the site serif: a second font inside the
-// chip broke the Petrona-tuned baseline, so the annotation carries the OSS
-// register by itself.
-const geistMono = Geist_Mono({ subsets: ["latin"] })
+import { siteConfig } from "@/lib/config"
+import { BrandIcon } from "@/components/project-logo"
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Shipped products, protocols, and open source.",
+  description: "Product and engineering at Raycash, previously at Zama, and the open source tools built along the way.",
 }
 
-// The chapter heading in the OSS voice: rust ~/ plus Geist Mono, filigrana
-// tones. Used below xl, where the margin note has nowhere to live.
-function ChapterLabel() {
+function ProjectHeading({ slug, name, role }: { slug: string; name: string; role: string }) {
   return (
-    <span
-      className="text-xs tracking-[0.08em] text-muted-foreground/65"
-      style={geistMono.style}
-    >
-      <span aria-hidden className="text-brand/50">
-        ~/
-      </span>
-      open-source
-    </span>
-  )
-}
-
-// External links share the quiet rust underline the prose uses site-wide.
-function Ext({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="underline decoration-brand/40 underline-offset-[3px] transition-colors hover:text-brand hover:decoration-brand"
-    >
-      {children}
-    </a>
+    <div>
+      <h2 className="font-serif text-xl font-medium">
+        <Link href={`/work/${slug}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-brand">
+          <BrandIcon slug={slug} className="size-5" />
+          {name}
+        </Link>
+      </h2>
+      <p className="mt-1 font-mono text-xs text-muted-foreground">{role}</p>
+    </div>
   )
 }
 
 export default function WorkPage() {
   return (
-    <div className="pb-8 pt-10">
-      <h1 className="font-serif text-2xl font-medium tracking-[-0.01em]">
-        Work
-      </h1>
+    <div className="pb-8 pt-8 sm:pt-10">
+      <h1 className="font-serif text-2xl font-medium tracking-[-0.01em]">Work</h1>
+      <p className="mt-5 font-serif text-lg leading-relaxed">
+        I like working where product and engineering meet: deciding what
+        is worth building, understanding the people it’s for, and getting
+        the details right. Most of my work is in confidential money and the
+        tools that make it possible.
+      </p>
 
-      <div className="mt-8 space-y-5 font-serif text-lg leading-relaxed">
-        <p>
-          My name is Valerio, a founder, engineer and advisor living at the
-          intersection of AI and crypto for more than ten years. I thrive in
-          zero-to-one projects, leading small and medium-sized teams to achieve
-          their goals.
-        </p>
-        <p>
-          Today I&apos;m CEO at{" "}
-          <span className="whitespace-nowrap">
-            <WorkPill slug="raycash" label="Raycash" />:
-          </span>{" "}
-          an app to receive, hold and grow your stablecoins confidentially.
-          It&apos;s the first of its kind running on FHE, and it&apos;s
-          available on the App Store and Play Store. Give it a try!
-        </p>
-        <p>
-          Before Raycash I worked at{" "}
-          <span className="whitespace-nowrap">
-            <WorkPill slug="zama" label="Zama" />,
-          </span>{" "}
-          the French unicorn that makes FHE possible for everyone. My brief was
-          clear: work out what FHE is good for at the scale of ordinary people.
-          The answer turned out to be stablecoins, and I left to build it. Zama
-          also owns a stake in Raycash.
-        </p>
-
-        <div className="relative">
-          {/* ≥xl: bracket + note in the right margin */}
-          <span
-            aria-hidden
-            className="absolute -right-7 top-1 bottom-1 hidden w-2 rounded-[2px] border-y border-r border-muted-foreground/35 xl:block"
-          />
-          <span
-            aria-hidden
-            className="absolute left-full top-1/2 hidden w-44 -translate-y-1/2 -rotate-2 pl-12 text-xs leading-relaxed text-muted-foreground/65 xl:block"
-            style={geistMono.style}
-          >
-            <span className="text-brand/50">~/</span>open-source
-          </span>
-          {/* <xl: the bracket flips to the left edge */}
-          <span
-            aria-hidden
-            className="absolute -left-3 top-1 bottom-1 w-2 rounded-[2px] border-y border-l border-muted-foreground/35 xl:hidden"
-          />
-          <div className="mb-2 xl:hidden">
-            <ChapterLabel />
-          </div>
+      <section className="mt-12 sm:mt-16">
+        <ProjectHeading slug="raycash" name={siteConfig.company} role="Co-founder & principal engineer · now" />
+        <div className="prose mt-5 max-w-none">
           <p>
-            When what I want doesn&apos;t exist, I build it and open the
-            source. <WorkPill slug="deployoor" label="deployoor" /> made it
-            easy to manage deployments in my development flow: deploy, manage
-            and verify your contracts from any Hardhat or Foundry project,
-            using any viem wallet, whether a local private key or a hosted one
-            like Privy or Turnkey.
+            An app to receive, hold and use stablecoins confidentially.
+            I work across the product and lead the engineering practice:
+            what we build, how it should work, and how a small team gets
+            it into people’s hands.
           </p>
-          <p className="mt-5">
-            With my{" "}
-            <WorkPill
-              slug="confidential-primitives"
-              label="confidential-primitives"
-            />{" "}
-            library (audited by Burrasec) I introduced new FHEVM patterns we
-            kept reusing at Raycash and thought could be useful to the whole
-            industry.
-          </p>
-          <p className="mt-5">
-            I&apos;m also passionate about NFT engineering as a tool for
-            creativity. I created{" "}
-            <span className="whitespace-nowrap">
-              <WorkPill slug="pinkwhale" label="pinkwhale" />,
-            </span>{" "}
-            a fully open-source NFT lending protocol built on the goated
-            Seaport. I think the design was pretty neat. Too bad I
-            couldn&apos;t release it before the market went to zero! Lesson
-            learned: you can never ship fast enough. I then came up with{" "}
-            <WorkPill slug="chain-double" label="chain-double" /> to push the
-            limits of dynamic, fully on-chain NFTs. It uses cross-chain message
-            passing to let an L1 NFT read its URI from L2 storage, with IPFS as
-            transport! It won me an award at HackFS in 2021.
+          <p>
+            That means connecting the business and the experience people
+            have with the contracts, web and mobile apps underneath. AI is
+            part of how we build, with BDD-first tests and release gates
+            keeping the feedback useful.
           </p>
         </div>
+        <Link href="/work/raycash" className="mt-3 inline-flex min-h-8 items-center gap-2 font-mono text-xs text-brand transition-colors hover:text-foreground">
+          How we build it <span aria-hidden>→</span>
+        </Link>
+        <p className="mt-5 font-serif text-base leading-relaxed text-muted-foreground">
+          Previously at <Link href="/work/zama" className="text-link">Zama</Link>,
+          I worked directly with the CEO and leaders in protocol and
+          cryptography to shape future products. That work led to{" "}
+          {siteConfig.company}.
+        </p>
+      </section>
 
-        <p>
-          Before my two wonderful twin daughters arrived, I&apos;d been hacking
-          around the world for fun, winning various awards. Honorable mentions:{" "}
-          <Ext href="https://ethglobal.com/showcase/zenny-ynkim">Zenny</Ext>{" "}
-          (first prize for the 1inch integration),{" "}
-          <Ext href="https://ethglobal.com/showcase/taptrust-12smv">
-            TapTrust
-          </Ext>{" "}
-          (grand finalist, plus the Arx and Base prizes) and{" "}
-          <Ext href="https://ethglobal.com/showcase/supernft-p2ahe">
-            SuperNFT
-          </Ext>{" "}
-          (the Superfluid and EPNS prizes). Those years were among the most fun
-          of my life and helped me bump into the most talented engineers, who
-          became long-term friends and colleagues. Hopefully, I&apos;ll be back
-          hitting the road again soon.
-        </p>
-        <p className="text-muted-foreground">
-          Before all of this there was Dappflow (2020–21), one of the earliest
-          platforms for managing your smart contracts, which shut down in 2021.
-          Maybe we were just too early! In 2020 I also got a grant from the UK
-          Government (via{" "}
-          <Ext href="https://gtr.ukri.org/projects?ref=77464">Innovate UK</Ext>
-          ) to build a DID-powered jobs board.
-        </p>
-      </div>
+      <section className="relative mt-16 sm:mt-24">
+        <h2 className="mb-8 font-mono text-xs tracking-[0.04em] text-muted-foreground">open source</h2>
+        <div className="relative space-y-10 sm:space-y-12">
+          <span aria-hidden className="absolute -right-7 inset-y-1 hidden w-2 rounded-[2px] border-y border-r border-muted-foreground/35 xl:block" />
+          <span aria-hidden className="absolute left-full top-1/2 hidden w-36 -translate-y-1/2 pl-12 font-mono text-xs leading-relaxed text-muted-foreground xl:block">
+            tools over<br />headcount
+          </span>
+          <div>
+            <ProjectHeading slug="deployoor" name="deployoor" role="Deployment tooling · open source" />
+            <p className="mt-3 font-serif text-[1.0625rem] leading-relaxed">
+              I got tired of wiring contract addresses into every app and test.
+              Deployoor gives you one typed contract object to share everywhere,
+              across Hardhat, Foundry and viem. Its testing package runs the same
+              deployments against an in-memory EVM.
+            </p>
+          </div>
+          <div>
+            <ProjectHeading slug="confidential-primitives" name="confidential-primitives" role="FHEVM contracts · audited by Burrasec" />
+            <p className="mt-3 font-serif text-[1.0625rem] leading-relaxed">
+              The patterns we kept needing at {siteConfig.company}, collected
+              into an open source library. Reusable pieces for confidential
+              contracts, so each new feature starts with less groundwork.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="earlier" className="mt-16 scroll-mt-8 sm:mt-24">
+        <h2 className="font-mono text-xs tracking-[0.04em] text-muted-foreground">earlier work & experiments</h2>
+        <div className="prose mt-5 max-w-none">
+          <p>
+            I also like NFT engineering as a tool for creativity.
+            <Link href="/work/pinkwhale"> Pinkwhale</Link> is an open source
+            lending protocol built on Seaport.
+            <Link href="/work/chain-double"> Chain-double</Link> lets an L1
+            NFT read its URI from L2 storage, with IPFS as transport. It won
+            an award at HackFS in 2021.
+          </p>
+          <p>
+            Before my twin daughters arrived, I spent a lot of time hacking
+            around the world. A few favorites: <a href="https://ethglobal.com/showcase/zenny-ynkim">Zenny</a>,{" "}
+            <a href="https://ethglobal.com/showcase/taptrust-12smv">TapTrust</a> and{" "}
+            <a href="https://ethglobal.com/showcase/supernft-p2ahe">SuperNFT</a>.
+            Those weekends introduced me to engineers who became long-term
+            friends and colleagues. Hopefully I’ll be back on the road soon.
+          </p>
+          <p className="text-muted-foreground">
+            Earlier still: Dappflow, a platform for managing smart contracts,
+            and a UK Government grant via{" "}
+            <a href="https://gtr.ukri.org/projects?ref=77464">Innovate UK</a>{" "}
+            to build a jobs board using decentralized identity.
+          </p>
+        </div>
+      </section>
+      <p aria-hidden className="mt-14 text-center font-serif text-muted-foreground">⁂</p>
     </div>
   )
 }

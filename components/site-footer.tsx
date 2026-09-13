@@ -10,8 +10,8 @@ export function SiteFooter() {
   ]
 
   return (
-    <footer className="mt-24 border-t border-dashed border-border pb-10 pt-6 font-mono text-xs text-muted-foreground">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
+    <footer className="mt-16 border-t border-dashed border-border pb-8 pt-6 font-mono text-xs text-muted-foreground sm:mt-20">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
         <div className="flex items-baseline gap-4">
           {links.map((l) => (
             <a
@@ -19,7 +19,7 @@ export function SiteFooter() {
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-brand"
+              className="inline-flex min-h-8 items-center transition-colors hover:text-brand"
             >
               {l.label}
             </a>

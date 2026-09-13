@@ -26,9 +26,8 @@ const posts = defineCollection({
     description: z.string().optional(),
     date: z.string(),
     draft: z.boolean().optional(),
-    // Marks a post that carries a live demo, so the homepage surfaces it in
-    // the "interactive" strip (poster card) rather than the plain essay list.
-    // `featured` promotes one to the live-teaser slot.
+    // Interactive demos live inside articles. `featured` selects the
+    // homepage's reading recommendation independently of presentation.
     interactive: z.boolean().optional(),
     featured: z.boolean().optional(),
     // For pieces first published elsewhere (X, etc.). When set, the post

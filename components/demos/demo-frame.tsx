@@ -25,7 +25,7 @@ export function DemoFrame({
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {title}
             </span>
-            <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/70">
+            <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               interactive
             </span>
           </div>

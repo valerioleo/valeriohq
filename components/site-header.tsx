@@ -7,28 +7,29 @@ import { NavLink } from "@/components/nav-link"
 
 export function SiteHeader() {
   return (
-    // flex-wrap is a safety net, not decoration: below ~340px the mark and
-    // the nav strip can't share a line, so the nav drops to its own row
-    // instead of forcing the whole page to scroll sideways.
-    <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 pb-6 pt-8">
-      {/* Lockup: the periscope mark + serif wordmark. Mark alone on mobile. */}
+    <header className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 pb-4 pt-6 sm:grid-cols-[1fr_auto_auto] sm:gap-x-3 sm:pt-8">
       <Link
         href="/"
-        className="inline-flex items-center gap-3 whitespace-nowrap font-serif text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors hover:text-brand"
+        className="inline-flex w-fit items-center gap-3 whitespace-nowrap font-serif text-base font-medium tracking-[-0.01em] transition-colors hover:text-brand"
       >
-        <Logo className="size-14 sm:size-18" />
-        <span className="hidden text-base sm:inline">{siteConfig.name}</span>
+        <Logo className="size-10 sm:size-12" />
+        <span>{siteConfig.name}</span>
       </Link>
 
-      {/* Nav in the mono metadata voice, lowercase. Links read as text. */}
-      <nav className="flex items-center gap-1.5 font-mono text-[0.8125rem]">
+      {/* A second line on mobile keeps the name and every destination visible. */}
+      <nav
+        aria-label="Main navigation"
+        className="col-span-2 row-start-2 flex items-center gap-5 font-mono text-xs sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-4"
+      >
         {siteConfig.nav.map((item) => (
           <NavLink key={item.href} href={item.href}>
             {item.title.toLowerCase()}
           </NavLink>
         ))}
-        <ModeToggle />
       </nav>
+      <div className="col-start-2 row-start-1 sm:col-start-3">
+        <ModeToggle />
+      </div>
     </header>
   )
 }

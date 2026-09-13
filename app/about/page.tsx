@@ -9,15 +9,17 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="pb-8 pt-10">
+    <div className="pb-8 pt-8 sm:pt-10">
       <h1 className="font-serif text-2xl font-medium tracking-[-0.01em]">
         About
       </h1>
 
       <div className="prose mt-8 max-w-none">
         <p>
-          I&apos;m a founder and full-stack engineer working on
-          privacy-preserving finance, based in {siteConfig.location}.
+          I’m a founder and engineer. I like being involved in the whole
+          product: understanding who it’s for, how the business works, what
+          to build, and how it should feel to use. Taste and technical
+          judgment belong in the same conversation.
         </p>
         <p>
           The question I keep coming back to is why everything you do with money
@@ -31,18 +33,16 @@ export default function AboutPage() {
           <a href="https://www.zama.org" target="_blank" rel="noopener noreferrer">
             Zama
           </a>
-          , the cryptography company making FHE fast enough to ship, where I was
-          Entrepreneur in Residence. The brief I set myself was to find what FHE
-          is good for at the scale of ordinary people. It turned out to be
-          banking, which is now {siteConfig.company}, which I co-founded and
-          now build full time.
+          , where I worked directly with the CEO and leaders in protocol and
+          cryptography to shape future products. We explored what FHE could
+          make possible for ordinary people. That work led to{" "}
+          {siteConfig.company}, which I co-founded and now build full time.
         </p>
         <p>
-          I work across the whole stack. On-chain that means confidential
-          ERC-7984 token contracts on Zama&apos;s FHEVM, tested BDD-first with
-          viem and Hardhat. Off-chain it&apos;s the Next.js and React Native apps
-          people actually touch. When the tooling doesn&apos;t exist I write it,
-          which is where{" "}
+          I still spend a lot of my time writing software: confidential
+          contracts on Zama’s FHEVM, Next.js and React Native apps, and the
+          tools that connect them. When a tool is missing, I tend to build
+          it, which is where{" "}
           <a
             href="https://deployoor.dev"
             target="_blank"
@@ -53,10 +53,25 @@ export default function AboutPage() {
           came from.
         </p>
         <p>
-          Before any of this I studied food science at the University of
-          Gastronomic Sciences in Pollenzo. Fermentation and cryptography have
-          more in common than you&apos;d think: both are processes you have to
-          trust without watching.
+          I’m an avid autodidact. Before software, I studied food science at
+          the University of Gastronomic Sciences in Pollenzo. I’ve always
+          liked following a question into a field I know little about and
+          learning enough to make something with it.
+        </p>
+        <p>
+          AI is giving me the time of my life as a learner. I’m getting my
+          hands dirty in things that used to feel out of reach, and building
+          my own harnesses, agent orchestration and skills to find out how
+          much these tools can do. Learning how to work with AI is now part
+          of how I approach a new problem.
+        </p>
+        <p>
+          On a small team, that curiosity has to turn into useful work.
+          At {siteConfig.company}, I connect product decisions with the
+          engineering practice: clear behavior, BDD-first tests and release
+          gates. Writing helps me think through the tradeoffs and explain
+          them to the people I work with. The public essays are part of
+          that habit.
         </p>
         <p>
           Find me on{" "}

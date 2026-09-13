@@ -21,7 +21,7 @@ export function GET() {
     "",
     `> ${siteConfig.description}`,
     "",
-    `Founder of ${siteConfig.company} (confidential money on Ethereum). Based in ${siteConfig.location}.`,
+    `Co-founder at ${siteConfig.company}, working across product and engineering. Previously at Zama, working directly with the CEO and protocol and cryptography leaders to shape future products. Avid autodidact building with AI, including custom harnesses, orchestration and skills.`,
     "",
     "## Writing",
     ...posts.map(

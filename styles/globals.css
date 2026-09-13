@@ -53,7 +53,7 @@
   --secondary: #0c3e4e;
   --secondary-foreground: #e7eef0;
   --muted: #0e4353;
-  --muted-foreground: #8aa3ac;
+  --muted-foreground: #9bb1b9;
   --accent: #0e4353;
   --accent-foreground: #e7eef0;
   --destructive: #e5705a;
@@ -148,16 +148,15 @@
  */
 @keyframes route-rise {
   from {
-    opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(3px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 .route-enter {
-  animation: route-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Text is visible on the first frame, including before hydration. */
+  animation: route-rise 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes overlay-in {
@@ -393,6 +392,18 @@
  * ────────────────────────────────────────────────────────────────────────
  */
 @layer utilities {
+  .text-link {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  .text-link:hover {
+    color: var(--brand);
+    text-decoration-color: var(--brand);
+  }
+
   .prose {
     --tw-prose-body: var(--foreground);
     --tw-prose-headings: var(--foreground);
@@ -403,7 +414,7 @@
     --tw-prose-bullets: color-mix(in srgb, var(--brand) 55%, transparent);
     --tw-prose-hr: var(--border);
     --tw-prose-quotes: var(--foreground);
-    --tw-prose-quote-borders: color-mix(in srgb, var(--brand) 45%, transparent);
+    --tw-prose-quote-borders: transparent;
     --tw-prose-captions: var(--muted-foreground);
     --tw-prose-code: var(--foreground);
     --tw-prose-pre-code: var(--foreground);
@@ -420,7 +431,7 @@
   }
 
   /* Links: quiet rust underline that commits on hover. */
-  .prose a {
+  .prose a:not(:where(.not-prose, .not-prose *)) {
     font-weight: inherit;
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
@@ -428,7 +439,7 @@
     text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
     transition: text-decoration-color 0.15s ease;
   }
-  .prose a:hover {
+  .prose a:not(:where(.not-prose, .not-prose *)):hover {
     text-decoration-color: var(--brand);
   }
 
@@ -448,11 +459,12 @@
     margin-top: 2em;
   }
 
-  /* Blockquotes: italic voice, rust hairline. No inserted quotation marks. */
+  /* Quotes use typography and space. No decorative colored left rules. */
   .prose blockquote {
     font-style: italic;
     font-weight: inherit;
-    border-inline-start-width: 2px;
+    border-inline-start-width: 0;
+    padding-inline-start: 0;
   }
   .prose blockquote p:first-of-type::before,
   .prose blockquote p:last-of-type::after {
@@ -516,10 +528,12 @@
      needed per theme. Miss the light one and code silently renders as flat
      body text in light mode. */
   .prose pre code span {
-    color: var(--shiki-light);
+    /* Vitesse targets a different paper color. Mix toward our ink so even
+       comments keep body-text contrast on this warmer code background. */
+    color: color-mix(in srgb, var(--shiki-light) 50%, var(--foreground));
   }
   .dark .prose pre code span {
-    color: var(--shiki-dark);
+    color: color-mix(in srgb, var(--shiki-dark) 70%, var(--foreground));
   }
 
   .prose figcaption,

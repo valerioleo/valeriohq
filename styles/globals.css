@@ -164,6 +164,63 @@
   /* Text is visible on the first frame, including before hydration. */
   animation: route-rise 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+@keyframes intro-shimmer {
+  0% {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+@keyframes intro-label-in {
+  from {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-copy-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.intro-shimmer {
+  display: inline-block;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(
+      90deg,
+      var(--muted-foreground) 0 35%,
+      var(--foreground) 50%,
+      var(--muted-foreground) 65% 100%
+    )
+    0 0 / 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: intro-shimmer 1.5s ease-in-out infinite;
+}
+.intro-expand-handle:hover .intro-shimmer {
+  animation: none;
+  color: var(--brand);
+  -webkit-text-fill-color: var(--brand);
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+.intro-label-in {
+  animation: intro-label-in 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.intro-copy {
+  animation: intro-copy-in 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 @keyframes overlay-in {
   from {
@@ -342,8 +399,16 @@
   .dialog-panel[data-state="open"],
   .logo-eyelid-upper,
   .logo-eyelid-lower,
-  .dark .logo-star {
+  .dark .logo-star,
+  .intro-shimmer,
+  .intro-label-in,
+  .intro-copy {
     animation: none !important;
+  }
+  .intro-shimmer {
+    color: var(--muted-foreground);
+    -webkit-text-fill-color: var(--muted-foreground);
+    background: none;
   }
   /* Stars and night sky still appear in dark mode — features, not motion.
      These need explicit overrides because the rules above carry !important

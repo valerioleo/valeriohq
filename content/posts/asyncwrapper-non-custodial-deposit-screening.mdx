@@ -17,7 +17,7 @@ balance. An atomic `wrap()` has no such gap: transfer and mint are one
 transaction, and there is no point in between where a check could run. The same
 deferral that made the on-ramp private is what makes it screenable.
 
-## How privacy and compliance can co-exist
+# How privacy and compliance can co-exist
 
 Privacy and compliance are usually presented as opposites. Mixers on one side,
 where they publish nothing and can refuse nobody, so the pool inherits the
@@ -34,7 +34,7 @@ AsyncWrapper brings the same equilibrium to confidential ERC-7984 tokens, with
 FHE (instead of ZK) and a programmable entry in place of association-set
 proofs. The rest of this post is the machinery of that separation.
 
-## Preventing permissionless privacy
+# Preventing permissionless privacy
 
 OpenZeppelin's ERC-7984 wrapper is permissionless: anyone can call `wrap()` and
 mint themselves a confidential balance. Our async wrapper does not have such
@@ -45,7 +45,7 @@ the operator.** Entry stops being a public function and becomes whatever policy
 the deployment enforces. The async wrapper contract ships no policy of its own;
 leaving the policy design entirely in the hands of the operator.
 
-## Screening happens while the money waits
+# Screening happens while the money waits
 
 In our deployment the entry function is restricted to an operator role. A
 depositor sends their funds to a special deposit address (more on it below) for
@@ -84,7 +84,7 @@ equivalent of this window. Its compliance check would have to run synchronously
 on-chain, inside the mint, or not at all. Here the decision is made off-chain,
 with all the context an off-chain screen has and a contract never will.
 
-## How the deposit addresses are non-custodial
+# How the deposit addresses are non-custodial
 
 If the operator could keep those funds stuck, this would become outright
 custody: declining a deposit would mean seizing it. For it to be non-custodial
@@ -111,7 +111,7 @@ custodian.
 Recovery is callable by anyone and always pays the recipient, so a relayer can
 run it for a user who has no gas. A declined deposit cannot be stranded.
 
-## Who holds the secret
+# Who holds the secret
 
 The contract doesn't care where the secret comes from, and deployments can
 differ here. In [Raycash](/work/raycash), our backend generates it and emails it
@@ -129,7 +129,7 @@ can ever reach was fixed before they were sent. The worst another secret-holder
 can do is trigger the recovery early, paying gas to send the recipient their own
 money.
 
-## What's public, what's auditable
+# What's public, what's auditable
 
 To an observer: some addresses received cleartext USDC, and some confidential
 mints later happened across decoy batches. The machinery described in
@@ -150,7 +150,7 @@ were admitted or declined, with the off-chain records to back it.
 A mixer fails compliance and a transparent wrapper fails privacy for the same
 reason: neither has an entry you can put a policy behind.
 
-## This is a v1
+# This is a v1
 
 The operator gate is only the simplest policy that works. The primitive
 underneath records a note and doesn't care what stands in front of it: an

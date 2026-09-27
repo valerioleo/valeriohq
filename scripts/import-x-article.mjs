@@ -84,7 +84,8 @@ function isoDate(s) {
 }
 
 const HEADINGS = {
-  "header-one": "##", // the page renders the title as h1, so body starts at h2
+  // Body headings start at h1: the page renders the title outside the body.
+  "header-one": "#",
   "header-two": "##",
   "header-three": "###",
   "header-four": "####",

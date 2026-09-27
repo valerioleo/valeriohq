@@ -57,6 +57,7 @@ syndication CDN — return an empty body for Articles and are useless here.)
    up against the live article; the lead-in sentence always makes it obvious.
 
 5. Apply house style, matching neighbouring posts in `content/posts/`:
+   - **Headings start at `#`.** The page renders the title outside the body, so the body is its own document: top-level sections are `#`, then `##`, `###`. Never `##` for a top-level section. (Rule set 2026-09-15.)
    - `@mentions` → internal links: `@zama` → `[Zama](/work/zama)`,
      Raycash → `/work/raycash`, deployoor → `/work/deployoor`
    - Cross-link related posts (part 1 ↔ part 2)

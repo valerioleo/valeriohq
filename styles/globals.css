@@ -452,20 +452,39 @@
     text-decoration-color: var(--brand);
   }
 
-  /* Headings: Petrona varies on weight only (no optical-size axis), so weight
-     alone carries the hierarchy. 500 against a 400 body is enough here. */
+  /* Section titles stay Inter, but they have to be bigger than the body.
+     Flattening them to 14px made MDX headings disappear into the copy. */
   .prose :is(h1, h2, h3, h4) {
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-heading);
+    font-weight: 560;
+    letter-spacing: -0.01875rem;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  /* Body headings start at h1: the page renders the title outside the
+     body, so the body is its own document. h1 sits at page-title size. */
+  .prose h1 {
+    font-size: 1.375em; /* ~19px at the 14px measure, same as page titles */
+    margin-top: 2.2em;
+    margin-bottom: 0.75em;
   }
   .prose h2 {
-    font-size: 1.375em;
-    margin-top: 2.2em;
-    margin-bottom: 0.9em;
+    font-size: 1.125em;
+    font-weight: 500;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
   }
   .prose h3 {
-    font-size: 1.125em;
-    margin-top: 2em;
+    font-size: 1em;
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+  }
+  .prose h4 {
+    font-size: 1em;
+    margin-top: 1.75em;
+  }
+  .prose :is(h1, h2, h3, h4):first-child {
+    margin-top: 0;
   }
 
   /* Quotes use typography and space. No decorative colored left rules. */

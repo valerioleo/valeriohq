@@ -35,7 +35,7 @@ the confidential ERC-7984 you receive.
 This is one of the things we're building at [Raycash](/work/raycash), and what
 follows is the design we landed on.
 
-## What current wrappers can reveal
+# What current wrappers can reveal
 
 Using a wrapper makes one transaction, the first one, non-confidential. That's
 a known and usually accepted tradeoff, and most of it fades the moment the
@@ -87,7 +87,7 @@ private too.
 Closing that loop is what we set out to do at Raycash: to push fhEVM far enough
 that the first mile gets the same privacy as everything after it.
 
-## The idea: split the wrap, and hide it in a crowd
+# The idea: split the wrap, and hide it in a crowd
 
 fhEVM can compute on more than just numbers; it works on encrypted addresses
 too. That makes one design tempting: keep a `mapping(eaddress => euint64)`, an
@@ -117,7 +117,7 @@ tokens to a recipient, and fusing them is what creates the public link. We
 separate them: one step records a note, a later step matches and mints it. The
 privacy lives in the detail of each step, so both are worth walking through.
 
-### Step 1, initWrap: record a note with an encrypted recipient
+## Step 1, initWrap: record a note with an encrypted recipient
 
 The first step takes the ERC-20 and records a note. It mints nothing. Every
 note goes into a single append-only list shared by all users:
@@ -163,7 +163,7 @@ Not who it's for.
 That shared, ever-growing list is the whole game. Every wrap from every user
 lands in it, and the next step is where that matters.
 
-### Step 2, finalizeWrap: match and mint
+## Step 2, finalizeWrap: match and mint
 
 Nothing is minted until the recipient decides to finalize, and that happens at
 a time of their choosing, possibly far in the future. Until then the note just
@@ -220,7 +220,7 @@ finalizing later is usually better. Between splitting the wrap across two
 transactions and matching inside a crowd, there is no longer a way to tie a
 deposited ERC-20 to the confidential balance it became.
 
-## What this looks like for the recipient
+# What this looks like for the recipient
 
 The recipient never has to touch the chain to get paid. They encrypt their own
 address with Zama's tooling and hand the ciphertext to whoever is paying them:
@@ -230,7 +230,7 @@ encrypted address with a cleartext amount matching what they expected. That
 tells them which deposit, which index, is theirs. Then, whenever they choose,
 they finalize that index alongside a handful of decoys to mint the balance.
 
-## What's public, what's hidden
+# What's public, what's hidden
 
 **Public**
 
@@ -261,7 +261,7 @@ Net effect: the traceable cleartext on-ramp is severed from the recipient, the
 credited amount is unreadable, and you can't even confirm a given deposit was
 ever spent.
 
-## Downstream, nothing changes: this is an on-ramp layer only
+# Downstream, nothing changes: this is an on-ramp layer only
 
 Once `finalizeWrap` mints, the recipient holds ordinary ERC-7984 tokens and
 spends them exactly like any other confidential token: amounts hidden, sender
@@ -270,7 +270,7 @@ privacy at exactly one boundary, the wrap. After that you're in standard
 ERC-7984, where the decay logic above applies in full: from the recipient's
 first transfer, their balance becomes unknowable.
 
-## Decoys: your privacy dial
+# Decoys: your privacy dial
 
 The strength of the anonymity isn't fixed by the contract. It's a dial the
 finalizer controls.

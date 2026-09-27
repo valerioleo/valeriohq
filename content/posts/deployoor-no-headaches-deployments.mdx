@@ -49,11 +49,11 @@ A few rules to make it possible:
    From there, consume them with deployoor's own tooling or literally anywhere
    else.
 
-## How it works
+# How it works
 
 Surprisingly simple.
 
-### 1. Generate typed deployers
+## 1. Generate typed deployers
 
 It doesn't matter whether you're on Hardhat or Foundry. You run:
 
@@ -76,7 +76,7 @@ import { tokenArtifact } from "./types/Token";
 export const getOrDeployToken = defineDeployer(tokenArtifact, config);
 ```
 
-### 2. Write an environment-agnostic deploy script
+## 2. Write an environment-agnostic deploy script
 
 All you need is a viem client with an account. That's it:
 
@@ -100,7 +100,7 @@ And `getOrDeployToken` is **idempotent by design**: the first run deploys and
 records; every run after that returns the same contract with no transaction.
 `freshDeploy` is `true` only when a deploy actually happened.
 
-### 3. Run it like any TypeScript file
+## 3. Run it like any TypeScript file
 
 ```bash
 tsx --env-file=.env scripts/deploy.ts
@@ -186,7 +186,7 @@ deployments/
 └─ 84532-base-sepolia/Pong.json
 ```
 
-## The part I didn't plan for: testing gets easier too.
+# The part I didn't plan for: testing gets easier too.
 
 This one fell out of the design almost by accident. If a deploy is just a viem
 client and some bytecode, then a *test* is the same thing pointed at a
@@ -229,7 +229,7 @@ I have to trust on faith. The same typed viem objects, the same helper
 functions to read and write, carry straight over. One DRY-er codebase, not
 Solidity tests on one side and an untested TypeScript layer on the other.
 
-## Beyond your solidity folder
+# Beyond your solidity folder
 
 One final advantage of deployoor is how it makes it easy to port your
 deployments everywhere, from your backend to your frontend apps.
@@ -293,7 +293,7 @@ on USDC, `register({ deploymentName: "USDC", address, abi })` records it with
 no transaction, so it lives in the same typed system as everything you deployed
 yourself.
 
-## Some words of caution.
+# Some words of caution.
 
 **This is an early, pre-release version.**
 

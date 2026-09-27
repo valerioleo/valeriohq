@@ -5,8 +5,9 @@ import { CrowdDiagram } from "@/components/post/crowd-diagram"
 import { DemoFrame } from "@/components/demos/demo-frame"
 import { DecoyDial } from "@/components/demos/decoy-dial"
 import { RevealToggle } from "@/components/demos/reveal-toggle"
+import { PaymentLinkFlow } from "@/components/demos/payment-link-flow"
+import { AgentMoneyLoop } from "@/components/demos/agent-money-loop"
 import { RaycashProduct } from "@/components/work/raycash-product"
-import { ReleaseFlow } from "@/components/work/release-flow"
 
 const components = {
   Image,
@@ -15,8 +16,10 @@ const components = {
   DemoFrame,
   DecoyDial,
   RevealToggle,
+  // Animated interface diagrams (CLAUDE.md → Article illustrations).
+  PaymentLinkFlow,
+  AgentMoneyLoop,
   RaycashProduct,
-  ReleaseFlow,
 }
 
 export function Mdx({ code }: { code: string }) {

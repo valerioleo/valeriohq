@@ -9,11 +9,15 @@ export function DemoFrame({
   title,
   caption,
   bleed = false,
+  kind = "interactive",
   children,
 }: {
   title?: string
   caption?: string
   bleed?: boolean
+  // "diagram" for play-once explanatory sequences; "interactive" for widgets
+  // the reader drives. The tag in the title bar says which.
+  kind?: "interactive" | "diagram"
   children: React.ReactNode
 }) {
   return (
@@ -26,7 +30,7 @@ export function DemoFrame({
               {title}
             </span>
             <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-              interactive
+              {kind}
             </span>
           </div>
         )}

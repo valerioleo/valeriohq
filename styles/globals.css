@@ -90,10 +90,10 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
 
-  /* Type — Direction C: Petrona body · Instrument Sans UI · Plex Mono meta.
-     Swapping the reading face is this one line; see lib/fonts.ts. */
-  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-petrona), ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  /* Type — Inter at caption size, one family. Plex Mono for chrome. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-serif: var(--font-sans);
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius-sm: 0.125rem;
@@ -109,14 +109,20 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-serif); /* reading surface = serif */
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 460;
+    line-height: 1.25rem;
+    letter-spacing: -0.00563rem;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
   h1,
   h2,
   h3,
   h4 {
+    font-family: var(--font-sans);
     text-wrap: balance;
   }
   ::selection {
@@ -422,12 +428,15 @@
     --tw-prose-th-borders: var(--border);
     --tw-prose-td-borders: var(--border);
 
-    /* Originally tuned as "17px Literata ≈ 68 chars on the 640px measure".
-       Petrona runs a little narrower than Literata, so the same 17px sets
-       slightly more than 68 — close enough to leave alone. Retune here if the
-       measure ever feels long. */
-    font-size: 1.0625rem;
-    line-height: 1.75;
+    font-size: 0.875rem;
+    font-weight: 460;
+    line-height: 1.25rem;
+    letter-spacing: -0.00563rem;
+  }
+  .prose :is(p, li, dd) {
+    font-weight: 460;
+    line-height: 1.25rem;
+    letter-spacing: -0.00563rem;
   }
 
   /* Links: quiet rust underline that commits on hover. */
@@ -508,11 +517,9 @@
     font-size: 0.8125rem;
     line-height: 1.7;
   }
-  /* Long lines clip on the 640px prose measure, so code gets a modest
+  /* Long lines clip on the ~582px prose measure, so code gets a modest
      breakout past it — the same courtesy DemoFrame's `bleed` extends to
-     demos. 768px is the floor at which the wider block still fits inside
-     the viewport around the centred 672px column; below it, pre stays on
-     the measure and scrolls horizontally. */
+     demos. Below 768px, pre stays on the measure and scrolls horizontally. */
   @media (min-width: 768px) {
     .prose pre {
       margin-inline: -2rem;

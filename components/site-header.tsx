@@ -10,7 +10,7 @@ export function SiteHeader() {
     <header className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 pb-4 pt-6 sm:grid-cols-[1fr_auto_auto] sm:gap-x-3 sm:pt-8">
       <Link
         href="/"
-        className="inline-flex w-fit items-center gap-3 whitespace-nowrap font-serif text-base font-medium tracking-[-0.01em] transition-colors hover:text-brand"
+        className="inline-flex w-fit items-center gap-3 whitespace-nowrap text-[1.1875rem] font-medium tracking-[-0.01875rem] transition-colors hover:text-brand"
       >
         <Logo className="size-10 sm:size-12" />
         <span>{siteConfig.name}</span>

@@ -7,7 +7,6 @@ type Post = {
   title: string
   date: string
   description?: string
-  readingTime: number
 }
 
 export function PostList({
@@ -18,33 +17,28 @@ export function PostList({
   descriptions?: boolean
 }) {
   return (
-    <ul className="divide-y divide-border/70">
+    <ul className="group/list">
       {posts.map((post) => (
         <li key={post.url}>
           <Link
             href={post.url}
-            className="group flex flex-col gap-2 py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+            className="group flex flex-col gap-0.5 py-2.5 opacity-100 transition-opacity duration-150 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:group-hover/list:opacity-30 sm:hover:!opacity-100"
           >
-            <div className="min-w-0">
-              <span className="font-serif text-[1.0625rem] leading-relaxed transition-colors group-hover:text-brand">
-                {post.title}
-              </span>
-              {descriptions && post.description && (
-                <p className="mt-1 font-sans text-sm leading-relaxed text-muted-foreground">
-                  {post.description}
-                </p>
-              )}
-            </div>
-            <span className="shrink-0 font-mono text-xs text-muted-foreground">
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
-              {descriptions && (
-                <span className="sm:mt-1 sm:block sm:text-right">
-                  <span aria-hidden className="sm:hidden"> · </span>
-                  {post.readingTime} min read
-                </span>
-              )}
+            <span className="min-w-0 transition-colors group-hover:text-brand">
+              {post.title}
             </span>
+            <time
+              dateTime={post.date}
+              className="shrink-0 text-muted-foreground"
+            >
+              {formatDate(post.date)}
+            </time>
           </Link>
+          {descriptions && post.description && (
+            <p className="-mt-1 mb-2.5 text-muted-foreground">
+              {post.description}
+            </p>
+          )}
         </li>
       ))}
     </ul>

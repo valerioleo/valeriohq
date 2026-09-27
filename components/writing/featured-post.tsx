@@ -4,7 +4,6 @@ type Post = {
   url: string
   title: string
   description?: string
-  readingTime: number
 }
 
 // The full interactive explanation lives in the article, with its context.
@@ -14,11 +13,7 @@ export function FeaturedPost({ post }: { post: Post }) {
       href={post.url}
       className="group mb-8 block"
     >
-      <div className="flex items-baseline gap-3 font-mono text-xs">
-        <span className="text-brand">Start here</span>
-        <span className="text-muted-foreground">{post.readingTime} min read</span>
-      </div>
-      <h3 className="mt-3 font-serif text-xl leading-snug transition-colors group-hover:text-brand">
+      <h3 className="font-serif text-xl leading-snug transition-colors group-hover:text-brand">
         {post.title}
         <span aria-hidden className="ml-2 inline-block text-base text-brand">→</span>
       </h3>

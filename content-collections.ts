@@ -45,9 +45,7 @@ const posts = defineCollection({
   transform: async (doc, ctx) => {
     const mdx = await compileMDX(ctx, doc, mdxOptions)
     const slug = doc._meta.path
-    const words = doc.content.trim().split(/\s+/).length
-    const readingTime = Math.max(1, Math.round(words / 220))
-    return { ...doc, slug, url: `/writing/${slug}`, mdx, readingTime }
+    return { ...doc, slug, url: `/writing/${slug}`, mdx }
   },
 })
 

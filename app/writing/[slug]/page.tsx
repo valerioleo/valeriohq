@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import { allPosts } from "content-collections"
 
 import { Mdx } from "@/components/mdx-components"
+import { META_LINK, MetaDot, PageMeta } from "@/components/page-meta"
 import { formatDate } from "@/lib/utils"
 
 interface Props {
@@ -34,36 +35,31 @@ export default async function PostPage({ params }: Props) {
   return (
     <article className="py-10">
       <header>
-        <div className="font-mono text-xs text-muted-foreground">
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-          <span aria-hidden> · </span>
-          <span>{post.readingTime} min</span>
-        </div>
-        <h1 className="mt-3 font-serif text-3xl font-medium leading-[1.2] tracking-[-0.01em] sm:text-[2.125rem]">
+        <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
           {post.title}
         </h1>
+        <PageMeta>
+          <time dateTime={post.date}>{formatDate(post.date)}</time>
+          {post.canonical && (
+            <>
+              <MetaDot />
+              <a
+                href={post.canonical}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={META_LINK}
+              >
+                Originally on {post.sourceLabel ?? "X"} ↗
+              </a>
+            </>
+          )}
+        </PageMeta>
         {post.description && (
-          <p className="mt-4 font-serif text-lg italic leading-relaxed text-muted-foreground">
-            {post.description}
-          </p>
+          <p className="mt-4 text-muted-foreground">{post.description}</p>
         )}
-        {post.canonical && (
-          <p className="mt-4 font-mono text-xs text-muted-foreground">
-            Originally on{" "}
-            <a
-              href={post.canonical}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
-            >
-              {post.sourceLabel ?? "X"} ↗
-            </a>
-          </p>
-        )}
-        <hr className="mb-10 mt-8 w-10 border-t border-brand/50" />
       </header>
 
-      <div className="prose max-w-none">
+      <div className="prose mt-8 max-w-none">
         <Mdx code={post.mdx} />
       </div>
 

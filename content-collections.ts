@@ -35,6 +35,11 @@ const posts = defineCollection({
     // the original gets the search credit while readers get this design.
     canonical: z.string().url().optional(),
     sourceLabel: z.string().optional(),
+    // Notion binding for the content workflow: the page this entry syncs
+    // from, and when it last did. The sync compares Notion's last-edited
+    // time against `notionSynced` to know what changed.
+    notion: z.string().optional(),
+    notionSynced: z.string().optional(),
     content: z.string(),
   }),
   transform: async (doc, ctx) => {
@@ -73,6 +78,11 @@ const projects = defineCollection({
     // 2 = a one-line mention only; no page is generated, so tier-2 entries
     //     must not be linked internally. Defaults to 1.
     tier: z.union([z.literal(1), z.literal(2)]).optional(),
+    // Notion binding for the content workflow: the page this entry syncs
+    // from, and when it last did. The sync compares Notion's last-edited
+    // time against `notionSynced` to know what changed.
+    notion: z.string().optional(),
+    notionSynced: z.string().optional(),
     content: z.string(),
   }),
   transform: async (doc, ctx) => {

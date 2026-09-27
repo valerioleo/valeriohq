@@ -2,10 +2,10 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { allProjects } from "content-collections"
-import { Code, Globe } from "lucide-react"
 
 import { Mdx } from "@/components/mdx-components"
-import { ProjectLogo } from "@/components/project-logo"
+import { META_LINK, MetaDot, PageMeta } from "@/components/page-meta"
+import { BrandIcon } from "@/components/project-logo"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -25,6 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: project.title, description: project.description }
 }
 
+const host = (url: string) => new URL(url).hostname.replace(/^www\./, "")
+
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params
   const project = allProjects.find((p) => p.slug === slug)
@@ -33,59 +35,45 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <article className="py-10">
       <header>
-        <div className="flex items-baseline justify-between gap-4 font-mono text-xs text-muted-foreground">
-          {project.role ? <span>{project.role}</span> : <span />}
-          {project.year && <span className="shrink-0">{project.year}</span>}
-        </div>
-        <h1 className="mt-3 flex items-center gap-3 font-serif text-3xl font-medium leading-[1.2] tracking-[-0.01em] sm:text-[2.125rem]">
-          <ProjectLogo
-            slug={project.slug}
-            className="h-[0.72em] w-auto shrink-0 text-brand"
-          />
+        {/* The original brand disc, as on the pills and lists — never a
+            recoloured mark. */}
+        <h1 className="flex items-center gap-2 text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+          <BrandIcon slug={project.slug} className="size-5 shrink-0" />
           {project.title}
         </h1>
-        {project.description && (
-          <p className="mt-4 font-serif text-lg italic leading-relaxed text-muted-foreground">
-            {project.description}
-          </p>
-        )}
-        {/* Outbound links as icon + mono label, no underline: an underlined
-            link here reads as a second hairline next to the rust rule below
-            it. The icon carries the "outbound" signal, the label carries the
-            destination (linkLabel when set, else the bare hostname). */}
         {(project.link || project.repo) && (
-          <div className="mt-5 flex items-center gap-5 font-mono text-xs">
-            {project.link && (
-              <a
+        <PageMeta>
+          {project.link && (
+            <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-brand"
+                className={META_LINK}
               >
-                <Globe className="size-[14px]" />
-                {(
-                  project.linkLabel ??
-                  new URL(project.link).hostname.replace(/^www\./, "")
-                ).toLowerCase()}
+                {(project.linkLabel ?? host(project.link)).toLowerCase()} ↗
               </a>
-            )}
-            {project.repo && (
+          )}
+          {project.repo && (
+            <>
+              {project.link && <MetaDot />}
               <a
                 href={project.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-brand"
+                className={META_LINK}
               >
-                <Code className="size-[14px]" />
-                source
+                source ↗
               </a>
-            )}
-          </div>
+            </>
+          )}
+        </PageMeta>
         )}
-        <hr className="mb-10 mt-8 w-10 border-t border-brand/50" />
+        {project.description && (
+          <p className="mt-4 text-muted-foreground">{project.description}</p>
+        )}
       </header>
 
-      <div className="prose max-w-none">
+      <div className="prose mt-8 max-w-none">
         <Mdx code={project.mdx} />
       </div>
 

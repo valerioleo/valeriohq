@@ -6,18 +6,17 @@ export const siteConfig = {
   name: "Valerio Leo",
   handle: "valeriohq",
 
-  // The footer's local-time detail and the OG card location.
+  // Shown on the OG card.
   location: "Italy",
-  timeZone: "Europe/Rome",
   // TODO(confirm): production domain (valeriohq.com assumed).
   url: "https://valeriohq.com",
   title: "Valerio Leo",
   description:
-    "Valerio Leo, founder and engineer building confidential money at Raycash. Previously at Zama. Product thinking, AI, open source and learning by building.",
+    "Valerio Leo, founder, engineer and team leader building confidential money at Raycash. Previously at Zama. Product thinking, AI, open source and learning by building.",
 
   // The homepage reads this directly, so the introduction has one source.
   tagline:
-    "I’m a founder and engineer. I like making complicated things feel simple.",
+    "I’m a founder, engineer and team leader. I like making complicated things feel simple.",
 
   links: {
     x: "https://x.com/valeriohq",
@@ -25,11 +24,9 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/valeriohq",
   },
 
-  nav: [
-    { title: "Writing", href: "/writing" },
-    { title: "Work", href: "/work" },
-    { title: "About", href: "/about" },
-  ],
+  // Writing and work are already on the homepage path. About is the
+  // only page that isn't, so it is the only thing in the nav.
+  nav: [{ title: "About", href: "/about" }],
 } as const
 
 export type SiteConfig = typeof siteConfig

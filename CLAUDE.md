@@ -45,8 +45,9 @@ sequence. Use a static diagram in the same style when motion adds no meaning.
 - No decorative colored left borders, including on callouts or cards.
   Avoid ornamental gradients, glows, heavy shadows, loading shimmer, and
   decorative particles in these diagrams.
-- Preserve the existing inline bubbles with brand logos. They are a separate,
-  memorable part of the site's identity; this style complements them.
+- Keep the inline bubbles with brand logos (`WorkPill`) available for article
+  prose; this style complements them. On the homepage the logos live in the
+  work list, so the bio links to work pages as plain text.
 
 ### Motion and storytelling
 

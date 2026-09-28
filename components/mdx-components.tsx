@@ -8,6 +8,7 @@ import { RevealToggle } from "@/components/demos/reveal-toggle"
 import { PaymentLinkFlow } from "@/components/demos/payment-link-flow"
 import { AgentMoneyLoop } from "@/components/demos/agent-money-loop"
 import { RaycashProduct } from "@/components/work/raycash-product"
+import { WorkPill } from "@/components/work-pill"
 
 const components = {
   Image,
@@ -20,6 +21,8 @@ const components = {
   PaymentLinkFlow,
   AgentMoneyLoop,
   RaycashProduct,
+  // Inline work bubble; Notion's {{pill <slug>}} sign becomes one on sync.
+  WorkPill,
 }
 
 export function Mdx({ code }: { code: string }) {

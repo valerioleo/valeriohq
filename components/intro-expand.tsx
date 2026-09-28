@@ -1,10 +1,10 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
-import { WorkPill } from "@/components/work-pill"
 
 // The bio at five lengths. Each step swaps the copy for the next, longer
 // rewrite — a change of length the reader asked for, not an append.
@@ -15,11 +15,24 @@ import { WorkPill } from "@/components/work-pill"
 // section-label register and reads as a toolbar item against the rule below.
 // At full length the slot becomes the invitation to talk.
 
-const Raycash = () => <WorkPill slug="raycash" label={siteConfig.company} />
-const Zama = () => <WorkPill slug="zama" label="Zama" />
-const Deployoor = () => <WorkPill slug="deployoor" label="deployoor" />
+// Prose-register link. The decoration colour is explicit so the underline
+// survives the glare, which paints the glyphs transparent over a gradient.
+const LINK =
+  "underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
+
+// Work names are plain links: the work list right below carries the logos,
+// so the bio doesn't repeat them.
+const Work = ({ slug, children }: { slug: string; children: React.ReactNode }) => (
+  <Link href={`/work/${slug}`} className={cn(LINK, "hover:text-brand")}>
+    {children}
+  </Link>
+)
+
+const Raycash = () => <Work slug="raycash">{siteConfig.company}</Work>
+const Zama = () => <Work slug="zama">Zama</Work>
+const Deployoor = () => <Work slug="deployoor">deployoor</Work>
 const Primitives = () => (
-  <WorkPill slug="confidential-primitives" label="Confidential Primitives" />
+  <Work slug="confidential-primitives">Confidential Primitives</Work>
 )
 
 // One entry per length; each entry is its paragraphs. The control is appended
@@ -101,11 +114,6 @@ const LEVELS: React.ReactNode[][] = [
   ],
 ]
 const LAST = LEVELS.length - 1
-
-// Prose-register link. The decoration colour is explicit so the underline
-// survives the glare, which paints the glyphs transparent over a gradient.
-const LINK =
-  "underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
 
 export const IntroExpand = () => {
   const [level, setLevel] = useState(0)

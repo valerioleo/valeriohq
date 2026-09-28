@@ -493,15 +493,19 @@
     --tw-prose-th-borders: var(--border);
     --tw-prose-td-borders: var(--border);
 
-    font-size: 0.875rem;
+    /* Long-form reads a step up from the 14px lists and chrome around it. */
+    font-size: 1rem;
     font-weight: 460;
-    line-height: 1.25rem;
+    line-height: 1.625rem;
     letter-spacing: -0.00563rem;
   }
   .prose :is(p, li, dd) {
     font-weight: 460;
-    line-height: 1.25rem;
+    line-height: 1.625rem;
     letter-spacing: -0.00563rem;
+  }
+  .prose p {
+    margin-block: 1em;
   }
 
   /* Links: quiet rust underline that commits on hover. */
@@ -517,8 +521,8 @@
     text-decoration-color: var(--brand);
   }
 
-  /* Section titles stay Inter, but they have to be bigger than the body.
-     Flattening them to 14px made MDX headings disappear into the copy. */
+  /* Section titles stay Inter, but they have to stand apart from the body:
+     weight carries it where size alone is too close. */
   .prose :is(h1, h2, h3, h4) {
     font-family: var(--font-heading);
     font-weight: 560;
@@ -529,13 +533,12 @@
   /* Body headings start at h1: the page renders the title outside the
      body, so the body is its own document. h1 sits at page-title size. */
   .prose h1 {
-    font-size: 1.375em; /* ~19px at the 14px measure, same as page titles */
+    font-size: 1.1875em; /* 19px at the 16px measure, same as page titles */
     margin-top: 2.2em;
     margin-bottom: 0.75em;
   }
   .prose h2 {
-    font-size: 1.125em;
-    font-weight: 500;
+    font-size: 1.0625em;
     margin-top: 2em;
     margin-bottom: 0.5em;
   }

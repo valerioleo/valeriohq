@@ -16,8 +16,7 @@ import { siteConfig } from "@/lib/config"
 // At full length the slot becomes the invitation to talk.
 
 // Prose-register link, in the full-strength ink so it stands out from the
-// softer body. The decoration colour is explicit so the underline survives
-// the glare, which paints the glyphs transparent over a gradient.
+// softer body.
 const LINK =
   "text-ink underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
 
@@ -129,10 +128,9 @@ export const IntroExpand = () => {
       <div
         key={level}
         id="intro-copy"
-        className={cn(
-          "space-y-4 text-base leading-7 tracking-[-0.00625rem]",
-          level > 0 && "intro-copy"
-        )}
+        // Body text size, like benji.org: 14px on a 20px line, 16px between
+        // paragraphs.
+        className={cn("space-y-4", level > 0 && "intro-copy")}
         aria-live="polite"
       >
         {paragraphs.map((content, i) => (
@@ -154,19 +152,17 @@ export const IntroExpand = () => {
               ) : (
                 <>
                   {" "}
+                  {/* A caption, not a link: smaller, semibold, faint and
+                      never underlined, so it can't be mistaken for the work
+                      links in the sentence before it. */}
                   <button
                     type="button"
                     onClick={() => setLevel(n => Math.min(n + 1, LAST))}
                     aria-label={`Show a longer introduction, ${level + 2} of ${LEVELS.length}`}
-                    className="intro-expand-handle cursor-pointer"
+                    className="intro-expand-handle cursor-pointer text-[0.8125rem] font-semibold"
                   >
-                    {/* Decoration lives on the span: text-decoration does not
-                        propagate into inline-block children, and the glare
-                        span is inline-block, so an underline on the button
-                        never paints. */}
-                    <span className={cn("intro-shimmer", LINK)}>More about me</span>
+                    <span className="intro-shimmer">More about me</span>
                   </button>
-                  .
                 </>
               ))}
           </p>

@@ -197,15 +197,18 @@
     transform: none;
   }
 }
+/* The "More about me" caption rests faint (benji.org's caption grey, ~2.8:1
+   on paper) and the glare lifts it to the muted grey as it passes. */
 .intro-shimmer {
+  --caption: color-mix(in srgb, var(--muted-foreground) 70%, var(--background));
   display: inline-block;
   color: transparent;
   -webkit-text-fill-color: transparent;
   background: linear-gradient(
       90deg,
-      var(--muted-foreground) 0 35%,
-      var(--foreground) 50%,
-      var(--muted-foreground) 65% 100%
+      var(--caption) 0 35%,
+      var(--muted-foreground) 50%,
+      var(--caption) 65% 100%
     )
     0 0 / 300% 100%;
   -webkit-background-clip: text;
@@ -411,8 +414,8 @@
     animation: none !important;
   }
   .intro-shimmer {
-    color: var(--muted-foreground);
-    -webkit-text-fill-color: var(--muted-foreground);
+    color: var(--caption);
+    -webkit-text-fill-color: var(--caption);
     background: none;
   }
   /* Stars and night sky still appear in dark mode — features, not motion.

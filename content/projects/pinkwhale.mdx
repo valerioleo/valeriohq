@@ -1,0 +1,50 @@
+---
+title: pinkwhale
+description: "NFT lending built on Seaport: loans as matched marketplace orders, so repayment and default are just more orders."
+summary: NFT lending on Seaport
+year: "2022–23"
+role: Author
+stack: ["Solidity", "Seaport", "Foundry", "TypeScript"]
+link: https://pinkwhale.valeriohq.com
+linkLabel: Demo
+repo: https://github.com/valerioleo/pinkwhale-protocol
+order: 20
+tier: 1
+kind: experiment
+---
+
+An experiment in how little lending code you need if you lean on someone
+else's settlement layer. Pinkwhale is an NFT lending protocol with no escrow
+logic, no settlement logic, and no liquidation engine of its own. It writes
+down both possible endings of a loan as marketplace orders, then lets the
+clock decide which one becomes real.
+
+The whole thing rests on one realisation: Seaport, OpenSea's settlement
+protocol, isn't really a marketplace. It's a general engine for "these items
+move this way if and only if those items move that way", with signatures, time
+windows and approvals all checked for you. Seen that way a loan is just three
+trades: taking it (collateral in, principal out), repaying it (the same trade
+backwards), and defaulting (that reverse trade again, priced at zero for the
+lender).
+
+So a loan is four ordinary Seaport orders. The lender and borrower sign the
+first two in their wallets, and anyone can match them in a single transaction.
+Inside that same transaction Pinkwhale mints two more with `seaport.validate`,
+which lets a contract be an offerer without ever holding a key: a repayment
+order the borrower can fill before expiry, and a default order the lender can
+claim for free one second after. The two windows never overlap, so nobody has
+to decide later whether a loan defaulted.
+
+The access control rides inside the orders, not in storage. Each resolution
+order is `FULL_RESTRICTED`, so Seaport calls back into Pinkwhale's zone before
+it will settle, and the zone checks the caller against a hash the signer
+committed to. No allowlist, no loan-to-borrower mapping, no storage at all.
+Interest comes free too: Seaport interpolates amounts linearly across an
+order's window, so "100 now, 110 at expiry" is a rate that accrues by the
+second, and Pinkwhale contains no interest code. Collection-wide and
+trait-filtered loans fall out of the consideration model for free.
+
+Never shipped as a product. It's a research artifact, unaudited, shared
+as-is. The point was to see whether a marketplace protocol could be bent into
+a lending one, and how much you get to not build if it can. The interactive
+writeup lives at [pinkwhale.valeriohq.com](https://pinkwhale.valeriohq.com).

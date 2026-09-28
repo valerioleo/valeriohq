@@ -1,0 +1,40 @@
+---
+title: deployoor
+description: Deploy once, then use typed viem contract objects everywhere. Quality of life for smart-contract teams.
+summary: typed contract deployments
+year: "2026"
+role: Author, open source (MIT)
+stack: ["TypeScript", "viem", "Hardhat", "Foundry"]
+link: https://deployoor.dev
+repo: https://github.com/raycashxyz/deployoor
+featured: true
+order: 4
+tier: 1
+kind: tool
+notion: 3db7c7c9-1f1f-81f4-9374-d2c439395fe3
+notionSynced: "2026-09-14T17:40:43Z"
+---
+
+`deployoor` came out of a recurring annoyance. You deploy a contract, then
+re-wire its address and ABI by hand into every app, script, and test that
+touches it. This gives you one typed contract object to share everywhere, and
+it works across Hardhat, Foundry, and viem.
+
+The idea is that a deployment is a fact worth recording once. You run a deploy
+script and deployoor writes what happened to a file you commit: address, ABI,
+chain, constructor arguments, transaction. Run the same script again and it
+finds that record and hands back the same contract without sending anything.
+Every place that needs the contract imports it from there, typed end to end,
+so an address can't quietly drift out of sync.
+
+It doesn't care how you sign. A deploy takes a viem client, so a local key, a
+browser wallet or a hosted signer all work the same way, and one script can
+hold clients for several chains and deploy across them in a single run.
+Verification and notifications hang off the same flow as plugins.
+
+Tests follow from the same design. If a deploy is just a client and some
+bytecode, a test is that deploy pointed at an in-memory chain. The generated
+deployers run unchanged, so fixtures can't drift away from the contracts they
+describe.
+
+MIT licensed, and the most directly verifiable thing here, so read the code.

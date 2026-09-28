@@ -1,0 +1,310 @@
+---
+title: Deployoor. No-headaches deployments.
+description: Why I built a tool to deploy a contract once and use a typed, shared contract object everywhere afterwards.
+date: "2026-07-08"
+work: [deployoor]
+canonical: https://x.com/valerioHQ/article/2074906197967110534
+sourceLabel: X
+---
+
+I wrote my first smart contract in 2017. It was painful. The tooling was
+immature, there were no useful error messages (a failed call just reverted, no
+reason string), and there was no AI to ask for help.
+
+Since then the developer experience has improved by orders of magnitude.
+Hardhat, Foundry, tevm, viem, Tenderly, the OpenZeppelin libraries — to name a
+few — are now part of a smart contract developer's daily life.
+
+But one part still hasn't made its evolutionary jump: **deployment
+management**.
+
+Every tool I could find falls into one of three buckets:
+
+1. **They lock you into an environment.** Hardhat Ignition and Forge scripts
+   are tied to their frameworks, and some ship their own DSL, adding friction.
+2. **They barely support real multi-chain deploys.** If your contracts live
+   across several chains, you usually end up with separate scripts you can't
+   run together: `step1.ts --network sepolia`, then import that result into
+   `step2.ts --network baseSepolia`, and so on.
+3. **TypeScript is not always king.** You're either writing `.sol` scripts, or
+   `.ts` scripts where you hand-import artifact JSON and lose all the types.
+
+It was clear to me that time had come to build the tool I actually needed:
+introducing [**deployoor**](/work/deployoor)!
+
+The philosophy is simple: **make deploying contracts as easy as viem made
+interacting with them.**
+
+A few rules to make it possible:
+
+1. **Environment-agnostic.** It looks around and figures out whether you're in
+   a Hardhat or Foundry project.
+2. **Zero config.** It should work at first try for any non-complex workflow.
+3. **viem-first.** A deployment is just bytecode + a viem client. No framework
+   dependency. It runs anywhere viem runs.
+4. **Typemaxxed.** Everything is typed, end to end: addresses, ABIs,
+   constructor args, return values.
+5. **Extensible.** An event-hook system lets you bolt on anything:
+   verification, notifications, whatever you need.
+6. **Zero lock-in.** You use deployoor to deploy and to record deployments.
+   From there, consume them with deployoor's own tooling or literally anywhere
+   else.
+
+# How it works
+
+Surprisingly simple.
+
+## 1. Generate typed deployers
+
+It doesn't matter whether you're on Hardhat or Foundry. You run:
+
+```bash
+pnpm add -D deployoor viem
+npx deployoor init
+forge build                    # or: npx hardhat compile
+npx deployoor generate
+```
+
+deployoor scans your project, finds where your artifacts live, and writes a
+`deployers/` folder of auto-generated, fully-typed functions, one per contract:
+
+```ts
+// deployers/Token.ts — generated; do not edit by hand
+import { defineDeployer } from "deployoor";
+import config from "../deployoor.config";
+import { tokenArtifact } from "./types/Token";
+
+export const getOrDeployToken = defineDeployer(tokenArtifact, config);
+```
+
+## 2. Write an environment-agnostic deploy script
+
+All you need is a viem client with an account. That's it:
+
+```ts
+// walletClient is any viem WalletClient — a local key, an injected wallet, or Privy/Turnkey.
+// deploy once; every run after returns the same contract — no tx, just the recorded address.
+const { contract: token, freshDeploy } = await getOrDeployToken({
+  walletClient,
+  publicClient,
+  args: [owner],
+});
+if (freshDeploy) await token.write.initialize([owner]); // one-time setup, only on a real deploy
+await token.write.transfer([to, amount]);
+```
+
+That `walletClient` is *any* viem wallet client — a local key, an injected
+wallet, Ledger, Privy, Turnkey. deployoor only ever sees a viem client, so your
+signer is your business.
+
+And `getOrDeployToken` is **idempotent by design**: the first run deploys and
+records; every run after that returns the same contract with no transaction.
+`freshDeploy` is `true` only when a deploy actually happened.
+
+## 3. Run it like any TypeScript file
+
+```bash
+tsx --env-file=.env scripts/deploy.ts
+```
+
+deployoor writes a committed JSON record for the deploy:
+
+```jsonc
+// deployments/11155111-sepolia/Token.json
+{
+  "schemaVersion": 1,
+  "contractName": "Token",
+  "deploymentName": "Token", // defaults to contractName; set your own to track multiple instances
+  "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "chainId": 11155111,
+  "networkName": "11155111-sepolia",
+  "abi": [/* the full ABI, exactly as deployed */],
+  "constructorArgs": ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"],
+  "transactionHash": "0x2c9a...d4e1",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "compiler": {
+    "version": "0.8.24+commit.e11b9ed9",
+    "settings": { "optimizer": { "enabled": true, "runs": 200 } },
+  },
+}
+```
+
+That's it. Your deployments now live in git-versioned files — address, ABI,
+chainId, constructor args, tx hash, compiler. No more DMing a colleague on
+Slack for "the latest address" to paste into your `.env`.
+
+**Also on complex multi-chain setups!**
+
+This is where the design pays off, and where Foundry and Hardhat make things
+genuinely hard. A `forge script` runs against one `--rpc-url`; `hardhat run`
+against one `--network`. "Which chain" is *global process* .env, chosen by a
+flag. A cross-chain deploy becomes a chore: deploy on chain A, save the
+address, run a second script on chain B and feed it that address by hand, then
+a third run to wire the two together.
+
+In deployoor a client is just a value, so "which chain" is a function argument.
+One script holds as many client pairs as you want and runs them in a single
+`tsx` invocation. Here's a real one — deploy **Ping** on Sepolia and **Pong** on
+Base Sepolia, then link them as LayerZero peers:
+
+```ts
+// scripts/deploy-ping-pong.ts
+import { createPublicClient, createWalletClient, http, pad, type Address } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { baseSepolia, sepolia } from "viem/chains";
+import { getOrDeployPing, getOrDeployPong } from "../deployers";
+
+const LZ_ENDPOINT = "0x6EDCE65408990e3A38e31dE08b74da7D5258d898";
+const LZ_EID = { sepolia: 40_161, baseSepolia: 40_245 } as const;
+
+function clientsFor(chain: typeof sepolia, rpcUrl: string, privateKey: `0x${string}`) {
+  const account = privateKeyToAccount(privateKey);
+  const transport = http(rpcUrl);
+  return {
+    walletClient: createWalletClient({ account, chain, transport }),
+    publicClient: createPublicClient({ chain, transport }),
+  };
+}
+
+const key = process.env.PRIVATE_KEY as `0x${string}`;
+const sepoliaClients = clientsFor(sepolia, process.env.SEPOLIA_RPC_URL!, key);
+const baseClients = clientsFor(baseSepolia, process.env.BASE_SEPOLIA_RPC_URL!, key);
+
+const { contract: ping } = await getOrDeployPing({ ...sepoliaClients, args: [LZ_ENDPOINT] });
+const { contract: pong } = await getOrDeployPong({ ...baseClients, args: [LZ_ENDPOINT] });
+
+const peer = (addr: Address) => pad(addr, { size: 32 });
+await ping.write.setPeer([LZ_EID.baseSepolia, peer(pong.address)]);
+await pong.write.setPeer([LZ_EID.sepolia, peer(ping.address)]);
+```
+
+No broadcast-file spelunking, no copy-pasting an address from run #1 into run
+#2. deployoor records each deploy under its own chain folder:
+
+```text
+deployments/
+├─ 11155111-sepolia/Ping.json
+└─ 84532-base-sepolia/Pong.json
+```
+
+# The part I didn't plan for: testing gets easier too.
+
+This one fell out of the design almost by accident. If a deploy is just a viem
+client and some bytecode, then a *test* is the same thing pointed at a
+different client. Suddenly Hardhat drops out of the loop entirely. No test
+environment to boot, no local node to babysit.
+
+`@deployoor/testing` gives you `createTestClients()`: an in-memory EVM (via the
+awesome [tevm](https://tevm.sh)!) exposed as viem clients, plus an **in-memory**
+store, so nothing touches disk. Your generated `getOrDeploy` functions run
+unchanged. The exact code you ship to mainnet, pointed at a throwaway
+in-process chain:
+
+```ts
+// token.test.ts — a smart-contract test in vitest. No Hardhat, no local node.
+import { test, expect } from "vitest";
+import { createTestClients } from "@deployoor/testing";
+import { getOrDeployToken } from "../deployers";
+
+test("transfer moves the balance", async () => {
+  const clients = await createTestClients(); // a real EVM in-process + an in-memory store
+  const [deployer, bob] = clients.accounts; // prefunded accounts
+
+  // the SAME getOrDeploy you run in production — spread `clients` and it deploys to memory
+  const { contract: token } = await getOrDeployToken({ ...clients, args: [deployer.address] });
+
+  await token.write.transfer([bob.address, 1000n]);
+  expect(await token.read.balanceOf([bob.address])).toBe(1000n);
+});
+```
+
+Because tevm is pure JavaScript, that in-memory chain **runs anywhere JS does,
+including the browser**! Each `createTestClients()` is its own isolated chain,
+so tests parallelize across every core. No anvil, no `--fork-url`, no shared
+state.
+
+And honestly, this is my favourite part. I love writing my contract tests in
+JavaScript, because I get to reuse so much of them in my frontend:
+*pre-working, already-tested functions* instead of a separate integration layer
+I have to trust on faith. The same typed viem objects, the same helper
+functions to read and write, carry straight over. One DRY-er codebase, not
+Solidity tests on one side and an untested TypeScript layer on the other.
+
+# Beyond your solidity folder
+
+One final advantage of deployoor is how it makes it easy to port your
+deployments everywhere, from your backend to your frontend apps.
+
+If you consume your contracts into your javascript apps, deployoor comes with a
+plugin for [`@wagmi/cli`](https://wagmi.sh/cli) that converts automatically your
+deployments into wagmi objects ready to be consumed in your react or vanilla JS
+apps. Perfectly typed and address-bearing.
+
+Add `@wagmi/cli` with the `@deployoor/wagmi` plugin, point it at
+`deployments/`, and run `wagmi generate`:
+
+```ts
+// wagmi.config.ts
+import { defineConfig } from "@wagmi/cli";
+import { deployments } from "@deployoor/wagmi";
+import { react } from "@wagmi/cli/plugins"; // or actions() for vanilla JS
+
+export default defineConfig({
+  out: "src/generated.ts",
+  plugins: [deployments({ path: "./deployments" }), react()],
+});
+```
+
+You get fully-typed React hooks (or framework-agnostic actions) with the
+address and ABI already wired in — no address maps, no copy-pasted ABIs:
+
+{/* TODO(port): snippet from the X article (entity 14) — the generated wagmi
+    hook in use. Paste the original block. */}
+
+The same contract deployed to several chains collapses into one entry with an
+address map keyed by `chainId`. Deploy → `wagmi generate` → your frontend is
+always in sync with what's actually on-chain.
+
+**Extend the deploy itself — plugins.**
+
+That extensibility rule from earlier is a small event-hook system: a plugin is
+a named object subscribed to lifecycle hooks. The built-ins cover the usual
+suspects:
+
+```ts
+// deployoor.config.ts
+import { defineConfig } from "deployoor";
+import { etherscan } from "@deployoor/etherscan";
+import { sourcify } from "@deployoor/sourcify";
+import { slack } from "@deployoor/slack";
+
+export default defineConfig({
+  plugins: [
+    etherscan({ apiKey: process.env.ETHERSCAN_KEY! }), // verify — V2, one key, all chains
+    sourcify(),                                        // verify — keyless
+    slack({ webhook: process.env.SLACK_HOOK! }),       // notify on every fresh deploy
+  ],
+});
+```
+
+Verification and Slack pings now happen automatically on each fresh deploy.
+Writing your own is a few lines against `deployoor/plugin`, shipped as its own
+package. And when you didn't deploy a contract at all, for example you depend
+on USDC, `register({ deploymentName: "USDC", address, abi })` records it with
+no transaction, so it lives in the same typed system as everything you deployed
+yourself.
+
+# Some words of caution.
+
+**This is an early, pre-release version.**
+
+deployoor works today on Foundry and Hardhat v2, but it's young. Expect rough
+edges: some APIs will move, Hardhat v3 support is still landing, and you'll hit
+corners I haven't. That's exactly why I'm shipping it now: I want the feedback
+while it's still cheap to change things.
+
+If deployment management has annoyed you as much as it's annoyed me, please try
+it, break it, and tell me what hurt. Issues, ideas, and PRs all welcome.
+
+→ Docs available on [deployoor.dev](https://deployoor.dev). See you there,
+deployoor! 🫡

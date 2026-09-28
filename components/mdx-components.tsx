@@ -1,16 +1,30 @@
 import Image from "next/image"
-import { useMDXComponent } from "next-contentlayer/hooks"
+import { MDXContent } from "@content-collections/mdx/react"
+
+import { CrowdDiagram } from "@/components/post/crowd-diagram"
+import { DemoFrame } from "@/components/demos/demo-frame"
+import { DecoyDial } from "@/components/demos/decoy-dial"
+import { RevealToggle } from "@/components/demos/reveal-toggle"
+import { PaymentLinkFlow } from "@/components/demos/payment-link-flow"
+import { AgentMoneyLoop } from "@/components/demos/agent-money-loop"
+import { RaycashProduct } from "@/components/work/raycash-product"
+import { WorkPill } from "@/components/work-pill"
 
 const components = {
   Image,
+  CrowdDiagram,
+  // Interactive demos. Registered here → usable by name in any post's MDX.
+  DemoFrame,
+  DecoyDial,
+  RevealToggle,
+  // Animated interface diagrams (CLAUDE.md → Article illustrations).
+  PaymentLinkFlow,
+  AgentMoneyLoop,
+  RaycashProduct,
+  // Inline work bubble; Notion's {{pill <slug>}} sign becomes one on sync.
+  WorkPill,
 }
 
-interface MdxProps {
-  code: string
-}
-
-export function Mdx({ code }: MdxProps) {
-  const Component = useMDXComponent(code)
-
-  return <Component components={components} />
+export function Mdx({ code }: { code: string }) {
+  return <MDXContent code={code} components={components} />
 }

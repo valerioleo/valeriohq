@@ -1,0 +1,92 @@
+---
+title: "Building the “WeTransfer of money”"
+description: "Money is already data. Payment links make it move like a file: sealed, portable, and private."
+date: "2026-09-15"
+work: [raycash]
+draft: true
+notion: 3db7c7c9-1f1f-80d0-85bf-c5226d32710f
+notionSynced: "2026-09-14T23:46:44Z"
+---
+
+Digital money is now ubiquitous. All money is dematerialising, going from
+atoms to bits. Whatever your net worth, most of it is just an entry in
+various ledgers. When you look at it this way, you realise that money… *is
+just data*.
+
+Blockchains give us total ownership over that data, with the ability to
+update those ledgers without any intermediaries. Any money living under your
+private key can be moved only by your private key, sent to whomever you
+want, whenever you want.
+
+But if blockchain money is just data, why does it still feel so hard to move
+around? What would it take to move money as easily as sending an email?
+
+That’s why we have Raycash.
+
+# Money as a file
+
+Think about how you send a big file today. You don’t ask the recipient which
+storage provider they use, or whether they have an account. You upload it,
+you get a link, and you send the link wherever the conversation already is.
+Whoever opens it, downloads it. WeTransfer turned file delivery into a link.
+
+Blockchain money today works the opposite way. To pay someone you need their
+address. They need a wallet before you can send anything. Every transfer is
+public. The data is yours, but moving it still means asking the other side
+to do the setup first.
+
+# Payment links
+
+At Raycash we are turning a payment into a link. You choose an amount, and
+Raycash creates a link that holds the funds. The link goes wherever you
+already talk to people: a chat, an email, a QR code on a screen. Whoever
+opens it claims the money. If they already use Raycash, it lands in their
+balance. If they don’t, the link is where they start: they claim it on the
+web, and the funds are theirs from that moment.
+
+<PaymentLinkFlow />
+
+It works in both directions. A request link is the mirror image. You ask for
+an amount, or leave it open like an invoice, and whoever pays it can do so
+with crypto or a card, without an account.
+
+Think of it as a confidential envelope. Everything about the envelope is
+private: how much is inside, who sealed it, who opened it. Balances and
+transfers are encrypted on chain, so the link is not a public receipt. It
+carries money the way a .zip carries files: sealed, portable, and readable
+only by the person it reaches.
+
+# Nothing gets stuck
+
+A link that holds money has to answer an obvious question: what if nobody
+opens it? Every link has an expiry date, and you can cancel it any time
+before it is claimed, so the funds come back to you instead of sitting on
+chain forever. Your links live on one screen: open, claimed, cancelled,
+expired. You always know where your money is.
+
+Money is data. Data moves as links. Once you see the two together, the rest
+follows: sending should feel like sharing, receiving should not require
+setup, and none of it should be anyone else’s business.
+
+# Your agents can now speak money.md
+
+The biggest shift in treating money as data is how portable and composable
+it becomes. In an era where agents are first-class citizens on the web,
+money movement needs to be just one prompt away.
+
+For this reason, Raycash has already built an MCP server where you can
+create pay and receive links talking directly to your agents. Upload an
+invoice for Acme Co. and send it with a Raycash payment link attached. Or
+pay your employees with a bunch of payment links generated on the fly. All
+in full confidentiality.
+
+<AgentMoneyLoop />
+
+Money as data was always the easy half. Moving it was the hard one, and a
+link is what solves it: no address to ask for, no account to open, no public
+receipt left behind. Put an agent at either end and the loop closes.
+Anything that can hold a conversation can hold a balance, ask to be paid,
+and settle up, without a human copying numbers between screens.
+
+That is the part worth getting right. Money should be as portable as the
+rest of your data, and a lot more private.

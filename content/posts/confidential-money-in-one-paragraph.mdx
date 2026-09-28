@@ -1,0 +1,26 @@
+---
+title: Confidential money, in one paragraph
+description: The question Raycash exists to answer, and why the answer is encryption rather than a permissioned ledger.
+date: "2026-07-20"
+work: [raycash]
+---
+
+{/* SEED POST — placeholder in Valerio's voice, grounded in his real founding
+    premise. Replace or expand with your actual first essays. */}
+
+Here is the question I keep coming back to. Why is everything you do with money visible to everyone, forever? Public blockchains made value programmable, and as a side effect turned every balance and every payment into a permanent broadcast. The usual fix is to wall the ledger off with permissioned chains and trusted operators, a kind of compliance-friendly opacity that just moves the surveillance somewhere you can't see it.
+
+I think the better answer is encryption that doesn't require you to trust anyone to keep it. With fully homomorphic encryption a contract can add two balances it cannot read, check that a transfer is valid without learning the amount, and settle, all on a public chain with no operator in the middle who could peek.
+
+That's the thesis behind [Raycash](/work/raycash): the privacy of cash with the reach of stablecoins. In practice an encrypted balance is just a handle the contract operates on.
+
+```solidity
+// Balances are ciphertext handles, not plaintext uints.
+euint64 senderBalance = _balances[msg.sender];
+ebool ok = FHE.le(amount, senderBalance);          // amount <= balance, encrypted
+_balances[msg.sender] = FHE.sub(senderBalance, amount);
+_balances[to]         = FHE.add(_balances[to], amount);
+// The chain verified and settled a transfer it never actually saw.
+```
+
+More soon on how the wrap and unwrap boundary works, and on what breaks when you try to test code whose state you aren't allowed to read.

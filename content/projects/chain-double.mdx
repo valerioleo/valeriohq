@@ -1,38 +1,25 @@
 ---
-title: Chain Double
-description: Cross chain NFT metadata transfer protocol
+title: chain-double
+description: A protocol that lets L1 NFTs trustlessly reflect actions taken on L2, with IPFS CIDs plus cross-chain message passing.
+year: "2021"
+role: Author, ETHGlobal HackFS
+stack: ["Solidity", "IPFS", "LayerZero", "NFTs"]
+link: https://ethglobal.com/showcase/chaindouble-x6c9q
+linkLabel: ETHGlobal writeup
+repo: https://github.com/valerioleo/chaindouble-hackfs
+order: 21
+tier: 1
+kind: experiment
 ---
 
-Blandit libero volutpat sed cras ornare arcu. Cursus sit amet dictum sit amet. Nunc vel risus commodo viverra maecenas accumsan. Libero id faucibus nisl tincidunt eget nullam non nisi est. Varius quam quisque id diam vel quam. Id donec ultrices tincidunt arcu non.
+Won Storage Mage at ETHGlobal HackFS.
 
-## Consent
+Dynamic NFTs want on-chain interactivity, but L1 gas makes that painful and L2
+markets are thin. Chain Double treats the L2 token as the stunt double: it does
+the heavy lifting (customisation, breeding, state), then a cross-chain message
+pushes a deterministic IPFS CID up to the L1 twin so they stay visually
+identical, without trusting a centralised metadata API.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat sed cras ornare arcu. Nibh ipsum consequat nisl vel pretium lectus quam id leo. A arcu cursus vitae congue. Amet justo donec enim diam. Vel pharetra vel turpis nunc eget lorem. Gravida quis blandit turpis cursus in. Semper auctor neque vitae tempus. Elementum facilisis leo vel fringilla est ullamcorper eget nulla. Imperdiet nulla malesuada pellentesque elit eget.
-
-Felis donec et odio pellentesque diam volutpat commodo sed.
-
-Tortor consequat id porta nibh. Fames ac turpis egestas maecenas pharetra convallis posuere morbi leo. Scelerisque fermentum dui faucibus in. Tortor posuere ac ut consequat semper viverra.
-
-## Information we collect
-
-Amet justo donec enim diam. In hendrerit gravida rutrum quisque non. Hac habitasse platea dictumst quisque sagittis purus sit.
-
-## How we use your Information
-
-Ut sem nulla pharetra diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit pellentesque habitant. Ut tristique et egestas quis ipsum suspendisse ultrices gravida.
-
-```solidity
-pragma solidity ^0.4.24;
-
-contract SimpleStorage {
-    uint storedData;
-
-    function set(uint x) public {
-        storedData = x;
-    }
-
-    function get() public view returns (uint) {
-        return storedData;
-    }
-}
-```
+The trick is that IPFS CIDs are computed from the data itself. A contract that
+can build its metadata on-chain can also derive the CID, then ship that CID
+across chains. Anyone can re-upload the bytes; the CID guarantees they match.

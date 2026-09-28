@@ -1,0 +1,304 @@
+---
+title: Hiding the on-ramp
+description: "AsyncWrapper, part 1. How decoys and a two-step deposit break the link between public tokens and confidential balances."
+date: "2026-06-29"
+work: [raycash]
+canonical: https://x.com/valerioHQ/article/2071658396583948427
+sourceLabel: X
+interactive: true
+featured: true
+---
+
+Once you're holding an ERC-7984 token, your balance is effectively encrypted.
+That part is solved. But how those tokens come into existence matters just as
+much, and there are two ways it happens:
+
+- **Native minting.** An issuer mints confidential tokens directly. If Circle
+  decided to issue a natively confidential ERC-7984 stablecoin, this is how it
+  would work: confidential from birth, no ERC-20 involved.
+- **Wrapping.** You deposit a normal ERC-20 and a wrapper mints you the
+  confidential ERC-7984 equivalent, one-for-one. This is how the existing
+  ERC-20 world, the USDC and USDT already in circulation, becomes confidential.
+
+Wrapping is the on-ramp most people will actually use, because most value
+already lives as plain ERC-20. The catch is in the timing. This design keeps
+the UX simple and efficient, but it also means the initial wrap transaction
+remains publicly observable. So while the token you end up with is
+confidential, the act of getting it reveals how much you wrapped and where it
+went.
+
+The token does its job. The only thing it exposes is the very first step, the
+wrap itself, and everything after that is private. This post is about closing
+even that one gap, the on-ramp: an anonymous wrap that uses decoys and an
+asynchronous two-step flow to break the link between the ERC-20 you deposit and
+the confidential ERC-7984 you receive.
+
+This is one of the things we're building at [Raycash](/work/raycash), and what
+follows is the design we landed on.
+
+# What current wrappers can reveal
+
+Using a wrapper makes one transaction, the first one, non-confidential. That's
+a known and usually accepted tradeoff, and most of it fades the moment the
+recipient spends: once they move tokens, the amount is encrypted and their
+balance becomes unknowable again. But one fact never fades. If an address was
+funded through a wrapper, anyone can say with 100% certainty that it received X
+tokens at that first transaction. It is indisputable. It reveals nothing about
+the recipient's current balance, but it permanently establishes that they
+received at least X.
+
+Here is where that comes from. Confidential ERC-7984 tokens (built on
+[Zama](/work/zama)'s FHEVM) hide amounts, not addresses: balances and transfer
+amounts are encrypted, but the sender and receiver of every transfer are
+public. That's the privacy you're buying, and it's strong. The confidentiality
+model works exactly as intended. The remaining observable information comes
+from the wrapping flow itself, which today is initiated in a public
+transaction.
+
+The canonical entry point is:
+
+```solidity
+function wrap(address to, uint256 amount) public;   // both `to` and `amount` are cleartext
+```
+
+Both arguments are public, and the mint happens in the same transaction. So at
+the moment of wrapping, call it `tx0`, the chain records in the clear that
+address `to` just received exactly `amount` of the confidential token.
+
+How bad is that? Often, not bad at all. Take a large holder wrapping 5M USDC to
+itself. `tx0` is public, so everyone sees that address now holds 5M
+confidentially. But that figure is known only at `tx0`. The moment it makes its
+first confidential transfer, the amount is encrypted, and an observer can no
+longer tell whether it moved all of it, none of it, or anything in between. The
+public number is just a starting upper bound that decays into uncertainty from
+`tx1` onward.
+
+In other words, the only thing you ever expose is the on-ramp itself. Once you
+hold the confidential token, you're private. That's a fine trade for an
+institution wrapping to itself. But when you wrap to a recipient (paying
+someone, funding a desk, distributing to a counterparty), that `tx0` snapshot
+of who got how much, captured before confidentiality kicks in, is often the
+precise fact you wanted to keep private.
+
+The thing being exposed is a link: the deposited ERC-20 (a public depositor, a
+public amount) is tied, in a single transaction, to the recipient of the
+freshly minted confidential tokens. Break that link, and the on-ramp becomes
+private too.
+
+Closing that loop is what we set out to do at Raycash: to push fhEVM far enough
+that the first mile gets the same privacy as everything after it.
+
+# The idea: split the wrap, and hide it in a crowd
+
+fhEVM can compute on more than just numbers; it works on encrypted addresses
+too. That makes one design tempting: keep a `mapping(eaddress => euint64)`, an
+encrypted recipient pointing at an encrypted balance, and credit people through
+it. It doesn't work. An EVM mapping keys on the literal ciphertext handle, and
+every encryption of the same address produces a different handle. Encrypt
+Alice's address twice and you get two unrelated keys, so there is no "Alice's
+slot" to find and add to. Encrypted addresses can't index storage.
+
+But they are a great fit for matching. You can take an encrypted address and
+later check whether it equals a given cleartext address, under encryption,
+without revealing the answer. So rather than key a balance by recipient, you
+record each deposit as a note that carries its encrypted recipient, and match
+against it when the time comes. That is a UTXO model: notes you match to spend,
+not balances you look up.
+
+<figure className="my-8">
+  <CrowdDiagram />
+  <figcaption className="mt-3 text-center font-mono text-xs text-muted-foreground">
+    A note waits in a shared crowd; at finalize, only the encrypted matches pay out.
+  </figcaption>
+</figure>
+
+Concretely, this splits the wrap into two steps. Today a wrap does two things
+in one transaction: it takes custody of your ERC-20, then mints confidential
+tokens to a recipient, and fusing them is what creates the public link. We
+separate them: one step records a note, a later step matches and mints it. The
+privacy lives in the detail of each step, so both are worth walking through.
+
+## Step 1, initWrap: record a note with an encrypted recipient
+
+The first step takes the ERC-20 and records a note. It mints nothing. Every
+note goes into a single append-only list shared by all users:
+
+```solidity
+Deposit[] public deposits;   // ever-growing; every wrap from every user lands here
+
+struct Deposit {
+    address  depositor;       // public: who funded the deposit
+    uint256  originalAmount;  // public: cleartext amount in
+    euint64  amount;          // encrypted
+    eaddress recipient;       // encrypted: who the confidential tokens are for
+}
+
+function _initWrap(
+    address          depositor,
+    uint256          amount,
+    externalEaddress encryptedRecipient,   // caller-supplied ciphertext...
+    bytes calldata   inputProof            // ...with a proof binding it to this input
+) internal returns (uint256 depositIndex) {
+    // verify the caller's encrypted recipient against its proof (Zama's FHE.fromExternal)
+    eaddress recipient = FHE.fromExternal(encryptedRecipient, inputProof);
+    // scale to the wrapper's confidential precision, then encrypt the amount
+    euint64 encryptedAmount = FHE.asEuint64(SafeCast.toUint64(amount / rate()));
+    deposits.push(Deposit({                        // add to the global list
+        depositor:      depositor,
+        originalAmount: amount,
+        amount:         encryptedAmount,
+        recipient:      recipient
+    }));
+    depositIndex = deposits.length - 1;            // its position in the ever-growing list
+    // emit WrapInitiated(depositIndex, depositor, amount, FHE.toBytes32(recipient));
+}
+```
+
+The recipient arrives as an encrypted address (`externalEaddress`) plus an
+`inputProof`; `FHE.fromExternal` checks the proof and stores it as ciphertext.
+The amount arrives in cleartext, since it's a public ERC-20 transfer, and gets
+encrypted on the way in. So the `WrapInitiated` event tells an observer the
+depositor and the cleartext amount, plus an opaque handle for the recipient.
+Not who it's for.
+
+That shared, ever-growing list is the whole game. Every wrap from every user
+lands in it, and the next step is where that matters.
+
+## Step 2, finalizeWrap: match and mint
+
+Nothing is minted until the recipient decides to finalize, and that happens at
+a time of their choosing, possibly far in the future. Until then the note just
+sits in the shared list, unspent, exactly like a UTXO. They mint only when they
+actually want the balance.
+
+To finalize, the recipient calls in with their own cleartext address and a set
+of note indices from the list. Here is the part that surprises people. In
+ordinary EVM, pointing at a note that isn't yours should just revert: you don't
+own it, so the call fails. fhEVM removes that failure. It gives you an encrypted
+ternary, `FHE.select`, which returns one of two values according to an encrypted
+flag, and the chain never learns which branch was taken. So you can
+homomorphically compare a note's encrypted recipient against the cleartext
+address with `FHE.eq`, get back an encrypted boolean, and select the note's
+amount if it matched or zero if it did not.
+
+```solidity
+eaddress encryptedRecipient = FHE.asEaddress(recipient);
+euint64  sum = E_ZERO;                                        // encrypted zero
+for (uint256 k; k < depositIndices.length; k++) {             // any notes from the list
+    Deposit storage d = deposits[depositIndices[k]];          // (index validation elided)
+    ebool   isMatch = FHE.eq(d.recipient, encryptedRecipient); // encrypted yes/no
+    euint64 payout  = FHE.select(isMatch, d.amount, E_ZERO);   // amount if mine, else 0
+    sum             = FHE.add(sum, payout);                    // encrypted running sum
+    d.amount        = FHE.select(isMatch, E_ZERO, d.amount);   // obliviously nullify
+}
+_mint(recipient, sum);                                        // sum is encrypted
+```
+
+That is the whole trick. Pointing at a note that isn't yours doesn't fail; it
+simply pays out zero. So you can pad your finalize with other people's notes
+pulled from the shared list, and they cost you nothing but a little gas. Those
+padding notes are the decoys. To anyone watching, your finalize touches a pile
+of notes, only the encrypted matches pay out, and the chain never reveals which
+ones did.
+
+The last line of the loop is the subtle one. Every note in the batch has its
+encrypted amount rewritten: to encrypted-zero if it matched (spent), or back to
+its own value if it did not (untouched). Both cases write a fresh, opaque
+ciphertext to the same slot, so they are indistinguishable on chain. This is an
+oblivious nullification, and it's what makes decoys truly free: a decoy that
+wasn't yours is rewritten to the value it already held, so it stays untouched
+and its real owner can still spend it later. You can borrow anyone's notes with
+no risk to them.
+
+This is why the batch matters. Finalize a single note alone and it points at
+one recipient; even encrypted, that one-to-one shape is easy to correlate over
+time. Finalize inside a batch and the recipient is matched against many notes at
+once under encryption, so no one can tell which were actually theirs, one,
+several, or none. A minimum batch size is enforced so a wrap can never finalize
+alone. And since decoys are just other notes from the ever-growing list, the
+longer a note waits the larger the crowd it can hide in, which is why
+finalizing later is usually better. Between splitting the wrap across two
+transactions and matching inside a crowd, there is no longer a way to tie a
+deposited ERC-20 to the confidential balance it became.
+
+# What this looks like for the recipient
+
+The recipient never has to touch the chain to get paid. They encrypt their own
+address with Zama's tooling and hand the ciphertext to whoever is paying them:
+"send 2000 USDC to this encrypted address." The payer deposits, and the
+recipient just watches the `WrapInitiated` events for the one carrying their
+encrypted address with a cleartext amount matching what they expected. That
+tells them which deposit, which index, is theirs. Then, whenever they choose,
+they finalize that index alongside a handful of decoys to mint the balance.
+
+# What's public, what's hidden
+
+**Public**
+
+- Each deposit's depositor and cleartext amount (it's a cleartext stablecoin
+  coming in).
+- At finalize: the recipient address, and which deposit indices were in the
+  batch.
+
+**Hidden**
+
+- Which deposits in the batch matched the recipient: the deposit-to-recipient
+  link.
+- Whether any given deposit was consumed: the oblivious nullification makes a
+  spent deposit and a decoy look identical.
+- How much the recipient received: the minted sum is encrypted, and can be
+  zero. Seeing a recipient address and a list of indices tells you nothing about
+  whether they actually received anything from those deposits.
+
+| At the wrap step | Canonical ERC-7984 wrap | AsyncWrapper (two-step + decoys) |
+| --- | --- | --- |
+| Recipient | public (`to`) | encrypted |
+| Recipient's received amount | public at `tx0` | encrypted (could be zero) |
+| Link from funds to recipient | direct, public | hidden (decoy batch) |
+| Whether a deposit was spent | n/a | unknowable (oblivious nullification) |
+| After the wrap | standard ERC-7984 | identical, standard ERC-7984 |
+
+Net effect: the traceable cleartext on-ramp is severed from the recipient, the
+credited amount is unreadable, and you can't even confirm a given deposit was
+ever spent.
+
+# Downstream, nothing changes: this is an on-ramp layer only
+
+Once `finalizeWrap` mints, the recipient holds ordinary ERC-7984 tokens and
+spends them exactly like any other confidential token: amounts hidden, sender
+and receiver public, the same Zama assumptions, unchanged. AsyncWrapper adds
+privacy at exactly one boundary, the wrap. After that you're in standard
+ERC-7984, where the decay logic above applies in full: from the recipient's
+first transfer, their balance becomes unknowable.
+
+# Decoys: your privacy dial
+
+The strength of the anonymity isn't fixed by the contract. It's a dial the
+finalizer controls.
+
+<DecoyDial />
+
+**You choose the size, and you pay for it.** Each decoy is another `FHE.eq` /
+`select` / `add` pass in the loop, so a larger anonymity set costs more gas.
+That's the right trade: spend a little on a routine wrap, spend more on the
+transfers where privacy really matters. The batch size is yours to set, per
+finalize.
+
+**The contract sets a floor.** A minimum decoy count is enforced so no one can
+finalize with too few, least of all zero. A zero-decoy finalize would resolve a
+deposit one-to-one in the open, and because deposits double as each other's
+decoys, that transparency pollutes the anonymity set everyone else is relying
+on. The floor protects the commons.
+
+**Size isn't everything; quality matters too.** Decoys whose public amounts,
+depositors, or timing make them implausible candidates can shrink the effective
+anonymity set well below its nominal size. A large batch of bad decoys can be
+weaker than a small batch of good ones. Choosing them well is a strategy in its
+own right, and we'll cover it in a separate post.
+
+**Part 2: non-custodial deposit screening.** The same two-step design, where
+deposits sit in the list before anything is minted, gives a deployment a
+natural place to screen deposits for compliance before they're ever added as a
+balance into the AsyncWrapper, without the protocol taking custody of anyone's
+funds. That's how Raycash's confidential on-ramp stays both anonymous and
+compliant.

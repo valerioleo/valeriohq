@@ -1,11 +1,13 @@
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { allProjects } from "content-collections"
+import { allPosts, allProjects } from "content-collections"
 
+import { relatedWriting } from "@/lib/writing"
 import { Mdx } from "@/components/mdx-components"
-import { META_LINK, MetaDot, PageMeta } from "@/components/page-meta"
+import { META_LINK, PageMeta } from "@/components/page-meta"
 import { BrandIcon } from "@/components/project-logo"
+import { Section } from "@/components/section"
+import { PostList } from "@/components/writing/post-list"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -31,68 +33,54 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params
   const project = allProjects.find((p) => p.slug === slug)
   if (!project || project.tier === 2) notFound()
+  const writing = relatedWriting(project.slug, allPosts)
 
   return (
-    <article className="py-10">
-      <header>
-        {/* The original brand disc, as on the pills and lists — never a
-            recoloured mark. */}
-        <h1 className="flex items-center gap-2 text-[1.1875rem] font-medium tracking-[-0.01875rem]">
-          <BrandIcon slug={project.slug} className="size-5 shrink-0" />
-          {project.title}
-        </h1>
-        {(project.link || project.repo) && (
-        <PageMeta>
-          {project.link && (
-            <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={META_LINK}
-              >
-                {(project.linkLabel ?? host(project.link)).toLowerCase()} ↗
-              </a>
+    <div className="py-10">
+      <article>
+        <header>
+          {/* The original brand disc, as on the pills and lists — never a
+              recoloured mark. */}
+          <h1 className="flex items-center gap-2 text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+            <BrandIcon slug={project.slug} className="size-5 shrink-0" />
+            {project.title}
+          </h1>
+          {(project.link || project.repo) && (
+            <PageMeta>
+              {project.link && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={META_LINK}
+                >
+                  {(project.linkLabel ?? host(project.link)).toLowerCase()} ↗
+                </a>
+              )}
+              {project.repo && (
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={META_LINK}
+                >
+                  source ↗
+                </a>
+              )}
+            </PageMeta>
           )}
-          {project.repo && (
-            <>
-              {project.link && <MetaDot />}
-              <a
-                href={project.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={META_LINK}
-              >
-                source ↗
-              </a>
-            </>
-          )}
-        </PageMeta>
-        )}
-        {project.description && (
-          <p className="mt-4 text-muted-foreground">{project.description}</p>
-        )}
-      </header>
+        </header>
 
-      <div className="prose mt-8 max-w-none">
-        <Mdx code={project.mdx} />
-      </div>
+        <div className="prose mt-8 max-w-none">
+          <Mdx code={project.mdx} />
+        </div>
+      </article>
 
-      <footer className="mt-14">
-        <p
-          aria-hidden
-          className="text-center font-serif text-muted-foreground/80"
-        >
-          ⁂
-        </p>
-        <p className="mt-8 font-mono text-xs">
-          <Link
-            href="/work"
-            className="text-muted-foreground transition-colors hover:text-brand"
-          >
-            ← work
-          </Link>
-        </p>
-      </footer>
-    </article>
+      {writing.length > 0 && (
+        <Section title="related writing">
+          <PostList posts={writing} />
+        </Section>
+      )}
+    </div>
   )
 }

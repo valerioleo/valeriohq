@@ -1,11 +1,13 @@
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { allPosts } from "content-collections"
+import { allPosts, allProjects } from "content-collections"
 
-import { Mdx } from "@/components/mdx-components"
-import { META_LINK, MetaDot, PageMeta } from "@/components/page-meta"
+import { relatedWork } from "@/lib/work"
 import { formatDate } from "@/lib/utils"
+import { Mdx } from "@/components/mdx-components"
+import { META_LINK, PageMeta } from "@/components/page-meta"
+import { Section } from "@/components/section"
+import { WorkList } from "@/components/work/work-list"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -31,18 +33,18 @@ export default async function PostPage({ params }: Props) {
   const { slug } = await params
   const post = allPosts.find((p) => p.slug === slug)
   if (!post) notFound()
+  const work = relatedWork(post.work ?? [], allProjects)
 
   return (
-    <article className="py-10">
-      <header>
-        <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
-          {post.title}
-        </h1>
-        <PageMeta>
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-          {post.canonical && (
-            <>
-              <MetaDot />
+    <div className="py-10">
+      <article>
+        <header>
+          <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+            {post.title}
+          </h1>
+          <PageMeta>
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
+            {post.canonical && (
               <a
                 href={post.canonical}
                 target="_blank"
@@ -51,34 +53,20 @@ export default async function PostPage({ params }: Props) {
               >
                 Originally on {post.sourceLabel ?? "X"} ↗
               </a>
-            </>
-          )}
-        </PageMeta>
-        {post.description && (
-          <p className="mt-4 text-muted-foreground">{post.description}</p>
-        )}
-      </header>
+            )}
+          </PageMeta>
+        </header>
 
-      <div className="prose mt-8 max-w-none">
-        <Mdx code={post.mdx} />
-      </div>
+        <div className="prose mt-8 max-w-none">
+          <Mdx code={post.mdx} />
+        </div>
+      </article>
 
-      <footer className="mt-14">
-        <p
-          aria-hidden
-          className="text-center font-serif text-muted-foreground/80"
-        >
-          ⁂
-        </p>
-        <p className="mt-8 font-mono text-xs">
-          <Link
-            href="/writing"
-            className="text-muted-foreground transition-colors hover:text-brand"
-          >
-            ← writing
-          </Link>
-        </p>
-      </footer>
-    </article>
+      {work.length > 0 && (
+        <Section title="related work">
+          <WorkList projects={work} />
+        </Section>
+      )}
+    </div>
   )
 }

@@ -1,12 +1,10 @@
 // The one meta line under a detail-page title: date and source for a post,
-// role, year and links for a project. Body sans, muted, dots between — no
-// mono, no italic, no rule, so the header speaks one voice before the prose.
+// site and source links for a project. Mono and muted like the section
+// labels, so the header reads title first and details second.
 export const PageMeta = ({ children }: { children: React.ReactNode }) => (
-  <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted-foreground">
+  <p className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
     {children}
   </p>
 )
-
-export const MetaDot = () => <span aria-hidden>·</span>
 
 export const META_LINK = "transition-colors hover:text-brand"

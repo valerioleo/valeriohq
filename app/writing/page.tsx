@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { allPosts } from "content-collections"
 
+import { publishedPosts } from "@/lib/writing"
 import { PostList } from "@/components/writing/post-list"
 
 export const metadata: Metadata = {
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 }
 
 export default function WritingPage() {
-  const posts = allPosts
-    .filter((p) => !p.draft)
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+  const posts = publishedPosts(allPosts)
 
   return (
     <div className="pb-8 pt-8 sm:pt-10">

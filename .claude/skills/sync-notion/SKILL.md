@@ -81,8 +81,8 @@ Doubts about one page don't block syncing another.
   URL.
 - **Frontmatter** comes from properties, never from the body. Fields the
   properties don't carry (`interactive`, `featured`, `order`, `stack`,
-  `link`, `repo`, `linkLabel`, `kind`, `tier`) are repo-owned: keep the
-  existing values.
+  `link`, `repo`, `linkLabel`, `kind`, `tier`, `summary`, `work`) are
+  repo-owned: keep the existing values.
 - **Blocks with no site equivalent** (callout, toggle, columns, synced
   block, embed) → stop and ask.
 - Hard-wrap the resulting prose at ~78 characters like the neighbouring

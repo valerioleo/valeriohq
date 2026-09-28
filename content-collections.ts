@@ -35,6 +35,10 @@ const posts = defineCollection({
     // the original gets the search credit while readers get this design.
     canonical: z.string().url().optional(),
     sourceLabel: z.string().optional(),
+    // Project slugs this post is about. The one place the relation lives:
+    // the post shows them as related work, and each project page lists the
+    // posts that name it as related writing.
+    work: z.array(z.string()).optional(),
     // Notion binding for the content workflow: the page this entry syncs
     // from, and when it last did. The sync compares Notion's last-edited
     // time against `notionSynced` to know what changed.
@@ -56,6 +60,9 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+    // The few words beside the title in work lists: the role for a company,
+    // what it does for a tool.
+    summary: z.string().optional(),
     year: z.string().optional(),
     role: z.string().optional(),
     stack: z.array(z.string()).optional(),

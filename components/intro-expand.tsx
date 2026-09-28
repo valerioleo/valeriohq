@@ -15,10 +15,11 @@ import { siteConfig } from "@/lib/config"
 // section-label register and reads as a toolbar item against the rule below.
 // At full length the slot becomes the invitation to talk.
 
-// Prose-register link. The decoration colour is explicit so the underline
-// survives the glare, which paints the glyphs transparent over a gradient.
+// Prose-register link, in the full-strength ink so it stands out from the
+// softer body. The decoration colour is explicit so the underline survives
+// the glare, which paints the glyphs transparent over a gradient.
 const LINK =
-  "underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
+  "text-ink underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
 
 // Work names are plain links: the work list right below carries the logos,
 // so the bio doesn't repeat them.

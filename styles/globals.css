@@ -16,21 +16,24 @@
   --radius: 0.25rem;
 
   --background: #eee6e5; /* warm paper */
-  --foreground: #24201e; /* warm ink */
+  /* Body ink, toned down from full ink (9.3:1 on paper) so the page reads
+     softer; links in running text keep the full-strength --ink. */
+  --foreground: #403836;
+  --ink: #161210; /* links — 15.2:1 on paper */
   --card: #f3edec;
-  --card-foreground: #24201e;
+  --card-foreground: #403836;
   --popover: #f6f1f0;
-  --popover-foreground: #24201e;
+  --popover-foreground: #403836;
   --primary: #24201e; /* ink — filled buttons */
   --primary-foreground: #f3edec;
   --secondary: #e1d7d5;
-  --secondary-foreground: #24201e;
+  --secondary-foreground: #403836;
   /* Deeper than paper on purpose: bright-room reading washes out near-
      neighbours, and chips (work pills) need a surface that still reads. */
   --muted: #dacfcb;
   --muted-foreground: #6b615d;
   --accent: #dacfcb; /* subtle hover surface (shadcn semantics) */
-  --accent-foreground: #24201e;
+  --accent-foreground: #403836;
   --destructive: #b4442f;
   --destructive-foreground: #f3edec;
   --border: #d8cdcb;
@@ -44,6 +47,7 @@
 .dark {
   --background: #022331; /* deep teal */
   --foreground: #e7eef0;
+  --ink: #e7eef0;
   --card: #06303f;
   --card-foreground: #e7eef0;
   --popover: #073847;
@@ -70,6 +74,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);

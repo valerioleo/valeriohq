@@ -99,6 +99,25 @@ const projects = defineCollection({
   },
 })
 
+// Standalone pages whose prose lives in the CMS, like About. The route owns
+// the layout; the entry only carries the body.
+const pages = defineCollection({
+  name: "pages",
+  directory: "content/pages",
+  include: "**/*.mdx",
+  schema: z.object({
+    title: z.string(),
+    // Notion binding, as for posts and projects.
+    notion: z.string().optional(),
+    notionSynced: z.string().optional(),
+    content: z.string(),
+  }),
+  transform: async (doc, ctx) => {
+    const mdx = await compileMDX(ctx, doc, mdxOptions)
+    return { ...doc, slug: doc._meta.path, mdx }
+  },
+})
+
 export default defineConfig({
-  content: [posts, projects],
+  content: [posts, projects, pages],
 })

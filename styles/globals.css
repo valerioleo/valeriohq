@@ -580,6 +580,10 @@
     border: none;
     margin-block: 3rem;
     text-align: center;
+    /* Preflight zeroes an hr's height and Chrome clips its overflow, which
+       hid the asterism below. Let the rule size to its glyph. */
+    height: auto;
+    overflow: visible;
   }
   .prose hr::before {
     content: "⁂";

@@ -1,0 +1,33 @@
+---
+title: Hidden amounts, visible graph
+description: Encrypting the number is the easy half. The timing and the shape of a transaction leak most of what you were trying to hide.
+date: "2026-06-28"
+draft: true
+---
+
+{/* SAMPLE POST — placeholder to preview layout. Delete before launch:
+    rm content/posts/sample-*.mdx */}
+
+A thing I got wrong for longer than I'd like to admit: I thought hiding the
+amount was the job.
+
+Say you deposit 5,000 USDC into a confidential token and receive an encrypted
+balance. The amount is now a ciphertext. Anyone watching still saw a public
+ERC-20 transfer of exactly 5,000 USDC land at a wrapper contract, followed
+moments later by one new confidential balance appearing. Nothing decrypted
+anything, and everyone knows what you have.
+
+This is the deposit graph, and it survives encryption because it isn't made of
+amounts. It's made of timing, ordering, and the fact that one thing followed
+another.
+
+The countermeasures are all variations on breaking that correspondence. Batch
+deposits so several arrive together. Delay finalisation so the wrap doesn't
+sit next to the deposit in the same block. Add decoys so the set of candidate
+deposits is larger than one. Each of these costs something real: latency,
+gas, or complexity, and users feel all three.
+
+What makes it interesting rather than depressing is that the requirement isn't
+perfect anonymity. It's a large enough set, held for long enough, that the
+graph stops being evidence. That's a design parameter you can actually reason
+about, argue over, and tune.

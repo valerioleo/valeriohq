@@ -1,0 +1,37 @@
+---
+title: "How the interactive demos work"
+description: A short showcase of the live widgets that appear across these writeups, and the shared frame they all sit in.
+date: "2026-08-04"
+interactive: true
+draft: true
+---
+
+{/* The demo sandbox — the design frontier for live widgets. `draft: true` on
+    purpose: it stays off the homepage, /writing, sitemap and llms.txt, but the
+    page itself keeps building at /writing/interactive-demos-test so new demo
+    patterns can be tried here before shipping in a real writeup. */}
+
+Prose reads exactly as it always does. The moment a demo appears, it drops into
+a consistent frame (a mono title bar, a rust dot, an "interactive" tag) so it
+always reads as part of the site rather than an embed. Here is a demo that ties
+back to the AsyncWrapper post: the decoy count is a dial you control.
+
+<DecoyDial />
+
+Back to prose immediately afterwards, at the normal reading measure. Demos don't
+interrupt the flow; they punctuate it. The next one carries a product idea in a
+single interaction: a confidential balance that only its owner can read.
+
+<RevealToggle />
+
+Some demos want more room than a column of text. The same frame takes a `bleed`
+prop and breaks out past the reading measure on wider screens, while staying
+contained on a phone.
+
+<DemoFrame title="Wider canvas" bleed caption="A demo that wants room can have it: bleed breaks past the reading measure.">
+  <CrowdDiagram />
+</DemoFrame>
+
+And then the article simply continues. Every demo above is one line in the MDX
+(`<DecoyDial />`), lives in `components/demos/`, and shares the same shell, so
+adding the next one is a component, a register line, and a tag in the prose.

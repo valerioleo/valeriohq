@@ -34,3 +34,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .contentlayer
+.gstack/
+
+# content-collections generated output
+.content-collections/

@@ -11,7 +11,7 @@ order: 3
 tier: 1
 kind: tool
 notion: 3f77c7c9-1f1f-813f-a3e4-cae90e749af7
-notionSynced: "2026-10-12T23:21:21Z"
+notionSynced: "2026-10-12T23:36:10Z"
 ---
 
 Agents need API keys. Paste one into the chat and it goes into the model’s
@@ -25,6 +25,16 @@ asking and which file it writes to, and checks each value as you paste it.
 offprompt writes the file and answers the agent with the key names and a
 four-emoji fingerprint, the same four your page shows. The transcript only
 ever sees the names.
+
+<AutoplayVideo
+  src="/videos/offprompt/handoff.mp4"
+  poster="/videos/offprompt/handoff-poster.jpg"
+  aria-label="A coding agent asks for a Resend API key, you type it into the page offprompt opens in your browser, and it lands in .env while the agent only gets its name."
+  width="1080"
+  height="1350"
+  controls
+  preload="none"
+/>
 
 An agent in a cloud sandbox gives you a link instead. The page reaches you
 through a Cloudflare tunnel, and your browser encrypts the values to a key

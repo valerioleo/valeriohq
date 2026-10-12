@@ -9,6 +9,7 @@ import { PaymentLinkFlow } from "@/components/demos/payment-link-flow"
 import { AgentMoneyLoop } from "@/components/demos/agent-money-loop"
 import { RaycashProduct } from "@/components/work/raycash-product"
 import { WorkPill } from "@/components/work-pill"
+import { AutoplayVideo } from "@/components/autoplay-video"
 
 const components = {
   Image,
@@ -23,6 +24,8 @@ const components = {
   RaycashProduct,
   // Inline work bubble; Notion's {{pill <slug>}} sign becomes one on sync.
   WorkPill,
+  // Demo videos synced from Notion: play once in view, rest on the poster.
+  AutoplayVideo,
 }
 
 export function Mdx({ code }: { code: string }) {

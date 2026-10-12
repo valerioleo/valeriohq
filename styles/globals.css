@@ -648,7 +648,13 @@
     font-size: 0.75rem;
   }
 
-  .prose img {
+  .prose :is(img, video) {
     border-radius: calc(var(--radius) + 2px);
+  }
+  /* Video carries width and height for its aspect ratio; scale it to the
+     column like an image. */
+  .prose video {
+    width: 100%;
+    height: auto;
   }
 }

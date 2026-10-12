@@ -12,6 +12,7 @@ export function listedOpenSource(projects: Project[]) {
     projects.filter(
       (project) =>
         project.tier === 1 &&
+        !project.draft &&
         (project.kind === "tool" || project.slug === "pinkwhale")
     )
   )
@@ -24,6 +25,7 @@ export function listedWork(projects: Project[]) {
     projects.filter(
       (project) =>
         project.tier === 1 &&
+        !project.draft &&
         (project.kind === "product" ||
           project.kind === "role" ||
           project.kind === "tool" ||

@@ -83,6 +83,9 @@ const projects = defineCollection({
     // 2 = a one-line mention only; no page is generated, so tier-2 entries
     //     must not be linked internally. Defaults to 1.
     tier: z.union([z.literal(1), z.literal(2)]).optional(),
+    // A project whose CMS row isn't Ready or Published: kept out of every
+    // list, the sitemap and llms.txt.
+    draft: z.boolean().optional(),
     // Notion binding for the content workflow: the page this entry syncs
     // from, and when it last did. The sync compares Notion's last-edited
     // time against `notionSynced` to know what changed.

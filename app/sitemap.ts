@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Tier-2 entries are mentions without pages — never advertise their URLs.
   const projects = allProjects
-    .filter((project) => project.tier === 1)
+    .filter((project) => project.tier === 1 && !project.draft)
     .map((project) => ({
       url: `${siteConfig.url}${project.url}`,
       lastModified: now,

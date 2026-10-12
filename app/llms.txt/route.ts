@@ -12,9 +12,10 @@ export function GET() {
     .sort((a, b) => (a.date < b.date ? 1 : -1))
   const byOrder = (a: { order?: number }, b: { order?: number }) =>
     (a.order ?? 99) - (b.order ?? 99)
-  const projects = allProjects.filter((p) => p.tier === 1).sort(byOrder)
+  const listed = allProjects.filter((p) => !p.draft)
+  const projects = listed.filter((p) => p.tier === 1).sort(byOrder)
   // Tier-2 entries have no page, so they're listed as plain text, not links.
-  const mentions = allProjects.filter((p) => p.tier === 2).sort(byOrder)
+  const mentions = listed.filter((p) => p.tier === 2).sort(byOrder)
 
   const lines = [
     `# ${siteConfig.name}`,

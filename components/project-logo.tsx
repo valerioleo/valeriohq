@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils"
 
 // Lets callers lay out a fallback when a project has no brand mark.
 // True for every slug BrandIcon can render: the PNG trio plus the inline-SVG
-// marks (pinkwhale, chain-double, innovate-uk) and the GitHub stand-in for
-// confidential-primitives.
+// marks (pinkwhale, chain-double, innovate-uk, offprompt) and the GitHub
+// stand-in for confidential-primitives.
 const BRAND_SLUGS = [
   "raycash",
   "zama",
@@ -19,6 +19,7 @@ const BRAND_SLUGS = [
   "chain-double",
   "innovate-uk",
   "confidential-primitives",
+  "offprompt",
 ]
 export function hasProjectLogo(slug: string) {
   return BRAND_SLUGS.includes(slug)
@@ -43,6 +44,25 @@ export function BrandIcon({
   // (wordmark removed) and set on a disc with the monogram inset so the
   // circle never clips it.
   switch (slug) {
+    case "offprompt":
+      // offprompt.dev's icon: four white dots on its green, the rounded
+      // square redrawn as a disc. The dots already sit well inside it.
+      return (
+        <svg
+          viewBox="0 0 96 96"
+          fill="none"
+          aria-hidden="true"
+          className={cn("shrink-0", className)}
+        >
+          <circle cx="48" cy="48" r="48" fill="#2B4A3B"/>
+          <g transform="translate(21 34.5) scale(1.256)" fill="#FFFFFF" fillRule="evenodd">
+            <path d="M5 11c2.76 0 5 2.24 5 5 0 2.76-2.24 5-5 5-2.76 0-5-2.24-5-5 0-2.76 2.24-5 5-5z"/>
+            <path d="M16 0c2.76 0 5 2.24 5 5 0 2.76-2.24 5-5 5-2.76 0-5-2.24-5-5 0-2.76 2.24-5 5-5z m0 2.25c1.518 0 2.75 1.232 2.75 2.75 0 1.518-1.232 2.75-2.75 2.75-1.518 0-2.75-1.232-2.75-2.75 0-1.518 1.232-2.75 2.75-2.75z"/>
+            <path d="M27 11c2.76 0 5 2.24 5 5 0 2.76-2.24 5-5 5-2.76 0-5-2.24-5-5 0-2.76 2.24-5 5-5z"/>
+            <path d="M38 11c2.76 0 5 2.24 5 5 0 2.76-2.24 5-5 5-2.76 0-5-2.24-5-5 0-2.76 2.24-5 5-5z"/>
+          </g>
+        </svg>
+      )
     case "pinkwhale":
       // Apple-touch treatment from pinkwhale.valeriohq.com: hot-pink whale
       // (#ff5fa2) on the site's navy (#0d1b26). Disc so the brand row still

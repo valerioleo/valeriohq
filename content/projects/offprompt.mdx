@@ -1,0 +1,35 @@
+---
+title: offprompt
+description: Lets a coding agent ask you for an API key and write it where the project needs it, without the value passing through the model.
+summary: keep secrets off the prompt
+year: "2026"
+role: Author, open source (MIT)
+stack: ["TypeScript", "MCP", "Node.js"]
+link: https://offprompt.dev
+repo: https://github.com/offprompt/offprompt
+order: 3
+tier: 1
+kind: tool
+notion: 3f77c7c9-1f1f-813f-a3e4-cae90e749af7
+notionSynced: "2026-10-12T23:21:21Z"
+---
+
+Agents need API keys. Paste one into the chat and it goes into the model’s
+context, the transcript on disk and the provider’s logs, and stays there.
+offprompt gives the agent another way to ask.
+
+It’s an MCP server. When an agent needs a secret, it calls `collect_secret`
+with the keys it wants, why it wants them and the file they go in, then
+waits. A page opens in your browser on `127.0.0.1`, says which agent is
+asking and which file it writes to, and checks each value as you paste it.
+offprompt writes the file and answers the agent with the key names and a
+four-emoji fingerprint, the same four your page shows. The transcript only
+ever sees the names.
+
+An agent in a cloud sandbox gives you a link instead. The page reaches you
+through a Cloudflare tunnel, and your browser encrypts the values to a key
+only the sandbox holds.
+
+`npx offprompt init` sets it up for Claude Code, Codex, Cursor and Pi, and any
+agent that speaks MCP can use it. MIT licensed, and the page itself can be
+tried at [offprompt.dev/playground](https://offprompt.dev/playground).

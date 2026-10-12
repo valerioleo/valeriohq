@@ -13,7 +13,7 @@
 //   props <id>                  stdin {properties} → update a row
 //   body <id>                   stdin markdown → replace a row's body
 //   edit <id>                   stdin [{old_str, new_str}] → targeted edits
-//   caption <block> <text>      set an image block's caption (the site's alt)
+//   caption <block> <text>      set a media block's caption (the site's alt)
 //
 // Properties go in and come out flat, the way frontmatter holds them:
 // { Name, Slug, Kind, Status, Date, Description, Canonical, Source, Summary,
@@ -238,11 +238,13 @@ const commands = {
     return { id: result.id, truncated: result.truncated }
   },
 
+  // Works for any media block that has a caption: image, video, file.
   caption: async (block, text) => {
+    const { type } = await call("GET", `/blocks/${block}`)
     const result = await call("PATCH", `/blocks/${block}`, {
-      image: { caption: [{ text: { content: text } }] },
+      [type]: { caption: [{ text: { content: text } }] },
     })
-    return { id: result.id, caption: plain(result.image.caption) }
+    return { id: result.id, type, caption: plain(result[type].caption) }
   },
 }
 

@@ -67,7 +67,8 @@ Doubts about one page don't block syncing another.
    `lastEdited` is at or after the minute of `notionSynced`; the worst case
    is a re-sync that changes nothing. Rows with no bound MDX are new content. Rows
    with `Status` other than Ready/Published are drafts: read them, don't
-   publish them (a post gets `draft: true`). Also compare every post's
+   publish them (a post or project gets `draft: true`, which keeps it out
+   of every list, the sitemap and llms.txt). Also compare every post's
    `Work` with its `work` frontmatter, whatever the timestamps say: a link
    added from a project's `Writing` column changes the post's `Work`
    without moving its last-edited time.
@@ -125,6 +126,13 @@ Doubts about one page don't block syncing another.
   local path, never the Notion URL. The Notion caption is the site's alt
   text. An image without one: describe only what is visible, write it into
   Notion with `caption`, and say so in the report.
+- **Videos** follow the same rules: download into `public/videos/<slug>/`,
+  remux with `ffmpeg -c copy -map_metadata -1 -movflags +faststart`, cut a
+  720px poster from the clearest frame, and write an `<AutoplayVideo>` with
+  `src`, `poster`, the caption as `aria-label`, the real `width` and
+  `height`, `controls` and `preload="none"`. It plays once when it scrolls
+  into view, pauses off screen, then rests on the poster; reduced motion
+  waits for a click.
 - **Frontmatter** comes from properties, never from the body. Fields the
   properties don't carry (`interactive`, `featured`, `order`, `stack`,
   `link`, `repo`, `linkLabel`, `kind`, `tier`, `year`, `role`) are

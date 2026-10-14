@@ -1,5 +1,5 @@
 import Script from "next/script"
-import { Analytics as VercelAnalytics } from "@vercel/analytics/react"
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next"
 
 // Umami Cloud's website for this site. Public by design: it ships in the page.
 const UMAMI_WEBSITE_ID = "61f9342a-8ea8-4500-96e1-dbf013c1d902"

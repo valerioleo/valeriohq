@@ -684,6 +684,15 @@ a:focus-visible .logo-lid-blink {
   .prose :is(img, video) {
     border-radius: calc(var(--radius) + 2px);
   }
+  /* A 1px inset edge so a photo's pale sky can't dissolve into the paper.
+     Transparent artwork sits in not-prose figures and is left alone. */
+  .prose img:not(:where(.not-prose, .not-prose *)) {
+    outline: 1px solid #0000001a;
+    outline-offset: -1px;
+  }
+  .dark .prose img:not(:where(.not-prose, .not-prose *)) {
+    outline-color: #ffffff1a;
+  }
   /* Video carries width and height for its aspect ratio; scale it to the
      column like an image. */
   .prose video {

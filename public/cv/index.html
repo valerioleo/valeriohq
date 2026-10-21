@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Valerio Leo, CV</title>
+    <meta name="author" content="Valerio Leo" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <style>
+      /*
+       * One A4 sheet in the site's vocabulary: Inter for reading, Plex Mono
+       * for labels and dates, lowercase section labels over a hairline, the
+       * site's warm ink on white paper. Rust marks the current role only.
+       * Sizes are in pt because the target is paper.
+       *
+       * The faces are static files in ./fonts so the PDF embeds real
+       * TrueType fonts (a variable font prints as Type 3) and the build
+       * works offline.
+       *
+       * Served unlisted at /cv (a rewrite in next.config.mjs), and the
+       * source of the PDF beside it: `pnpm cv` prints this page.
+       */
+      @font-face {
+        font-family: "Inter";
+        font-weight: 400;
+        src: url("/cv/fonts/Inter-Regular.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Inter";
+        font-weight: 500;
+        src: url("/cv/fonts/Inter-Medium.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Inter";
+        font-weight: 600;
+        src: url("/cv/fonts/Inter-SemiBold.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Inter Display";
+        font-weight: 600;
+        src: url("/cv/fonts/InterDisplay-SemiBold.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 400;
+        src: url("/cv/fonts/IBMPlexMono-Regular.woff2") format("woff2");
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      :root {
+        --paper: #ffffff;
+        --ink: #161210;
+        --foreground: #403836;
+        --muted: #6b615d;
+        --border: #d8cdcb;
+        --brand: #9a4a22;
+
+        --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+        --font-display: "Inter Display", var(--font-sans);
+        --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+          monospace;
+
+        /* Type scale: one size per role, each paired with its leading. */
+        --text-name: 18pt;
+        --text-lede: 9.5pt;
+        --text-title: 9.25pt;
+        --text-body: 8.5pt;
+        --text-label: 7.25pt;
+
+        /* Space between groups is at least twice the space within one. */
+        --space-1: 0.8mm;
+        --space-2: 1.8mm;
+        --space-3: 3.2mm;
+        --space-4: 5.5mm;
+        --space-5: 7.5mm;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-sans);
+        font-size: var(--text-body);
+        font-weight: 400;
+        line-height: 1.45;
+        color: var(--foreground);
+      }
+
+      @media screen {
+        body {
+          background: #e4dcdb;
+          padding: 8mm 0 12mm;
+        }
+      }
+
+      @media print {
+        .download {
+          display: none;
+        }
+      }
+
+      .download {
+        width: 210mm;
+        max-width: 100%;
+        margin: 0 auto 4mm;
+        padding-inline: 16mm;
+        text-align: end;
+        font-family: var(--font-mono);
+        font-size: var(--text-label);
+        line-height: 1.5;
+      }
+
+      .download a {
+        color: var(--foreground);
+        text-decoration: underline;
+        text-decoration-color: var(--brand);
+        text-decoration-thickness: from-font;
+        text-underline-position: from-font;
+      }
+
+
+      h1,
+      h2,
+      h3,
+      p,
+      ul,
+      dl,
+      dd {
+        margin: 0;
+        padding: 0;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* Exactly one A4 page tall. Anything that overflows spills onto a
+         second page, which the build reports. */
+      .sheet {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 15mm 16mm 12mm;
+        background: var(--paper);
+      }
+
+      /* ── Masthead ─────────────────────────────────────────────────── */
+
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-5);
+      }
+
+      .identity {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .identity img {
+        width: 12.5mm;
+        height: 12.5mm;
+        flex: none;
+      }
+
+      .name {
+        font-family: var(--font-display);
+        font-size: var(--text-name);
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .headline {
+        margin-top: var(--space-1);
+        font-size: var(--text-lede);
+        line-height: 1.3;
+        color: var(--muted);
+        text-wrap: balance;
+      }
+
+      .contact {
+        display: grid;
+        justify-items: end;
+        gap: 0.5mm;
+        font-family: var(--font-mono);
+        font-size: var(--text-label);
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
+      .lede {
+        max-width: 122mm;
+        margin-top: var(--space-5);
+        font-size: var(--text-lede);
+        line-height: 1.5;
+        color: var(--foreground);
+        text-wrap: pretty;
+      }
+
+      /* ── Columns: the record on the left, the rest in a rail ─────── */
+
+      .body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 50mm;
+        column-gap: 10mm;
+        margin-top: var(--space-5);
+      }
+
+      .main,
+      .rail {
+        display: grid;
+        align-content: start;
+        gap: var(--space-5);
+      }
+
+      .label {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-family: var(--font-mono);
+        font-size: var(--text-label);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+
+      .label::after {
+        content: "";
+        flex: 1;
+        height: 0.5pt;
+        background: var(--border);
+      }
+
+      .label + * {
+        margin-top: var(--space-3);
+      }
+
+      /* Dates and places: mono, muted, every digit one width. */
+      .meta {
+        font-family: var(--font-mono);
+        font-size: var(--text-label);
+        line-height: 1.3;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .meta.current {
+        color: var(--brand);
+      }
+
+      .title {
+        font-size: var(--text-title);
+        font-weight: 500;
+        line-height: 1.3;
+        color: var(--ink);
+      }
+
+      .heading-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-3);
+      }
+
+      p,
+      li {
+        text-wrap: pretty;
+      }
+
+      /* ── Experience ───────────────────────────────────────────────── */
+
+      .roles {
+        display: grid;
+        gap: var(--space-4);
+      }
+
+      .role-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 2.2mm;
+      }
+
+      .role-title .position {
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      .role-body {
+        margin-top: var(--space-1);
+      }
+
+      .points {
+        display: grid;
+        gap: 0.5mm;
+        margin-top: var(--space-1);
+      }
+
+      .points li {
+        position: relative;
+        padding-left: 3.2mm;
+      }
+
+      .points li::before {
+        content: "";
+        position: absolute;
+        left: 0.3mm;
+        top: 0.7em;
+        width: 1.5mm;
+        height: 0.6pt;
+        background: var(--muted);
+      }
+
+      .inline-link {
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-color: var(--border);
+        text-decoration-thickness: from-font;
+        text-underline-position: from-font;
+        white-space: nowrap;
+      }
+
+      /* ── Earlier roles: one line each ────────────────────────────── */
+
+      .rows {
+        display: grid;
+        gap: 1.1mm;
+      }
+
+      .rows .who {
+        min-width: 0;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .rows .who span {
+        margin-left: 1.8mm;
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      /* ── Rail ─────────────────────────────────────────────────────── */
+
+      .entries {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .entries .title {
+        font-size: var(--text-body);
+      }
+
+      .entries p {
+        margin-top: 0.4mm;
+      }
+
+      .skills {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .skills dt {
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      /* Below A4 width the sheet becomes one flowing column.
+         Last in the sheet, so it wins over the A4 rules above. */
+      @media screen and (max-width: 225mm) {
+        body {
+          padding: 0;
+          background: var(--paper);
+        }
+
+        .download {
+          margin: 0;
+          padding: 5mm 6mm 0;
+        }
+
+        .sheet {
+          width: auto;
+          min-height: 0;
+          padding: 6mm 6mm 10mm;
+        }
+
+        .masthead {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--space-4);
+        }
+
+        .contact {
+          justify-items: start;
+        }
+
+        .body {
+          grid-template-columns: minmax(0, 1fr);
+          row-gap: var(--space-5);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="download">
+      <a href="/cv/valerio-leo-cv.pdf" download>Download PDF</a>
+    </p>
+    <main class="sheet">
+      <header class="masthead">
+        <div class="identity">
+          <img src="/valeriohq.svg" alt="" />
+          <div>
+            <h1 class="name">Valerio Leo</h1>
+            <p class="headline">Founder, product engineer and team leader · London</p>
+          </div>
+        </div>
+        <ul class="contact" aria-label="Contact">
+          <li><a href="mailto:mail.valerioleo@gmail.com">mail.valerioleo@gmail.com</a></li>
+          <li><a href="https://valeriohq.com">valeriohq.com</a></li>
+          <li><a href="https://github.com/valerioleo">github.com/valerioleo</a></li>
+          <li><a href="https://www.linkedin.com/in/valeriohq">linkedin.com/in/valeriohq</a></li>
+        </ul>
+      </header>
+
+      <p class="lede">
+        I like being involved in the whole product: who it’s for, how the
+        business works, what to build and how it should feel to use. Smart
+        contracts since 2017. Now building Raycash, confidential money for
+        everyday life.
+      </p>
+
+      <div class="body">
+        <div class="main">
+          <section aria-labelledby="experience">
+            <h2 class="label" id="experience">experience</h2>
+            <div class="roles">
+              <article>
+                <header class="heading-row">
+                  <h3 class="title role-title">
+                    <a href="https://www.raycash.xyz">Raycash</a>
+                    <span class="position">Co-founder &amp; CEO</span>
+                  </h3>
+                  <span class="meta current">2025–now</span>
+                </header>
+                <div class="role-body">
+                  <p>
+                    Confidential money on Ethereum. Balances and transfers are
+                    encrypted with Zama’s fully homomorphic encryption, so the
+                    contracts settle a payment without reading its amount.
+                  </p>
+                  <ul class="points">
+                    <li>
+                      Own product decisions, technical direction, hiring and
+                      delivery for a small team building the contracts, a web
+                      app and a mobile app.
+                    </li>
+                    <li>
+                      Hands-on across the Solidity and FHEVM contracts and the
+                      Next.js and React Native apps. BDD-first, with CI gates
+                      that block bad releases.
+                    </li>
+                    <li>
+                      Open-sourced the tooling we kept needing:
+                      <a class="inline-link" href="https://deployoor.dev">deployoor</a>
+                      and
+                      <a class="inline-link" href="https://github.com/raycashxyz/confidential-primitives">confidential-primitives</a>,
+                      audited by Burrasec.
+                    </li>
+                    <li>
+                      AI is part of how we write, review and test code. I build
+                      my own agent harnesses, orchestration and skills.
+                    </li>
+                  </ul>
+                </div>
+              </article>
+
+              <article>
+                <header class="heading-row">
+                  <h3 class="title role-title">
+                    <a href="https://www.zama.org">Zama</a>
+                    <span class="position">Entrepreneur in Residence</span>
+                  </h3>
+                  <span class="meta">2025</span>
+                </header>
+                <div class="role-body">
+                  <p>
+                    Worked with the CEO and the protocol and cryptography leads
+                    to shape the products FHE could make possible. Explored
+                    confidential money: self-custody, encrypted stablecoin
+                    balances and compliance through selective disclosure. That
+                    work became Raycash.
+                  </p>
+                </div>
+              </article>
+
+              <article>
+                <header class="heading-row">
+                  <h3 class="title role-title">
+                    Sandsoft and YOX
+                    <span class="position">Technical Lead · Riyadh</span>
+                  </h3>
+                  <span class="meta">2023–2024</span>
+                </header>
+                <div class="role-body">
+                  <p>
+                    Technical lead at Sandsoft, a mobile games publisher, and
+                    YOX, a marketplace founded in 2023.
+                  </p>
+                </div>
+              </article>
+
+              <article>
+                <header class="heading-row">
+                  <h3 class="title role-title">
+                    Dappflow
+                    <span class="position">Co-founder &amp; Director · London</span>
+                  </h3>
+                  <span class="meta">2020–2021</span>
+                </header>
+                <div class="role-body">
+                  <p>
+                    One of the earliest platforms for managing smart contracts.
+                    Blockchain architect on an
+                    <a class="inline-link" href="https://gtr.ukri.org/projects?ref=77464">Innovate UK grant</a>
+                    project building a jobs board on decentralised identity.
+                  </p>
+                </div>
+              </article>
+
+              <article>
+                <header class="heading-row">
+                  <h3 class="title role-title">
+                    Coincierge
+                    <span class="position">Co-founder &amp; CPO · London</span>
+                  </h3>
+                  <span class="meta">2018–2020</span>
+                </header>
+                <div class="role-body">
+                  <p>Co-founded a digital securities platform and led its product.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section aria-labelledby="earlier">
+            <h2 class="label" id="earlier">earlier</h2>
+            <ul class="rows">
+              <li class="heading-row">
+                <span class="who">Forge Design<span>Chief Blockchain Officer</span></span>
+                <span class="meta">2020</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">Evident Proof<span>Blockchain engineer and advisor</span></span>
+                <span class="meta">2018</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">Token Lounge<span>Co-founder</span></span>
+                <span class="meta">2018</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">CommerceBlock<span>Smart contracts developer</span></span>
+                <span class="meta">2017</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">Voncrank<span>JavaScript developer</span></span>
+                <span class="meta">2017</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">Intesa Sanpaolo, Slow Food<span>UX consultant</span></span>
+                <span class="meta">2016–2017</span>
+              </li>
+              <li class="heading-row">
+                <span class="who">Suppershare<span>CTO · Milan</span></span>
+                <span class="meta">2014–2016</span>
+              </li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="education">
+            <h2 class="label" id="education">education</h2>
+            <article>
+              <header class="heading-row">
+                <h3 class="title role-title">
+                  University of Gastronomic Sciences
+                  <span class="position">Pollenzo</span>
+                </h3>
+                <span class="meta">2012–2015</span>
+              </header>
+              <div class="role-body">
+                <p>BSc Food Science and Technology</p>
+              </div>
+            </article>
+          </section>
+        </div>
+
+        <aside class="rail">
+          <section aria-labelledby="projects">
+            <h2 class="label" id="projects">open source</h2>
+            <ul class="entries">
+              <li>
+                <div class="heading-row">
+                  <a class="title" href="https://offprompt.dev">offprompt</a>
+                  <span class="meta">MIT</span>
+                </div>
+                <p>
+                  An MCP server that lets coding agents ask you for API keys
+                  without the value passing through the model.
+                </p>
+              </li>
+              <li>
+                <div class="heading-row">
+                  <a class="title" href="https://deployoor.dev">deployoor</a>
+                  <span class="meta">MIT</span>
+                </div>
+                <p>
+                  Deploy once, then use typed viem contract objects in every
+                  app, script and test.
+                </p>
+              </li>
+              <li>
+                <div class="heading-row">
+                  <a class="title" href="https://github.com/raycashxyz/confidential-primitives">confidential-primitives</a>
+                </div>
+                <p>
+                  Building blocks for confidential contracts on Zama’s FHEVM.
+                  Audited by Burrasec.
+                </p>
+              </li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="experiments">
+            <h2 class="label" id="experiments">experiments</h2>
+            <ul class="entries">
+              <li>
+                <div class="heading-row">
+                  <a class="title" href="https://pinkwhale.valeriohq.com">pinkwhale</a>
+                  <span class="meta">2022–2023</span>
+                </div>
+                <p>
+                  NFT lending built only from Seaport orders, with no escrow or
+                  liquidation code of its own.
+                </p>
+              </li>
+              <li>
+                <div class="heading-row">
+                  <a class="title" href="https://ethglobal.com/showcase/chaindouble-x6c9q">chain-double</a>
+                  <span class="meta">2022</span>
+                </div>
+                <p>
+                  Won the IPFS/Filecoin prize at ETHGlobal HackFS. L1 NFTs that
+                  mirror their L2 twin through IPFS CIDs.
+                </p>
+              </li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="skills">
+            <h2 class="label" id="skills">skills</h2>
+            <dl class="skills">
+              <div>
+                <dt>Contracts</dt>
+                <dd>Solidity, Zama FHEVM, ERC-7984, Foundry, Hardhat, viem</dd>
+              </div>
+              <div>
+                <dt>Apps</dt>
+                <dd>TypeScript, Next.js, React, React Native, Node.js</dd>
+              </div>
+              <div>
+                <dt>AI</dt>
+                <dd>Agent harnesses and orchestration, skills, MCP</dd>
+              </div>
+              <div>
+                <dt>Product</dt>
+                <dd>Product direction, UX, hiring, team leadership</dd>
+              </div>
+              <div>
+                <dt>Languages</dt>
+                <dd>Italian (native), English</dd>
+              </div>
+            </dl>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

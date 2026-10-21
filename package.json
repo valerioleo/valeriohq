@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "cv": "node scripts/build-cv.mjs"
   },
   "dependencies": {
     "@content-collections/core": "0.15.2",

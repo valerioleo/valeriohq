@@ -18,7 +18,7 @@ export default function AboutPage() {
         {page.title}
       </h1>
 
-      <div className="prose prose-bio mt-8 max-w-none">
+      <div className="prose mt-8 max-w-none">
         <Mdx code={page.mdx} />
       </div>
 

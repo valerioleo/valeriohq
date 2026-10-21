@@ -11,7 +11,7 @@ import { BrandIcon } from "@/components/project-logo"
 // surface alone marks it as a reference. Hover feedback is colour-only, on
 // the label.
 //
-// Disc is 1.15em of the 16px reading size (~18px). The chip is nudged 2px
+// Disc is 1.15em of the 14px reading size (~16px). The chip is nudged 2px
 // down so it sits on the surrounding Inter line instead of floating above it.
 export function WorkPill({ slug, label }: { slug: string; label: string }) {
   return (

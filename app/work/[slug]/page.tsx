@@ -41,7 +41,7 @@ export default async function ProjectPage({ params }: Props) {
         <header>
           {/* The original brand disc, as on the pills and lists — never a
               recoloured mark. */}
-          <h1 className="flex items-center gap-2 text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+          <h1 className="flex items-center gap-2 text-title">
             <BrandIcon slug={project.slug} className="size-5 shrink-0" />
             {project.title}
           </h1>

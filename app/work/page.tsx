@@ -15,7 +15,7 @@ export default function WorkPage() {
 
   return (
     <div className="pb-8 pt-8 sm:pt-10">
-      <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">Work</h1>
+      <h1 className="text-title">Work</h1>
       <div className="prose mt-4 max-w-none">
         <p>
           I like working where product and engineering meet: deciding what

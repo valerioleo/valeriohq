@@ -26,10 +26,10 @@ export function DemoFrame({
         {title && (
           <div className="flex items-center gap-2 border-b border-border px-4 py-2">
             <span aria-hidden className="size-1.5 rounded-full bg-muted-foreground" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="font-mono text-xs uppercase tracking-[0.05em] text-muted-foreground">
               {title}
             </span>
-            <span className="ms-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="ms-auto font-mono text-xs uppercase tracking-[0.05em] text-muted-foreground">
               {kind}
             </span>
           </div>

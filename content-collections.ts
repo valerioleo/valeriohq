@@ -1,6 +1,7 @@
 import { defineCollection, defineConfig } from "@content-collections/core"
 import { compileMDX } from "@content-collections/mdx"
 import remarkGfm from "remark-gfm"
+import remarkSmartypants from "remark-smartypants"
 import rehypePrettyCode, { type Options } from "rehype-pretty-code"
 import { z } from "zod"
 
@@ -12,8 +13,14 @@ const prettyCode: Options = {
   defaultLang: "plaintext",
 }
 
+// Typographic quotes and ellipses at build time, so the Notion-synced source
+// stays as written. Code is left alone. Dashes stay off: the site's prose
+// has no em dashes, and `--` is never meant as one.
 const mdxOptions: Parameters<typeof compileMDX>[2] = {
-  remarkPlugins: [remarkGfm],
+  remarkPlugins: [
+    remarkGfm,
+    [remarkSmartypants, { dashes: false, backticks: false }],
+  ],
   rehypePlugins: [[rehypePrettyCode, prettyCode]],
 }
 

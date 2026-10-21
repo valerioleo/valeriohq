@@ -79,6 +79,16 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* The page-title role, shared by every page h1 and the body's h1: one
+   decision for size, leading, tracking and weight. Not inline, so the
+   variable exists at runtime for .prose h1 to read. */
+@theme {
+  --text-title: 1.1875rem;
+  --text-title--line-height: 1.3;
+  --text-title--letter-spacing: -0.016em;
+  --text-title--font-weight: 560;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -89,8 +99,8 @@
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 460;
-    line-height: 1.25rem;
-    letter-spacing: -0.00563rem;
+    line-height: calc(20 / 14); /* 20px at 14px, and it scales */
+    letter-spacing: -0.0064em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -111,6 +121,12 @@
     outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+  /* Plex Mono ships 400 and 500. Labels, dates and nav sit at 500 on
+     purpose; left to inherit the body's 460 they'd land there by accident. */
+  .font-mono,
+  kbd {
+    font-weight: 500;
   }
   kbd {
     font-family: var(--font-mono);
@@ -459,13 +475,14 @@ a:focus-visible .logo-lid-blink {
     /* Long-form reads a step up from the 14px lists and chrome around it. */
     font-size: 1rem;
     font-weight: 460;
-    line-height: 1.625rem;
-    letter-spacing: -0.00563rem;
+    line-height: 1.625;
+    letter-spacing: -0.0056em;
   }
   .prose :is(p, li, dd) {
     font-weight: 460;
-    line-height: 1.625rem;
-    letter-spacing: -0.00563rem;
+    line-height: 1.625;
+    letter-spacing: -0.0056em;
+    text-wrap: pretty;
   }
   .prose p {
     margin-block: 1em;
@@ -491,14 +508,14 @@ a:focus-visible .logo-lid-blink {
   .prose :is(h1, h2, h3, h4) {
     font-family: var(--font-heading);
     font-weight: 560;
-    letter-spacing: -0.01875rem;
+    letter-spacing: -0.016em;
     line-height: 1.3;
     text-wrap: balance;
   }
   /* Body headings start at h1: the page renders the title outside the
-     body, so the body is its own document. h1 sits at page-title size. */
+     body, so the body is its own document. h1 is the page-title role. */
   .prose h1 {
-    font-size: 1.1875em; /* 19px at the 16px measure, same as page titles */
+    font-size: var(--text-title);
     margin-top: 2.2em;
     margin-bottom: 0.75em;
   }
@@ -617,6 +634,7 @@ a:focus-visible .logo-lid-blink {
   .prose time {
     font-family: var(--font-mono);
     font-size: 0.75rem;
+    font-weight: 500;
   }
 
   .prose :is(img, video) {

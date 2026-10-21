@@ -42,7 +42,7 @@ export function DecoyDial() {
 
       <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+          <dt className="font-mono text-xs uppercase tracking-[0.05em] text-muted-foreground">
             chance of linking your note
           </dt>
           <dd className="mt-1 font-mono text-lg tabular-nums">
@@ -53,7 +53,7 @@ export function DecoyDial() {
           </dd>
         </div>
         <div>
-          <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+          <dt className="font-mono text-xs uppercase tracking-[0.05em] text-muted-foreground">
             relative gas
           </dt>
           <dd className="mt-1 font-mono text-lg tabular-nums">

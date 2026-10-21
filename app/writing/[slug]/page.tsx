@@ -39,7 +39,7 @@ export default async function PostPage({ params }: Props) {
     <div className="py-10">
       <article>
         <header>
-          <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+          <h1 className="text-title">
             {post.title}
           </h1>
           <PageMeta>

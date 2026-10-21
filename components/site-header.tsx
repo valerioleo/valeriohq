@@ -12,7 +12,7 @@ export function SiteHeader() {
     <header className="flex flex-wrap items-center gap-x-4 gap-y-3 pb-4 pt-6 sm:gap-x-3 sm:pt-8">
       <Link
         href="/"
-        className="me-auto inline-flex items-center gap-3 whitespace-nowrap text-[1.1875rem] font-medium tracking-[-0.01875rem] transition-colors hover:text-brand"
+        className="me-auto inline-flex items-center gap-3 whitespace-nowrap text-title font-medium transition-colors hover:text-brand"
       >
         <Logo className="size-10 sm:size-12" />
         <span>{siteConfig.name}</span>

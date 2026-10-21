@@ -17,7 +17,7 @@ export default function AboutPage() {
 
   return (
     <div className="pb-8 pt-8 sm:pt-10">
-      <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+      <h1 className="text-title">
         {page.title}
       </h1>
 

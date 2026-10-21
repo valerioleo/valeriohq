@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/config"
 // Kept locally with its original dimensions; next/image serves smaller sizes.
 export function RaycashProduct() {
   return (
-    <figure className="not-prose my-10 grid gap-6 border-y border-border/80 py-8 sm:grid-cols-[200px_1fr] sm:items-center sm:gap-10">
+    <figure className="not-prose my-10 grid gap-6 border-y border-border py-8 sm:grid-cols-[200px_1fr] sm:items-center sm:gap-10">
       <Image
         src="/work/raycash-home.png"
         alt={`${siteConfig.company} mobile app showing a balance, pending deposits and payment controls`}

@@ -18,7 +18,7 @@ import { siteConfig } from "@/lib/config"
 // Prose-register link, in the full-strength ink so it stands out from the
 // softer body.
 const LINK =
-  "text-ink underline decoration-brand/40 underline-offset-[3px] transition-colors hover:decoration-brand"
+  "text-ink underline decoration-link-underline underline-offset-[3px] transition-colors hover:decoration-brand"
 
 // Work names are plain links: the work list right below carries the logos,
 // so the bio doesn't repeat them.

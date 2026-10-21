@@ -36,7 +36,7 @@ export function DecoyDial() {
           nothing on chain says which. */}
       <div className="mt-5 flex flex-wrap gap-1.5" aria-hidden>
         {Array.from({ length: n }, (_, i) => (
-          <span key={i} className="size-2 rounded-full bg-foreground/30" />
+          <span key={i} className="size-2 rounded-full bg-foreground/60" />
         ))}
       </div>
 
@@ -60,7 +60,7 @@ export function DecoyDial() {
             ×{n}
             <div aria-hidden className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
               <div
-                className="h-full rounded-full bg-brand/70 transition-[width] duration-200"
+                className="h-full rounded-full bg-brand transition-[width] duration-200"
                 style={{ width: `${(n / 32) * 100}%` }}
               />
             </div>

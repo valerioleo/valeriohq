@@ -21,27 +21,18 @@
   --foreground: #403836;
   --ink: #161210; /* links — 15.2:1 on paper */
   --card: #f3edec;
-  --card-foreground: #403836;
-  --popover: #f6f1f0;
-  --popover-foreground: #403836;
-  --primary: #24201e; /* ink — filled buttons */
-  --primary-foreground: #f3edec;
-  --secondary: #e1d7d5;
-  --secondary-foreground: #403836;
   /* Deeper than paper on purpose: bright-room reading washes out near-
      neighbours, and chips (work pills) need a surface that still reads. */
   --muted: #dacfcb;
-  --muted-foreground: #6b615d;
-  --accent: #dacfcb; /* subtle hover surface (shadcn semantics) */
-  --accent-foreground: #403836;
-  --destructive: #b4442f;
-  --destructive-foreground: #f3edec;
-  --border: #d8cdcb;
-  --input: #d8cdcb;
+  --muted-foreground: #6b615d; /* 4.89:1 on paper */
+  /* Hairlines sit at the discernible floor (APCA Lc 15) on paper. */
+  --border: #d2c7c5;
   --ring: #9a4a22;
 
   --brand: #9a4a22; /* rust — 5.06:1 on paper */
   --brand-foreground: #f6f1ef;
+  /* The underline is what marks a link in running text: 3.5:1 on paper. */
+  --link-underline: color-mix(in srgb, var(--brand) 80%, transparent);
 }
 
 .dark {
@@ -49,25 +40,17 @@
   --foreground: #e7eef0;
   --ink: #e7eef0;
   --card: #06303f;
-  --card-foreground: #e7eef0;
-  --popover: #073847;
-  --popover-foreground: #e7eef0;
-  --primary: #e7eef0;
-  --primary-foreground: #022331;
-  --secondary: #0c3e4e;
-  --secondary-foreground: #e7eef0;
   --muted: #0e4353;
-  --muted-foreground: #9bb1b9;
-  --accent: #0e4353;
-  --accent-foreground: #e7eef0;
-  --destructive: #e5705a;
-  --destructive-foreground: #022331;
-  --border: #0e3b4a;
-  --input: #0e3b4a;
+  --muted-foreground: #9bb1b9; /* 7.29:1 on teal */
+  /* Hairlines at the discernible floor on teal (APCA Lc 15). */
+  --border: #335e6e;
   --ring: #e0906a;
 
   --brand: #e0906a; /* apricot — 6.5:1 on teal */
   --brand-foreground: #022331;
+  /* 3.1:1 on teal; bio links share the body colour here, so the underline
+     is their only mark. */
+  --link-underline: color-mix(in srgb, var(--brand) 60%, transparent);
 }
 
 /* Map tokens → Tailwind utilities (bg-background, text-muted-foreground, …). */
@@ -76,24 +59,13 @@
   --color-foreground: var(--foreground);
   --color-ink: var(--ink);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-link-underline: var(--link-underline);
 
   /* Type — Inter at caption size, one family. Plex Mono for chrome. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -136,7 +108,7 @@
   }
   /* Visible, branded focus for keyboard users — everywhere. */
   :focus-visible {
-    outline: 2px solid var(--brand);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -197,17 +169,17 @@
     transform: none;
   }
 }
-/* The "More about me" caption rests faint (benji.org's caption grey, ~2.8:1
-   on paper) and the glare lifts it to the muted grey as it passes. */
+/* The "More about me" caption rests at the muted grey (4.89:1 on paper, the
+   floor for control text) and the glare lifts it to body ink as it passes. */
 .intro-shimmer {
-  --caption: color-mix(in srgb, var(--muted-foreground) 70%, var(--background));
+  --caption: var(--muted-foreground);
   display: inline-block;
   color: transparent;
   -webkit-text-fill-color: transparent;
   background: linear-gradient(
       90deg,
       var(--caption) 0 35%,
-      var(--muted-foreground) 50%,
+      var(--foreground) 50%,
       var(--caption) 65% 100%
     )
     0 0 / 300% 100%;
@@ -475,7 +447,7 @@
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
-    text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    text-decoration-color: var(--link-underline);
     transition: color 0.15s ease, text-decoration-color 0.15s ease;
   }
   .text-link:hover {
@@ -490,7 +462,7 @@
     --tw-prose-links: var(--brand);
     --tw-prose-bold: var(--foreground);
     --tw-prose-counters: var(--muted-foreground);
-    --tw-prose-bullets: color-mix(in srgb, var(--brand) 55%, transparent);
+    --tw-prose-bullets: var(--muted-foreground);
     --tw-prose-hr: var(--border);
     --tw-prose-quotes: var(--foreground);
     --tw-prose-quote-borders: transparent;
@@ -522,7 +494,7 @@
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
-    text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
+    text-decoration-color: var(--link-underline);
     transition: text-decoration-color 0.15s ease;
   }
   .prose a:not(:where(.not-prose, .not-prose *)):hover {
@@ -598,7 +570,7 @@
   .prose :is(code):not(pre code) {
     font-weight: 400;
     font-size: 0.85em;
-    background-color: color-mix(in srgb, var(--muted) 70%, transparent);
+    background-color: color-mix(in srgb, var(--muted) 50%, transparent);
     border-radius: 0.25rem;
     padding: 0.1em 0.35em;
   }
@@ -610,7 +582,7 @@
   /* Code blocks: elevated card panel; shiki paints the tokens. */
   .prose pre {
     background-color: var(--card);
-    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border: 1px solid var(--border);
     border-radius: calc(var(--radius) + 2px);
     padding: 1rem 1.25rem;
     font-size: 0.8125rem;
@@ -634,12 +606,13 @@
      needed per theme. Miss the light one and code silently renders as flat
      body text in light mode. */
   .prose pre code span {
-    /* Vitesse targets a different paper color. Mix toward our ink so even
-       comments keep body-text contrast on this warmer code background. */
-    color: color-mix(in srgb, var(--shiki-light) 50%, var(--foreground));
+    /* Vitesse targets a different paper and ships some tokens (quotes,
+       punctuation, comments) semi-transparent. Pulling each one this far
+       toward our ink keeps every token at 4.5:1 or more on the code card. */
+    color: color-mix(in srgb, var(--shiki-light) 38%, var(--foreground));
   }
   .dark .prose pre code span {
-    color: color-mix(in srgb, var(--shiki-dark) 70%, var(--foreground));
+    color: color-mix(in srgb, var(--shiki-dark) 60%, var(--foreground));
   }
 
   .prose figcaption,

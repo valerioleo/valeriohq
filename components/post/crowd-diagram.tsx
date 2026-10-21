@@ -14,7 +14,7 @@ export function CrowdDiagram({ className }: { className?: string }) {
       viewBox="0 0 424 160"
       role="img"
       aria-label="A deposit enters a crowd of notes and a confidential balance leaves it"
-      className={cn("h-auto w-full text-foreground/55", className)}
+      className={cn("h-auto w-full text-foreground/60", className)}
     >
       <g
         fill="none"

@@ -10,10 +10,14 @@ import { siteConfig } from "@/lib/config"
 // rewrite — a change of length the reader asked for, not an append.
 //
 // The control is the last words of the current copy, set in prose register
-// (the site's rust-underlined link) with the glare running over it. It is
-// never a standalone element under the bio: a mono handle there shares the
-// section-label register and reads as a toolbar item against the rule below.
-// At full length the slot becomes the invitation to talk.
+// with the glare running over it. It is never a standalone element under the
+// bio: a mono handle there shares the section-label register and reads as a
+// toolbar item against the rule below. At full length the slot becomes the
+// invitation to talk.
+//
+// Each step remounts the copy so it can animate in, which would drop keyboard
+// focus to the page. Focus moves to the new copy instead: a screen reader
+// reads it, and the next Tab reaches the next control.
 
 // Prose-register link, in the full-strength ink so it stands out from the
 // softer body.
@@ -115,6 +119,10 @@ const LEVELS: React.ReactNode[][] = [
 ]
 const LAST = LEVELS.length - 1
 
+// Focus lands on the copy once it has been expanded, never on first load.
+const focusCopy = (node: HTMLDivElement | null) =>
+  node?.focus({ preventScroll: true })
+
 export const IntroExpand = () => {
   const [level, setLevel] = useState(0)
   const atEnd = level === LAST
@@ -127,14 +135,15 @@ export const IntroExpand = () => {
       </h1>
       <div
         key={level}
+        ref={level > 0 ? focusCopy : undefined}
         id="intro-copy"
+        tabIndex={-1}
         // Body text size, like benji.org: 14px on a 20px line, 16px between
         // paragraphs.
-        className={cn("space-y-4", level > 0 && "intro-copy")}
-        aria-live="polite"
+        className={cn("space-y-4 outline-none", level > 0 && "intro-copy")}
       >
         {paragraphs.map((content, i) => (
-          <p key={i}>
+          <p key={i} className="text-pretty">
             {content}
             {i === paragraphs.length - 1 &&
               (atEnd ? (
@@ -146,22 +155,27 @@ export const IntroExpand = () => {
                     rel="noopener noreferrer"
                     className={cn(LINK, "hover:text-brand")}
                   >
-                    Talk to me →
+                    Talk to me on X <span aria-hidden>↗</span>
                   </a>
                 </>
               ) : (
                 <>
                   {" "}
-                  {/* A caption, not a link: smaller, semibold, faint and
-                      never underlined, so it can't be mistaken for the work
+                  {/* A control, not a link: smaller, semibold and muted with a
+                      dotted underline, so it reads as something to press
+                      without being mistaken for the solid-underlined work
                       links in the sentence before it. */}
                   <button
                     type="button"
                     onClick={() => setLevel(n => Math.min(n + 1, LAST))}
-                    aria-label={`Show a longer introduction, ${level + 2} of ${LEVELS.length}`}
                     className="intro-expand-handle cursor-pointer text-[0.8125rem] font-semibold"
                   >
-                    <span className="intro-shimmer">More about me</span>
+                    <span className="intro-shimmer underline decoration-muted-foreground decoration-dotted underline-offset-[3px]">
+                      More about me
+                    </span>
+                    <span className="sr-only">
+                      , {level + 2} of {LEVELS.length}
+                    </span>
                   </button>
                 </>
               ))}

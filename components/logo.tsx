@@ -75,12 +75,18 @@ export function Logo({ className }: { className?: string }) {
           <circle cx="533" cy="272.8" r="106" />
         </clipPath>
       </defs>
+      {/* Each lid nests two groups: the outer runs the arrival blinks, the
+          inner the blink on hover or focus (keyframes in globals.css). */}
       <g clipPath="url(#logo-eyelid-clip)">
         <g className="logo-eyelid-upper">
-          <path d="M417 -120H649V110Q533 202 417 110Z" fill="#FFD5C2" stroke="#011627" strokeWidth="7" />
-          <path d="M417 96Q533 188 649 96" fill="none" stroke="#D8AC9E" strokeWidth="5" />
+          <g className="logo-lid-blink">
+            <path d="M417 -120H649V110Q533 202 417 110Z" fill="#FFD5C2" stroke="#011627" strokeWidth="7" />
+            <path d="M417 96Q533 188 649 96" fill="none" stroke="#D8AC9E" strokeWidth="5" />
+          </g>
         </g>
-        <path className="logo-eyelid-lower" d="M417 460V339Q533 431 649 339V460Z" fill="#FFD5C2" stroke="#011627" strokeWidth="7" />
+        <g className="logo-eyelid-lower">
+          <path className="logo-lid-blink" d="M417 460V339Q533 431 649 339V460Z" fill="#FFD5C2" stroke="#011627" strokeWidth="7" />
+        </g>
       </g>
 
       {/* glass texture */}

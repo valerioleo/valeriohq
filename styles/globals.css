@@ -149,16 +149,6 @@
     background-position: 100% 0;
   }
 }
-@keyframes intro-label-in {
-  from {
-    opacity: 0;
-    transform: translateY(80%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 @keyframes intro-copy-in {
   from {
     opacity: 0.35;
@@ -167,6 +157,12 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+/* The reduced-motion version: the same arrival without the movement. */
+@keyframes intro-copy-fade {
+  from {
+    opacity: 0.35;
   }
 }
 /* The "More about me" caption rests at the muted grey (4.89:1 on paper, the
@@ -185,51 +181,31 @@
     0 0 / 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: intro-shimmer 1.5s ease-in-out infinite;
+  /* Two passes, then it rests: motion that starts on its own stays under
+     WCAG's five seconds. */
+  animation: intro-shimmer 1.5s ease-in-out 2;
 }
-.intro-expand-handle:hover .intro-shimmer {
-  animation: none;
-  color: var(--brand);
-  -webkit-text-fill-color: var(--brand);
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
+@media (hover: hover) {
+  .intro-expand-handle:hover .intro-shimmer {
+    color: var(--brand);
+    -webkit-text-fill-color: var(--brand);
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
 }
-.intro-label-in {
-  animation: intro-label-in 0.24s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* Each longer bio arrives with a short rise; under reduced motion it only
+   fades, so the swap still reads as a change. */
 .intro-copy {
-  animation: intro-copy-in 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: intro-copy-fade 0.32s ease-out both;
 }
-
-@keyframes overlay-in {
-  from {
-    opacity: 0;
+@media (prefers-reduced-motion: no-preference) {
+  .intro-copy {
+    animation-name: intro-copy-in;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
-/* Animates opacity + the native `scale` property only — Tailwind v4 positions
-   the panel with the native `translate` property, which this must not touch. */
-@keyframes panel-in {
-  from {
-    opacity: 0;
-    scale: 0.98;
-  }
-}
-.dialog-overlay[data-state="open"] {
-  animation: overlay-in 0.18s ease-out;
-}
-.dialog-panel[data-state="open"] {
-  animation: panel-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-/*
- * The logo's night sky. Stars live between the sky disc and the periscope
- * (components/logo.tsx) and only exist in dark mode. Keyframe animations,
- * not transitions, on purpose: next-themes kills all transitions during the
- * theme switch (disableTransitionOnChange), but animations play through.
- * Dusk gets ceremony — a staggered rise — while switching back to light is
- * an instant sunrise.
- */
 /*
  * Night falls on the sky disc itself — and lifts again at dawn.
  *
@@ -256,75 +232,82 @@
  * closed as a curved seam low on the eye, not a flattened disc. The eyeball
  * itself never deforms (squashing it would reveal the sky through the
  * barrel). Each blink snaps shut (~100ms), holds a beat (~70ms), reopens
- * slower (~220ms) — per-segment easings below. One 29s cycle, blinks at
- * three uneven points with a double-blink in the middle: intervals of
- * ~12.5s, ~1.2s, ~15.3s. Reads as random; costs zero JS.
+ * slower (~220ms) — per-segment easings below.
+ *
+ * On arrival the eye runs one 4s pass: a blink, a pause, a double-blink.
+ * After that it rests open, so nothing moves on its own past WCAG's five
+ * seconds, and it blinks again whenever you point at or focus the home
+ * link. The two live on nested groups (logo.tsx), so the hover blink never
+ * restarts the arrival. Both lids share the keyframes through --lid-travel;
+ * their edges are shaped to seal against each other at full travel.
  */
 .logo-eyelid-upper {
-  animation: logo-blink-upper 29s linear infinite;
+  --lid-travel: 193px;
 }
 .logo-eyelid-lower {
-  animation: logo-blink-lower 29s linear infinite;
+  --lid-travel: -36px;
+}
+.logo-eyelid-upper,
+.logo-eyelid-lower {
+  animation: logo-arrival 4s linear;
+}
+@media (hover: hover) {
+  a:hover .logo-lid-blink {
+    animation: logo-blink 0.39s linear;
+  }
+}
+a:focus-visible .logo-lid-blink {
+  animation: logo-blink 0.39s linear;
 }
 /* Open keyframes carry the close easing (their only moving exit segments
    are open→closed); the later closed keyframes carry the reopen easing.
-   Segments between identical values are flat, so sharing blocks is safe.
-   Both keyframe sets must stay on the same schedule — the lid edges are
-   shaped to seal against each other at full travel. */
-@keyframes logo-blink-upper {
+   Segments between identical values are flat, so sharing blocks is safe. */
+@keyframes logo-arrival {
   0%,
-  11.5%,
-  12.85%,
-  54.5%,
-  55.85%,
-  58.7%,
-  60.05%,
+  30%,
+  39.75%,
+  72.5%,
+  82.25%,
+  86.25%,
+  96%,
   100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
   }
-  11.85%,
-  54.85%,
-  59.05% {
-    transform: translateY(193px);
+  32.5%,
+  75%,
+  88.75% {
+    transform: translateY(var(--lid-travel));
   }
-  12.1%,
-  55.1%,
-  59.3% {
-    transform: translateY(193px);
+  34.25%,
+  76.75%,
+  90.5% {
+    transform: translateY(var(--lid-travel));
     animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
   }
 }
-@keyframes logo-blink-lower {
-  0%,
-  11.5%,
-  12.85%,
-  54.5%,
-  55.85%,
-  58.7%,
-  60.05%,
-  100% {
+@keyframes logo-blink {
+  0% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
   }
-  11.85%,
-  54.85%,
-  59.05% {
-    transform: translateY(-36px);
+  26% {
+    transform: translateY(var(--lid-travel));
   }
-  12.1%,
-  55.1%,
-  59.3% {
-    transform: translateY(-36px);
+  44% {
+    transform: translateY(var(--lid-travel));
     animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
 /*
  * Stars rise in at dusk and sink back out at dawn — same transition, run
- * in reverse. The rise/fade lives on the <path>; the idle twinkle rides on
- * the wrapping <g>, so an infinite animation and a one-shot transition
- * never fight over the same property.
+ * in reverse. The rise/fade lives on the <path>; the twinkle rides on the
+ * wrapping <g>, so the animation and the transition never fight over the
+ * same property.
  */
 .logo-star path {
   opacity: 0;
@@ -351,17 +334,18 @@
   transition-delay: 0.24s !important;
 }
 
+/* One staggered twinkle once night has fallen, done within five seconds. */
 .dark .logo-star {
-  animation: logo-star-twinkle 5.5s ease-in-out 1.2s infinite;
+  animation: logo-star-twinkle 2.4s ease-in-out 0.6s;
 }
 .dark .logo-star:nth-of-type(2) {
-  animation-delay: 3.1s;
+  animation-delay: 1.5s;
 }
 .dark .logo-star:nth-of-type(3) {
-  animation-delay: 4.3s;
+  animation-delay: 2.2s;
 }
 .dark .logo-star:nth-of-type(4) {
-  animation-delay: 2.2s;
+  animation-delay: 1.1s;
 }
 @keyframes logo-star-twinkle {
   0%,
@@ -375,14 +359,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .route-enter,
-  .dialog-overlay[data-state="open"],
-  .dialog-panel[data-state="open"],
   .logo-eyelid-upper,
   .logo-eyelid-lower,
+  .logo-lid-blink,
   .dark .logo-star,
-  .intro-shimmer,
-  .intro-label-in,
-  .intro-copy {
+  .intro-shimmer {
     animation: none !important;
   }
   .intro-shimmer {
@@ -450,9 +431,11 @@
     text-decoration-color: var(--link-underline);
     transition: color 0.15s ease, text-decoration-color 0.15s ease;
   }
-  .text-link:hover {
-    color: var(--brand);
-    text-decoration-color: var(--brand);
+  @media (hover: hover) {
+    .text-link:hover {
+      color: var(--brand);
+      text-decoration-color: var(--brand);
+    }
   }
 
   .prose {
@@ -497,8 +480,10 @@
     text-decoration-color: var(--link-underline);
     transition: text-decoration-color 0.15s ease;
   }
-  .prose a:not(:where(.not-prose, .not-prose *)):hover {
-    text-decoration-color: var(--brand);
+  @media (hover: hover) {
+    .prose a:not(:where(.not-prose, .not-prose *)):hover {
+      text-decoration-color: var(--brand);
+    }
   }
 
   /* Section titles stay Inter, but they have to stand apart from the body:

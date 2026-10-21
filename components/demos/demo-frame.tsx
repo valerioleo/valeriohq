@@ -29,7 +29,7 @@ export function DemoFrame({
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {title}
             </span>
-            <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="ms-auto font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {kind}
             </span>
           </div>

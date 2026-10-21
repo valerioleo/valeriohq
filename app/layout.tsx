@@ -48,14 +48,14 @@ export default function RootLayout({
     // Font variables must live on <html>: Tailwind's @theme tokens
     // (--font-sans etc.) resolve their var() references at :root scope.
     <html lang="en" suppressHydrationWarning className={fontVariables}>
-      <body className="min-h-screen antialiased">
+      <body className="min-h-dvh antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="mx-auto flex min-h-screen max-w-[36.375rem] flex-col px-5">
+          <div className="mx-auto flex min-h-dvh max-w-[36.375rem] flex-col px-5">
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />

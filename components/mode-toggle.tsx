@@ -47,7 +47,7 @@ export function ModeToggle() {
       // the box, on the edge the dates and rules below end on.
       className={cn(
         navItemClass,
-        "-mr-2.5 w-8 justify-center text-muted-foreground hover:text-foreground [&_svg]:size-[15px]"
+        "-me-2.5 w-8 justify-center text-muted-foreground hover:text-foreground [&_svg]:size-[15px]"
       )}
     >
       {mounted ? <Icon /> : <Monitor />}

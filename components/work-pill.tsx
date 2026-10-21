@@ -17,7 +17,7 @@ export function WorkPill({ slug, label }: { slug: string; label: string }) {
   return (
     <Link
       href={`/work/${slug}`}
-      className="inline-flex translate-y-[2px] items-center gap-[0.2em] whitespace-nowrap rounded-full bg-muted/60 py-[0.12em] pl-[0.12em] pr-[0.3em] align-baseline leading-none transition-colors hover:text-brand"
+      className="inline-flex translate-y-[2px] items-center gap-[0.2em] whitespace-nowrap rounded-full bg-muted/60 py-[0.12em] ps-[0.12em] pe-[0.3em] align-baseline leading-none transition-colors hover:text-brand"
     >
       <BrandIcon slug={slug} className="size-[1.15em]" />
       <span>{label}</span>

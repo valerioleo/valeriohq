@@ -590,10 +590,23 @@
   }
   /* Long lines clip on the ~582px prose measure, so code gets a modest
      breakout past it — the same courtesy DemoFrame's `bleed` extends to
-     demos. Below 768px, pre stays on the measure and scrolls horizontally. */
+     demos. Below 768px there's no room to break out, and a sideways scroll
+     can end on a space and hide the rest of a line without a hint, so code
+     wraps instead. The hanging indent keeps a wrapped line reading as the
+     continuation of the one above. */
   @media (min-width: 768px) {
     .prose pre {
       margin-inline: -2rem;
+    }
+  }
+  @media (width < 768px) {
+    .prose pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .prose pre [data-line] {
+      padding-inline-start: 4ch;
+      text-indent: -4ch;
     }
   }
   .prose pre code {

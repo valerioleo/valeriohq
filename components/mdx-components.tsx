@@ -11,8 +11,17 @@ import { RaycashProduct } from "@/components/work/raycash-product"
 import { WorkPill } from "@/components/work-pill"
 import { AutoplayVideo } from "@/components/autoplay-video"
 
+// A wide table scrolls inside its own box instead of pushing the page
+// sideways on a narrow screen.
+const Table = (props: React.ComponentProps<"table">) => (
+  <div className="my-8 overflow-x-auto [&>table]:my-0">
+    <table {...props} />
+  </div>
+)
+
 const components = {
   Image,
+  table: Table,
   CrowdDiagram,
   // Interactive demos. Registered here → usable by name in any post's MDX.
   DemoFrame,

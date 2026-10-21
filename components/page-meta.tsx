@@ -7,4 +7,5 @@ export const PageMeta = ({ children }: { children: React.ReactNode }) => (
   </p>
 )
 
-export const META_LINK = "transition-colors hover:text-brand"
+// Underlined like every other link, so it can't pass for the date beside it.
+export const META_LINK = "text-link"

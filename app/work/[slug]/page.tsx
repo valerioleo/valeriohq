@@ -59,7 +59,8 @@ export default async function ProjectPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className={META_LINK}
                 >
-                  {(project.linkLabel ?? host(project.link)).toLowerCase()} ↗
+                  {(project.linkLabel ?? host(project.link)).toLowerCase()}{" "}
+                  <span aria-hidden>↗</span>
                 </a>
               )}
               {project.repo && (
@@ -69,7 +70,7 @@ export default async function ProjectPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className={META_LINK}
                 >
-                  source ↗
+                  source <span aria-hidden>↗</span>
                 </a>
               )}
             </PageMeta>

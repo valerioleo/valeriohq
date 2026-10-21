@@ -373,7 +373,36 @@ a:focus-visible .logo-lid-blink {
   }
 }
 
+/*
+ * The theme toggle's icons share one grid cell and cross-fade: the outgoing
+ * one shrinks and blurs away as the next resolves. `!important` for the
+ * same reason as the logo: next-themes suppresses transitions for the
+ * frame the theme switches, which is exactly when this one runs.
+ */
+.theme-icon {
+  grid-area: 1 / 1;
+}
+[data-animate] > .theme-icon {
+  transition:
+    opacity 0.3s cubic-bezier(0.2, 0, 0, 1),
+    scale 0.3s cubic-bezier(0.2, 0, 0, 1),
+    filter 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+.theme-icon[data-hidden] {
+  opacity: 0;
+  scale: 0.25;
+  filter: blur(4px);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* Reduced motion keeps the cross-fade and drops the movement. */
+  [data-animate] > .theme-icon {
+    transition: opacity 0.15s ease !important;
+  }
+  .theme-icon[data-hidden] {
+    scale: 1;
+    filter: none;
+  }
   .route-enter,
   .logo-eyelid-upper,
   .logo-eyelid-lower,

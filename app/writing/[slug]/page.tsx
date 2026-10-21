@@ -60,7 +60,8 @@ export default async function PostPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className={META_LINK}
               >
-                Originally on {post.sourceLabel ?? "X"} ↗
+                originally on {(post.sourceLabel ?? "X").toLowerCase()}{" "}
+                <span aria-hidden>↗</span>
               </a>
             )}
           </PageMeta>

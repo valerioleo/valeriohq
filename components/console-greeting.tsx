@@ -11,7 +11,7 @@ export function ConsoleGreeting() {
 
     console.log("%cYou opened the console. Good instinct.", brand)
     console.log(
-      "%cBefore confidential money, I studied the science of food — at the University of\nGastronomic Sciences in Pollenzo, the school the Slow Food movement built.\nAsk me about it sometime.",
+      "%cBefore confidential money, I studied the science of food at the University of\nGastronomic Sciences in Pollenzo, the school the Slow Food movement built.\nAsk me about it sometime.",
       dim
     )
     console.log("%c→ https://github.com/valerioleo", dim)

@@ -36,7 +36,7 @@ const Raycash = () => <Work slug="raycash">{siteConfig.company}</Work>
 const Zama = () => <Work slug="zama">Zama</Work>
 const Deployoor = () => <Work slug="deployoor">deployoor</Work>
 const Primitives = () => (
-  <Work slug="confidential-primitives">Confidential Primitives</Work>
+  <Work slug="confidential-primitives">confidential-primitives</Work>
 )
 
 // One entry per length; each entry is its paragraphs. The control is appended

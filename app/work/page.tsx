@@ -35,8 +35,8 @@ export default function WorkPage() {
           friends and colleagues. Hopefully I’ll be back on the road soon.
         </p>
         <p>
-          I also like NFT engineering as a tool for creativity.
-          <Link href="/work/chain-double"> Chain-double</Link> lets an L1
+          I also like NFT engineering as a tool for creativity.{" "}
+          <Link href="/work/chain-double">chain-double</Link> lets an L1
           NFT read its URI from L2 storage, with IPFS as transport. It won
           an award at HackFS in 2022.
         </p>

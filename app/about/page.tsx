@@ -2,13 +2,10 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { allPages } from "content-collections"
 
-import { siteConfig } from "@/lib/config"
+import { pageMetadata } from "@/lib/metadata"
 import { Mdx } from "@/components/mdx-components"
 
-export const metadata: Metadata = {
-  title: "About",
-  description: siteConfig.description,
-}
+export const metadata: Metadata = pageMetadata({ title: "About", path: "/about" })
 
 // The prose lives in content/pages/about.mdx, synced from Notion.
 export default function AboutPage() {

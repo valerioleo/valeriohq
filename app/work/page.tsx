@@ -3,12 +3,15 @@ import type { Metadata } from "next"
 import { allProjects } from "content-collections"
 
 import { listedWork } from "@/lib/work"
+import { pageMetadata } from "@/lib/metadata"
 import { WorkList } from "@/components/work/work-list"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Work",
-  description: "Product and engineering at Raycash, previously at Zama, and the open source tools built along the way.",
-}
+  description:
+    "Product and engineering at Raycash, previously at Zama, and the open source tools built along the way.",
+  path: "/work",
+})
 
 export default function WorkPage() {
   const projects = listedWork(allProjects)

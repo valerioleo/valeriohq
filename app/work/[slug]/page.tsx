@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { allPosts, allProjects } from "content-collections"
 
 import { relatedWriting } from "@/lib/writing"
+import { pageMetadata } from "@/lib/metadata"
 import { Mdx } from "@/components/mdx-components"
 import { META_LINK, PageMeta } from "@/components/page-meta"
 import { BrandIcon } from "@/components/project-logo"
@@ -24,7 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const project = allProjects.find((p) => p.slug === slug)
   if (!project) return {}
-  return { title: project.title, description: project.description }
+  return pageMetadata({
+    title: project.title,
+    description: project.description,
+    path: project.url,
+  })
 }
 
 const host = (url: string) => new URL(url).hostname.replace(/^www\./, "")

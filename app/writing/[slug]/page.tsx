@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { allPosts, allProjects } from "content-collections"
 
 import { relatedWork } from "@/lib/work"
+import { pageMetadata } from "@/lib/metadata"
 import { formatDate } from "@/lib/utils"
 import { Mdx } from "@/components/mdx-components"
 import { META_LINK, PageMeta } from "@/components/page-meta"
@@ -22,10 +23,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = allPosts.find((p) => p.slug === slug)
   if (!post) return {}
   return {
-    title: post.title,
-    description: post.description,
+    ...pageMetadata({
+      title: post.title,
+      description: post.description,
+      path: post.url,
+      publishedTime: post.date,
+      ownCard: true,
+    }),
     // Point search engines at the original when this was published elsewhere.
     alternates: post.canonical ? { canonical: post.canonical } : undefined,
+    // Drafts stay reachable by URL for review (see /sandbox), but out of
+    // search results.
+    robots: post.draft ? { index: false, follow: false } : undefined,
   }
 }
 

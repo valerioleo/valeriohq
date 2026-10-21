@@ -517,6 +517,21 @@ a:focus-visible .logo-lid-blink {
     margin-block: 1em;
   }
 
+  /* About reads at the homepage bio's size, 14px on a 20px line with 16px
+     between paragraphs, so the short bio and the long one are one voice. */
+  .prose-bio {
+    font-size: 0.875rem;
+    line-height: calc(20 / 14);
+    letter-spacing: -0.0064em;
+  }
+  .prose-bio :is(p, li, dd) {
+    line-height: calc(20 / 14);
+    letter-spacing: -0.0064em;
+  }
+  .prose-bio p {
+    margin-block: 1rem;
+  }
+
   /* Links: quiet rust underline that commits on hover. */
   .prose a:not(:where(.not-prose, .not-prose *)) {
     font-weight: inherit;

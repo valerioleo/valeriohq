@@ -15,14 +15,22 @@ const ICONS = { light: Sun, dark: Moon, system: Monitor } as const
 const isChoice = (theme?: string): theme is ThemeChoice =>
   ORDER.some(choice => choice === theme)
 
+// False on the server and during hydration, true after: the stored theme is
+// only known on the client.
+const subscribeNever = () => () => undefined
+const useMounted = () =>
+  React.useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  )
+
 export function ModeToggle() {
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
+  const mounted = useMounted()
   // The icons only cross-fade once you've pressed the toggle, so the stored
   // theme replacing the server's placeholder on load isn't animated.
   const [pressed, setPressed] = React.useState(false)
-
-  React.useEffect(() => setMounted(true), [])
 
   const current: ThemeChoice = mounted && isChoice(theme) ? theme : "system"
 

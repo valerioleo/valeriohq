@@ -44,7 +44,7 @@ export function ModeToggle() {
         "-me-2.5 w-8 justify-center text-muted-foreground hover:text-foreground"
       )}
     >
-      {/* All three icons share one cell and cross-fade (.theme-icon in
+      {/* All three icons share one cell and cross-fade (.swap-icon in
           globals.css). The stroke matches the 12px mono beside it. */}
       <span aria-hidden data-animate={pressed ? "" : undefined} className="grid">
         {ORDER.map(choice => {
@@ -56,7 +56,7 @@ export function ModeToggle() {
               strokeWidth={1.5}
               absoluteStrokeWidth
               data-hidden={choice === current ? undefined : ""}
-              className="theme-icon"
+              className="swap-icon"
             />
           )
         })}

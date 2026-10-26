@@ -374,21 +374,22 @@ a:focus-visible .logo-lid-blink {
 }
 
 /*
- * The theme toggle's icons share one grid cell and cross-fade: the outgoing
+ * An icon that follows a control's state (the theme toggle, the decrypt
+ * button) keeps every glyph in one grid cell and cross-fades: the outgoing
  * one shrinks and blurs away as the next resolves. `!important` for the
  * same reason as the logo: next-themes suppresses transitions for the
- * frame the theme switches, which is exactly when this one runs.
+ * frame the theme switches, which is exactly when the theme icon runs.
  */
-.theme-icon {
+.swap-icon {
   grid-area: 1 / 1;
 }
-[data-animate] > .theme-icon {
+[data-animate] > .swap-icon {
   transition:
     opacity 0.3s cubic-bezier(0.2, 0, 0, 1),
     scale 0.3s cubic-bezier(0.2, 0, 0, 1),
     filter 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
 }
-.theme-icon[data-hidden] {
+.swap-icon[data-hidden] {
   opacity: 0;
   scale: 0.25;
   filter: blur(4px);
@@ -396,10 +397,10 @@ a:focus-visible .logo-lid-blink {
 
 @media (prefers-reduced-motion: reduce) {
   /* Reduced motion keeps the cross-fade and drops the movement. */
-  [data-animate] > .theme-icon {
+  [data-animate] > .swap-icon {
     transition: opacity 0.15s ease !important;
   }
-  .theme-icon[data-hidden] {
+  .swap-icon[data-hidden] {
     scale: 1;
     filter: none;
   }

@@ -39,7 +39,7 @@ export const AgentMoneyLoop = () => (
               Send Acme the invoice with a payment link.
             </Line>
 
-            <div className={cn("pl-[3.25rem]", reveal(step >= 1))}>
+            <div className={cn("ps-[3.25rem]", reveal(step >= 1))}>
               <Steps header="Thinking" done={step >= 4}>
                 <Step
                   status={statusAt(step, 1)}
@@ -64,7 +64,7 @@ export const AgentMoneyLoop = () => (
               Sent. Acme has the invoice and a link to pay it.
             </Line>
 
-            <div className={cn("pl-[3.25rem]", reveal(step >= 5))}>
+            <div className={cn("ps-[3.25rem]", reveal(step >= 5))}>
               <Steps header="Update" done={step >= 6}>
                 <Step
                   status={statusAt(step, 5)}

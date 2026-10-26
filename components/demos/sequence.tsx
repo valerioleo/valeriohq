@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 
 // A short explanatory sequence: establish → act → hold. Plays once when it
 // scrolls into view, rests on the final state, and offers Replay. Under
@@ -19,25 +19,30 @@ export type SequenceState = {
   reduced: boolean
 }
 
-const useReducedMotion = () => {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const update = () => setReduced(mq.matches)
-    update()
-    mq.addEventListener("change", update)
-    return () => mq.removeEventListener("change", update)
-  }, [])
-  return reduced
+const REDUCED = "(prefers-reduced-motion: reduce)"
+
+const subscribeReduced = (onChange: () => void) => {
+  const mq = window.matchMedia(REDUCED)
+  mq.addEventListener("change", onChange)
+  return () => mq.removeEventListener("change", onChange)
 }
+
+const useReducedMotion = () =>
+  useSyncExternalStore(
+    subscribeReduced,
+    () => window.matchMedia(REDUCED).matches,
+    () => false
+  )
 
 const useSequence = (durations: number[]) => {
   const reduced = useReducedMotion()
   const last = durations.length - 1
   const ref = useRef<HTMLDivElement>(null)
-  const [armed, setArmed] = useState(false)
   const [step, setStep] = useState(0)
-  const [playing, setPlaying] = useState(false)
+  // Set when the sequence first scrolls into view, and again on Replay.
+  const [started, setStarted] = useState(false)
+  // Under reduced motion the reader steps by hand, starting from the result.
+  const [manual, setManual] = useState<number | null>(null)
 
   useEffect(() => {
     const el = ref.current
@@ -45,7 +50,7 @@ const useSequence = (durations: number[]) => {
     const io = new IntersectionObserver(
       entries => {
         if (entries.some(e => e.isIntersecting)) {
-          setArmed(true)
+          setStarted(true)
           io.disconnect()
         }
       },
@@ -55,36 +60,25 @@ const useSequence = (durations: number[]) => {
     return () => io.disconnect()
   }, [])
 
-  useEffect(() => {
-    if (!armed) return
-    if (reduced) {
-      setStep(last)
-      setPlaying(false)
-    } else {
-      setStep(0)
-      setPlaying(true)
-    }
-  }, [armed, reduced, last])
+  const playing = started && !reduced && step < last
 
   useEffect(() => {
     if (!playing) return
-    if (step >= last) {
-      setPlaying(false)
-      return
-    }
     const t = window.setTimeout(() => setStep(s => s + 1), durations[step])
     return () => window.clearTimeout(t)
-  }, [playing, step, durations, last])
+  }, [playing, step, durations])
+
+  const shown = reduced ? (manual ?? last) : step
 
   const replay = () => {
-    if (reduced) setStep(s => (s >= last ? 0 : s + 1))
+    if (reduced) setManual(shown >= last ? 0 : shown + 1)
     else {
       setStep(0)
-      setPlaying(true)
+      setStarted(true)
     }
   }
 
-  return { ref, step, last, playing, reduced, replay }
+  return { ref, step: shown, last, playing, reduced, replay }
 }
 
 export const Sequence = ({
@@ -105,12 +99,18 @@ export const Sequence = ({
       </div>
       <div className="mt-4 flex items-center justify-between font-mono text-[11px] text-muted-foreground">
         <span aria-hidden>
-          {reduced ? `step ${step + 1} of ${last + 1}` : playing ? "playing" : "done"}
+          {reduced
+            ? `step ${step + 1} of ${last + 1}`
+            : playing
+              ? "playing"
+              : step >= last
+                ? "done"
+                : ""}
         </span>
         <button
           type="button"
           onClick={replay}
-          className="rounded-md border border-border px-2.5 py-1 transition-colors hover:border-brand hover:text-brand"
+          className="rounded-md border border-border px-2.5 py-1 lowercase transition-colors hover:border-brand hover:text-brand"
         >
           {control}
         </button>
@@ -123,5 +123,5 @@ export const Sequence = ({
 // opacity and a 4px rise change. Motion only when the user allows it.
 export const reveal = (on: boolean) =>
   on
-    ? "opacity-100 translate-y-0 motion-safe:transition-all motion-safe:duration-300"
-    : "opacity-0 translate-y-1 pointer-events-none motion-safe:transition-all motion-safe:duration-300"
+    ? "opacity-100 translate-y-0 motion-safe:transition-[opacity,translate] motion-safe:duration-300"
+    : "opacity-0 translate-y-1 pointer-events-none motion-safe:transition-[opacity,translate] motion-safe:duration-300"

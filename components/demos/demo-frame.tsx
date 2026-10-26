@@ -37,7 +37,7 @@ export function DemoFrame({
         <div className="p-5 sm:p-6">{children}</div>
       </div>
       {caption && (
-        <figcaption className="mt-3 text-center font-mono text-xs text-muted-foreground">
+        <figcaption className="mt-3 text-balance text-center font-mono text-xs text-muted-foreground">
           {caption}
         </figcaption>
       )}

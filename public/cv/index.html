@@ -389,9 +389,44 @@
         color: var(--ink);
       }
 
-      /* Below A4 width the sheet becomes one flowing column.
+      /* On screen the contact lines are tapped, not read off paper: each
+         is a full 24px target instead of a 13px line. */
+      @media screen {
+        .contact {
+          gap: 0;
+        }
+
+        .contact a {
+          display: inline-flex;
+          align-items: center;
+          min-height: 24px;
+        }
+      }
+
+      /* Names that link (a company, a project) look like the names that
+         don't, as they must on paper. On screen they answer the pointer. */
+      @media screen and (hover: hover) {
+        .sheet a {
+          transition: color 0.15s ease;
+        }
+
+        .sheet a:hover {
+          color: var(--brand);
+        }
+      }
+
+      /* Below A4 width the sheet becomes one flowing column, read at the
+         site's 14px body size rather than the 11px of the printed sheet.
          Last in the sheet, so it wins over the A4 rules above. */
       @media screen and (max-width: 225mm) {
+        :root {
+          --text-name: 20pt;
+          --text-lede: 11.75pt;
+          --text-title: 11.25pt;
+          --text-body: 10.5pt;
+          --text-label: 9pt;
+        }
+
         body {
           padding: 0;
           background: var(--paper);
@@ -426,9 +461,9 @@
     </style>
   </head>
   <body>
-    <p class="download">
+    <header class="download">
       <a href="/cv/valerio-leo-cv.pdf" download>Download PDF</a>
-    </p>
+    </header>
     <main class="sheet">
       <header class="masthead">
         <div class="identity">

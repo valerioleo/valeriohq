@@ -11,8 +11,23 @@ import { RaycashProduct } from "@/components/work/raycash-product"
 import { WorkPill } from "@/components/work-pill"
 import { AutoplayVideo } from "@/components/autoplay-video"
 
+// A wide table scrolls inside its own box instead of pushing the page
+// sideways on a narrow screen.
+const Table = (props: React.ComponentProps<"table">) => (
+  <div className="my-8 overflow-x-auto [&>table]:my-0">
+    <table {...props} />
+  </div>
+)
+
+// A comparison table's empty corner is a plain cell, not a header with no
+// name for the column of row labels beneath it.
+const Th = ({ children, ...props }: React.ComponentProps<"th">) =>
+  children ? <th {...props}>{children}</th> : <td {...props} />
+
 const components = {
   Image,
+  table: Table,
+  th: Th,
   CrowdDiagram,
   // Interactive demos. Registered here → usable by name in any post's MDX.
   DemoFrame,

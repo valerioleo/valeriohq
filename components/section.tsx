@@ -12,7 +12,7 @@ export const Section = ({
       <h2 className="font-mono text-xs tracking-[0.04em] text-muted-foreground">
         {title}
       </h2>
-      <div aria-hidden className="h-px flex-1 bg-border/80" />
+      <div aria-hidden className="h-px flex-1 bg-border" />
     </div>
     <div className="mt-5">{children}</div>
   </section>

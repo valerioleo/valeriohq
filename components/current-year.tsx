@@ -8,15 +8,17 @@ import * as React from "react"
 //
 // `initial` is the build-time year and exists only so the static HTML ships
 // a complete line (crawlers and no-JS readers see a year, and there's no
-// layout shift on hydration). The effect then corrects it if the real year
-// has moved on since the last deploy.
-export function CurrentYear({ initial }: { initial: number }) {
-  const [year, setYear] = React.useState(initial)
+// layout shift on hydration). Once hydrated, the client's year takes over
+// if it has moved on since the last deploy.
+const subscribeNever = () => () => undefined
+const thisYear = () => new Date().getFullYear()
 
-  React.useEffect(() => {
-    const actual = new Date().getFullYear()
-    if (actual !== initial) setYear(actual)
-  }, [initial])
+export function CurrentYear({ initial }: { initial: number }) {
+  const year = React.useSyncExternalStore(
+    subscribeNever,
+    thisYear,
+    () => initial
+  )
 
   return <>{year}</>
 }

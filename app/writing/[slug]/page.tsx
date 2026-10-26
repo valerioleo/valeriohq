@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { allPosts, allProjects } from "content-collections"
 
 import { relatedWork } from "@/lib/work"
+import { pageMetadata } from "@/lib/metadata"
 import { formatDate } from "@/lib/utils"
 import { Mdx } from "@/components/mdx-components"
 import { META_LINK, PageMeta } from "@/components/page-meta"
@@ -22,10 +23,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = allPosts.find((p) => p.slug === slug)
   if (!post) return {}
   return {
-    title: post.title,
-    description: post.description,
+    ...pageMetadata({
+      title: post.title,
+      description: post.description,
+      path: post.url,
+      publishedTime: post.date,
+      ownCard: true,
+    }),
     // Point search engines at the original when this was published elsewhere.
     alternates: post.canonical ? { canonical: post.canonical } : undefined,
+    // Drafts stay reachable by URL for review (see /sandbox), but out of
+    // search results.
+    robots: post.draft ? { index: false, follow: false } : undefined,
   }
 }
 
@@ -39,7 +48,7 @@ export default async function PostPage({ params }: Props) {
     <div className="py-10">
       <article>
         <header>
-          <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">
+          <h1 className="text-title">
             {post.title}
           </h1>
           <PageMeta>
@@ -51,7 +60,8 @@ export default async function PostPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className={META_LINK}
               >
-                Originally on {post.sourceLabel ?? "X"} ↗
+                originally on {(post.sourceLabel ?? "X").toLowerCase()}{" "}
+                <span aria-hidden>↗</span>
               </a>
             )}
           </PageMeta>

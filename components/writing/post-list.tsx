@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 import { cn, formatDate } from "@/lib/utils"
-import { ROW, ROWS } from "@/components/rows"
+import { ROW, ROW_TITLE, ROWS } from "@/components/rows"
 
 type Post = {
   url: string
@@ -20,9 +20,7 @@ export const PostList = ({ posts }: { posts: Post[] }) => (
             "flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
           )}
         >
-          <span className="min-w-0 transition-colors group-hover:text-brand">
-            {post.title}
-          </span>
+          <span className={cn("min-w-0", ROW_TITLE)}>{post.title}</span>
           <time
             dateTime={post.date}
             className="shrink-0 font-mono text-xs text-muted-foreground"

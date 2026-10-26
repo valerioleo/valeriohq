@@ -11,13 +11,13 @@ import { BrandIcon } from "@/components/project-logo"
 // surface alone marks it as a reference. Hover feedback is colour-only, on
 // the label.
 //
-// Disc is 1.15em of the 16px reading size (~18px). The chip is nudged 2px
+// Disc is 1.15em of the 14px reading size (~16px). The chip is nudged 2px
 // down so it sits on the surrounding Inter line instead of floating above it.
 export function WorkPill({ slug, label }: { slug: string; label: string }) {
   return (
     <Link
       href={`/work/${slug}`}
-      className="inline-flex translate-y-[2px] items-center gap-[0.2em] whitespace-nowrap rounded-full bg-muted/60 py-[0.12em] pl-[0.12em] pr-[0.3em] align-baseline leading-none transition-colors hover:text-brand"
+      className="inline-flex translate-y-[2px] items-center gap-[0.2em] whitespace-nowrap rounded-full bg-muted/60 py-[0.12em] ps-[0.12em] pe-[0.3em] align-baseline leading-none transition-colors hover:text-brand"
     >
       <BrandIcon slug={slug} className="size-[1.15em]" />
       <span>{label}</span>

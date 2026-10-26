@@ -18,7 +18,7 @@ const APPS = ["Messages", "WhatsApp", "Mail", "More"]
 // A screen that slides up over a window's body, like an app opening.
 const sheet = (open: boolean) =>
   cn(
-    "absolute -inset-3 sm:-inset-4 bg-background px-3 pb-3 pt-3 sm:px-4 motion-safe:transition-all motion-safe:duration-400",
+    "absolute -inset-3 sm:-inset-4 bg-background px-3 pb-3 pt-3 sm:px-4 motion-safe:transition-[opacity,translate] motion-safe:duration-400",
     open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"
   )
 
@@ -53,7 +53,7 @@ export const PaymentLinkFlow = () => (
               {/* Share sheet over the sender's screen at state 3 */}
               <div
                 className={cn(
-                  "absolute inset-x-0 -bottom-3 sm:-bottom-4 -mx-3 sm:-mx-4 rounded-t-lg border-t border-border bg-background px-3 pb-3 pt-2.5 motion-safe:transition-all motion-safe:duration-400",
+                  "absolute inset-x-0 -bottom-3 sm:-bottom-4 -mx-3 sm:-mx-4 rounded-t-lg border-t border-border bg-background px-3 pb-3 pt-2.5 motion-safe:transition-[opacity,translate] motion-safe:duration-400",
                   step === 3 ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"
                 )}
               >

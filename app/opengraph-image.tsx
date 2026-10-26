@@ -50,7 +50,6 @@ export default async function OpengraphImage() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logoSrc} width={52} height={52} alt="" />
               <div style={{ color: "#e0906a" }}>{siteConfig.handle}</div>
             </div>

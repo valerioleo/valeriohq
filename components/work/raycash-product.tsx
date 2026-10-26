@@ -4,9 +4,11 @@ import { siteConfig } from "@/lib/config"
 
 // Public product artwork from raycash.xyz/images/landing/phone-home.png.
 // Kept locally with its original dimensions; next/image serves smaller sizes.
+// The caption's lead takes the page-title role, so it never outranks the
+// page's own title.
 export function RaycashProduct() {
   return (
-    <figure className="not-prose my-10 grid gap-6 border-y border-border/80 py-8 sm:grid-cols-[200px_1fr] sm:items-center sm:gap-10">
+    <figure className="not-prose my-10 grid gap-6 border-y border-border py-8 sm:grid-cols-[200px_1fr] sm:items-center sm:gap-10">
       <Image
         src="/work/raycash-home.png"
         alt={`${siteConfig.company} mobile app showing a balance, pending deposits and payment controls`}
@@ -17,8 +19,8 @@ export function RaycashProduct() {
         className="mx-auto h-auto w-[180px] sm:w-[200px]"
       />
       <figcaption>
-        <p className="font-serif text-xl leading-snug">Private money, ordinary interactions.</p>
-        <p className="mt-3 font-sans text-sm leading-relaxed text-muted-foreground">
+        <p className="text-title">Private money, ordinary interactions.</p>
+        <p className="mt-3 text-sm text-muted-foreground">
           A balance, a deposit, a payment. Underneath the familiar interface,
           the contracts work with encrypted amounts. The engineering has to
           connect those two worlds.

@@ -12,6 +12,25 @@ const nextConfig = {
       source: "/vhq/script.js",
       destination: "https://cloud.umami.is/script.js",
     },
+    // The CV is a static page in public/cv, which is also the PDF's source
+    // (scripts/build-cv.mjs). Nothing links to it.
+    {
+      source: "/cv",
+      destination: "/cv/index.html",
+    },
+  ],
+  // Unlisted, so kept out of search results too: the page, the PDF and its
+  // fonts. robots.txt stays silent about it, since naming it there would
+  // advertise it.
+  headers: async () => [
+    {
+      source: "/cv/:path*",
+      headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+    },
+    {
+      source: "/cv",
+      headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+    },
   ],
 }
 

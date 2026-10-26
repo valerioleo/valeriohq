@@ -5,18 +5,34 @@ import { allPosts } from "content-collections"
 
 import { siteConfig } from "@/lib/config"
 
-export const alt = "Writing"
-export const size = { width: 1200, height: 630 }
-export const contentType = "image/png"
+const size = { width: 1200, height: 630 }
 
 export function generateStaticParams() {
   return allPosts.map((post) => ({ slug: post.slug }))
+}
+
+// The card's alt is the post's title: the image is the title, set large.
+export function generateImageMetadata({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const post = allPosts.find((p) => p.slug === params.slug)
+  return [
+    {
+      id: "card",
+      alt: post?.title ?? siteConfig.name,
+      size,
+      contentType: "image/png",
+    },
+  ]
 }
 
 export default async function Image({
   params,
 }: {
   params: Promise<{ slug: string }>
+  id: Promise<string>
 }) {
   const { slug } = await params
   const post = allPosts.find((p) => p.slug === slug)
@@ -61,7 +77,6 @@ export default async function Image({
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logoSrc} width={52} height={52} alt="" />
               <div style={{ color: "#e0906a" }}>{siteConfig.handle}</div>
             </div>

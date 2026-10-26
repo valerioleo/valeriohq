@@ -21,27 +21,18 @@
   --foreground: #403836;
   --ink: #161210; /* links — 15.2:1 on paper */
   --card: #f3edec;
-  --card-foreground: #403836;
-  --popover: #f6f1f0;
-  --popover-foreground: #403836;
-  --primary: #24201e; /* ink — filled buttons */
-  --primary-foreground: #f3edec;
-  --secondary: #e1d7d5;
-  --secondary-foreground: #403836;
   /* Deeper than paper on purpose: bright-room reading washes out near-
      neighbours, and chips (work pills) need a surface that still reads. */
   --muted: #dacfcb;
-  --muted-foreground: #6b615d;
-  --accent: #dacfcb; /* subtle hover surface (shadcn semantics) */
-  --accent-foreground: #403836;
-  --destructive: #b4442f;
-  --destructive-foreground: #f3edec;
-  --border: #d8cdcb;
-  --input: #d8cdcb;
+  --muted-foreground: #6b615d; /* 4.89:1 on paper */
+  /* Hairlines sit at the discernible floor (APCA Lc 15) on paper. */
+  --border: #d2c7c5;
   --ring: #9a4a22;
 
   --brand: #9a4a22; /* rust — 5.06:1 on paper */
   --brand-foreground: #f6f1ef;
+  /* The underline is what marks a link in running text: 3.5:1 on paper. */
+  --link-underline: color-mix(in srgb, var(--brand) 80%, transparent);
 }
 
 .dark {
@@ -49,25 +40,17 @@
   --foreground: #e7eef0;
   --ink: #e7eef0;
   --card: #06303f;
-  --card-foreground: #e7eef0;
-  --popover: #073847;
-  --popover-foreground: #e7eef0;
-  --primary: #e7eef0;
-  --primary-foreground: #022331;
-  --secondary: #0c3e4e;
-  --secondary-foreground: #e7eef0;
   --muted: #0e4353;
-  --muted-foreground: #9bb1b9;
-  --accent: #0e4353;
-  --accent-foreground: #e7eef0;
-  --destructive: #e5705a;
-  --destructive-foreground: #022331;
-  --border: #0e3b4a;
-  --input: #0e3b4a;
+  --muted-foreground: #9bb1b9; /* 7.29:1 on teal */
+  /* Hairlines at the discernible floor on teal (APCA Lc 15). */
+  --border: #335e6e;
   --ring: #e0906a;
 
   --brand: #e0906a; /* apricot — 6.5:1 on teal */
   --brand-foreground: #022331;
+  /* 3.1:1 on teal; bio links share the body colour here, so the underline
+     is their only mark. */
+  --link-underline: color-mix(in srgb, var(--brand) 60%, transparent);
 }
 
 /* Map tokens → Tailwind utilities (bg-background, text-muted-foreground, …). */
@@ -76,24 +59,13 @@
   --color-foreground: var(--foreground);
   --color-ink: var(--ink);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-link-underline: var(--link-underline);
 
   /* Type — Inter at caption size, one family. Plex Mono for chrome. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -107,6 +79,16 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* The page-title role, shared by every page h1 and the body's h1: one
+   decision for size, leading, tracking and weight. Not inline, so the
+   variable exists at runtime for .prose h1 to read. */
+@theme {
+  --text-title: 1.1875rem;
+  --text-title--line-height: 1.3;
+  --text-title--letter-spacing: -0.016em;
+  --text-title--font-weight: 560;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -117,8 +99,8 @@
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 460;
-    line-height: 1.25rem;
-    letter-spacing: -0.00563rem;
+    line-height: calc(20 / 14); /* 20px at 14px, and it scales */
+    letter-spacing: -0.0064em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -136,9 +118,15 @@
   }
   /* Visible, branded focus for keyboard users — everywhere. */
   :focus-visible {
-    outline: 2px solid var(--brand);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+  /* Plex Mono ships 400 and 500. Labels, dates and nav sit at 500 on
+     purpose; left to inherit the body's 460 they'd land there by accident. */
+  .font-mono,
+  kbd {
+    font-weight: 500;
   }
   kbd {
     font-family: var(--font-mono);
@@ -169,95 +157,7 @@
   /* Text is visible on the first frame, including before hydration. */
   animation: route-rise 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-@keyframes intro-shimmer {
-  0% {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 100% 0;
-  }
-}
-@keyframes intro-label-in {
-  from {
-    opacity: 0;
-    transform: translateY(80%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes intro-copy-in {
-  from {
-    opacity: 0.35;
-    transform: translateY(-3px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-/* The "More about me" caption rests faint (benji.org's caption grey, ~2.8:1
-   on paper) and the glare lifts it to the muted grey as it passes. */
-.intro-shimmer {
-  --caption: color-mix(in srgb, var(--muted-foreground) 70%, var(--background));
-  display: inline-block;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background: linear-gradient(
-      90deg,
-      var(--caption) 0 35%,
-      var(--muted-foreground) 50%,
-      var(--caption) 65% 100%
-    )
-    0 0 / 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: intro-shimmer 1.5s ease-in-out infinite;
-}
-.intro-expand-handle:hover .intro-shimmer {
-  animation: none;
-  color: var(--brand);
-  -webkit-text-fill-color: var(--brand);
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
-}
-.intro-label-in {
-  animation: intro-label-in 0.24s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.intro-copy {
-  animation: intro-copy-in 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-@keyframes overlay-in {
-  from {
-    opacity: 0;
-  }
-}
-/* Animates opacity + the native `scale` property only — Tailwind v4 positions
-   the panel with the native `translate` property, which this must not touch. */
-@keyframes panel-in {
-  from {
-    opacity: 0;
-    scale: 0.98;
-  }
-}
-.dialog-overlay[data-state="open"] {
-  animation: overlay-in 0.18s ease-out;
-}
-.dialog-panel[data-state="open"] {
-  animation: panel-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/*
- * The logo's night sky. Stars live between the sky disc and the periscope
- * (components/logo.tsx) and only exist in dark mode. Keyframe animations,
- * not transitions, on purpose: next-themes kills all transitions during the
- * theme switch (disableTransitionOnChange), but animations play through.
- * Dusk gets ceremony — a staggered rise — while switching back to light is
- * an instant sunrise.
- */
 /*
  * Night falls on the sky disc itself — and lifts again at dawn.
  *
@@ -284,75 +184,82 @@
  * closed as a curved seam low on the eye, not a flattened disc. The eyeball
  * itself never deforms (squashing it would reveal the sky through the
  * barrel). Each blink snaps shut (~100ms), holds a beat (~70ms), reopens
- * slower (~220ms) — per-segment easings below. One 29s cycle, blinks at
- * three uneven points with a double-blink in the middle: intervals of
- * ~12.5s, ~1.2s, ~15.3s. Reads as random; costs zero JS.
+ * slower (~220ms) — per-segment easings below.
+ *
+ * On arrival the eye runs one 4s pass: a blink, a pause, a double-blink.
+ * After that it rests open, so nothing moves on its own past WCAG's five
+ * seconds, and it blinks again whenever you point at or focus the home
+ * link. The two live on nested groups (logo.tsx), so the hover blink never
+ * restarts the arrival. Both lids share the keyframes through --lid-travel;
+ * their edges are shaped to seal against each other at full travel.
  */
 .logo-eyelid-upper {
-  animation: logo-blink-upper 29s linear infinite;
+  --lid-travel: 193px;
 }
 .logo-eyelid-lower {
-  animation: logo-blink-lower 29s linear infinite;
+  --lid-travel: -36px;
+}
+.logo-eyelid-upper,
+.logo-eyelid-lower {
+  animation: logo-arrival 4s linear;
+}
+@media (hover: hover) {
+  a:hover .logo-lid-blink {
+    animation: logo-blink 0.39s linear;
+  }
+}
+a:focus-visible .logo-lid-blink {
+  animation: logo-blink 0.39s linear;
 }
 /* Open keyframes carry the close easing (their only moving exit segments
    are open→closed); the later closed keyframes carry the reopen easing.
-   Segments between identical values are flat, so sharing blocks is safe.
-   Both keyframe sets must stay on the same schedule — the lid edges are
-   shaped to seal against each other at full travel. */
-@keyframes logo-blink-upper {
+   Segments between identical values are flat, so sharing blocks is safe. */
+@keyframes logo-arrival {
   0%,
-  11.5%,
-  12.85%,
-  54.5%,
-  55.85%,
-  58.7%,
-  60.05%,
+  30%,
+  39.75%,
+  72.5%,
+  82.25%,
+  86.25%,
+  96%,
   100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
   }
-  11.85%,
-  54.85%,
-  59.05% {
-    transform: translateY(193px);
+  32.5%,
+  75%,
+  88.75% {
+    transform: translateY(var(--lid-travel));
   }
-  12.1%,
-  55.1%,
-  59.3% {
-    transform: translateY(193px);
+  34.25%,
+  76.75%,
+  90.5% {
+    transform: translateY(var(--lid-travel));
     animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
   }
 }
-@keyframes logo-blink-lower {
-  0%,
-  11.5%,
-  12.85%,
-  54.5%,
-  55.85%,
-  58.7%,
-  60.05%,
-  100% {
+@keyframes logo-blink {
+  0% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
   }
-  11.85%,
-  54.85%,
-  59.05% {
-    transform: translateY(-36px);
+  26% {
+    transform: translateY(var(--lid-travel));
   }
-  12.1%,
-  55.1%,
-  59.3% {
-    transform: translateY(-36px);
+  44% {
+    transform: translateY(var(--lid-travel));
     animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
 /*
  * Stars rise in at dusk and sink back out at dawn — same transition, run
- * in reverse. The rise/fade lives on the <path>; the idle twinkle rides on
- * the wrapping <g>, so an infinite animation and a one-shot transition
- * never fight over the same property.
+ * in reverse. The rise/fade lives on the <path>; the twinkle rides on the
+ * wrapping <g>, so the animation and the transition never fight over the
+ * same property.
  */
 .logo-star path {
   opacity: 0;
@@ -379,17 +286,18 @@
   transition-delay: 0.24s !important;
 }
 
+/* One staggered twinkle once night has fallen, done within five seconds. */
 .dark .logo-star {
-  animation: logo-star-twinkle 5.5s ease-in-out 1.2s infinite;
+  animation: logo-star-twinkle 2.4s ease-in-out 0.6s;
 }
 .dark .logo-star:nth-of-type(2) {
-  animation-delay: 3.1s;
+  animation-delay: 1.5s;
 }
 .dark .logo-star:nth-of-type(3) {
-  animation-delay: 4.3s;
+  animation-delay: 2.2s;
 }
 .dark .logo-star:nth-of-type(4) {
-  animation-delay: 2.2s;
+  animation-delay: 1.1s;
 }
 @keyframes logo-star-twinkle {
   0%,
@@ -401,22 +309,43 @@
   }
 }
 
+/*
+ * An icon that follows a control's state (the theme toggle, the decrypt
+ * button) keeps every glyph in one grid cell and cross-fades: the outgoing
+ * one shrinks and blurs away as the next resolves. `!important` for the
+ * same reason as the logo: next-themes suppresses transitions for the
+ * frame the theme switches, which is exactly when the theme icon runs.
+ */
+.swap-icon {
+  grid-area: 1 / 1;
+}
+[data-animate] > .swap-icon {
+  transition:
+    opacity 0.3s cubic-bezier(0.2, 0, 0, 1),
+    scale 0.3s cubic-bezier(0.2, 0, 0, 1),
+    filter 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+.swap-icon[data-hidden] {
+  opacity: 0;
+  scale: 0.25;
+  filter: blur(4px);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* Reduced motion keeps the cross-fade and drops the movement. */
+  [data-animate] > .swap-icon {
+    transition: opacity 0.15s ease !important;
+  }
+  .swap-icon[data-hidden] {
+    scale: 1;
+    filter: none;
+  }
   .route-enter,
-  .dialog-overlay[data-state="open"],
-  .dialog-panel[data-state="open"],
   .logo-eyelid-upper,
   .logo-eyelid-lower,
-  .dark .logo-star,
-  .intro-shimmer,
-  .intro-label-in,
-  .intro-copy {
+  .logo-lid-blink,
+  .dark .logo-star {
     animation: none !important;
-  }
-  .intro-shimmer {
-    color: var(--caption);
-    -webkit-text-fill-color: var(--caption);
-    background: none;
   }
   /* Stars and night sky still appear in dark mode — features, not motion.
      These need explicit overrides because the rules above carry !important
@@ -468,6 +397,9 @@
  * Lives in the utilities layer: the typography plugin emits `.prose` there,
  * and layer order (not specificity) decides the cascade — these must come
  * after it in the same layer to win.
+ *
+ * Every element rule skips `.not-prose`, as the plugin's own rules do, so a
+ * demo or figure that opts out keeps its own margins and type.
  * ────────────────────────────────────────────────────────────────────────
  */
 @layer utilities {
@@ -475,12 +407,14 @@
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
-    text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    text-decoration-color: var(--link-underline);
     transition: color 0.15s ease, text-decoration-color 0.15s ease;
   }
-  .text-link:hover {
-    color: var(--brand);
-    text-decoration-color: var(--brand);
+  @media (hover: hover) {
+    .text-link:hover {
+      color: var(--brand);
+      text-decoration-color: var(--brand);
+    }
   }
 
   .prose {
@@ -490,7 +424,7 @@
     --tw-prose-links: var(--brand);
     --tw-prose-bold: var(--foreground);
     --tw-prose-counters: var(--muted-foreground);
-    --tw-prose-bullets: color-mix(in srgb, var(--brand) 55%, transparent);
+    --tw-prose-bullets: var(--muted-foreground);
     --tw-prose-hr: var(--border);
     --tw-prose-quotes: var(--foreground);
     --tw-prose-quote-borders: transparent;
@@ -501,19 +435,22 @@
     --tw-prose-th-borders: var(--border);
     --tw-prose-td-borders: var(--border);
 
-    /* Long-form reads a step up from the 14px lists and chrome around it. */
-    font-size: 1rem;
+    /* Every page reads at the body size: the homepage bio's 14px on a 20px
+       line, with 16px between paragraphs, so the site is one voice from
+       the short bio to the longest article. */
+    font-size: 0.875rem;
     font-weight: 460;
-    line-height: 1.625rem;
-    letter-spacing: -0.00563rem;
+    line-height: calc(20 / 14);
+    letter-spacing: -0.0064em;
   }
-  .prose :is(p, li, dd) {
+  .prose :is(p, li, dd):not(:where(.not-prose, .not-prose *)) {
     font-weight: 460;
-    line-height: 1.625rem;
-    letter-spacing: -0.00563rem;
+    line-height: calc(20 / 14);
+    letter-spacing: -0.0064em;
+    text-wrap: pretty;
   }
-  .prose p {
-    margin-block: 1em;
+  .prose p:not(:where(.not-prose, .not-prose *)) {
+    margin-block: 1rem;
   }
 
   /* Links: quiet rust underline that commits on hover. */
@@ -522,49 +459,51 @@
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
-    text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
+    text-decoration-color: var(--link-underline);
     transition: text-decoration-color 0.15s ease;
   }
-  .prose a:not(:where(.not-prose, .not-prose *)):hover {
-    text-decoration-color: var(--brand);
+  @media (hover: hover) {
+    .prose a:not(:where(.not-prose, .not-prose *)):hover {
+      text-decoration-color: var(--brand);
+    }
   }
 
   /* Section titles stay Inter, but they have to stand apart from the body:
      weight carries it where size alone is too close. */
-  .prose :is(h1, h2, h3, h4) {
+  .prose :is(h1, h2, h3, h4):not(:where(.not-prose, .not-prose *)) {
     font-family: var(--font-heading);
     font-weight: 560;
-    letter-spacing: -0.01875rem;
+    letter-spacing: -0.016em;
     line-height: 1.3;
     text-wrap: balance;
   }
   /* Body headings start at h1: the page renders the title outside the
-     body, so the body is its own document. h1 sits at page-title size. */
-  .prose h1 {
-    font-size: 1.1875em; /* 19px at the 16px measure, same as page titles */
+     body, so the body is its own document. h1 is the page-title role. */
+  .prose h1:not(:where(.not-prose, .not-prose *)) {
+    font-size: var(--text-title);
     margin-top: 2.2em;
     margin-bottom: 0.75em;
   }
-  .prose h2 {
-    font-size: 1.0625em;
+  .prose h2:not(:where(.not-prose, .not-prose *)) {
+    font-size: 1.0625rem;
     margin-top: 2em;
     margin-bottom: 0.5em;
   }
-  .prose h3 {
-    font-size: 1em;
+  .prose h3:not(:where(.not-prose, .not-prose *)) {
+    font-size: 1rem;
     margin-top: 1.6em;
     margin-bottom: 0.4em;
   }
-  .prose h4 {
-    font-size: 1em;
+  .prose h4:not(:where(.not-prose, .not-prose *)) {
+    font-size: 1rem;
     margin-top: 1.75em;
   }
-  .prose :is(h1, h2, h3, h4):first-child {
+  .prose :is(h1, h2, h3, h4):not(:where(.not-prose, .not-prose *)):first-child {
     margin-top: 0;
   }
 
   /* Quotes use typography and space. No decorative colored left rules. */
-  .prose blockquote {
+  .prose blockquote:not(:where(.not-prose, .not-prose *)) {
     font-style: italic;
     font-weight: inherit;
     border-inline-start-width: 0;
@@ -576,7 +515,7 @@
   }
 
   /* Section breaks: an asterism, not a rule. */
-  .prose hr {
+  .prose hr:not(:where(.not-prose, .not-prose *)) {
     border: none;
     margin-block: 3rem;
     text-align: center;
@@ -585,7 +524,7 @@
     height: auto;
     overflow: visible;
   }
-  .prose hr::before {
+  .prose hr:not(:where(.not-prose, .not-prose *))::before {
     content: "⁂";
     display: block;
     color: var(--muted-foreground);
@@ -595,10 +534,10 @@
   }
 
   /* Inline code: soft panel, no backtick pseudo-quotes, no bold. */
-  .prose :is(code):not(pre code) {
+  .prose :is(code):not(pre code):not(:where(.not-prose, .not-prose *)) {
     font-weight: 400;
-    font-size: 0.85em;
-    background-color: color-mix(in srgb, var(--muted) 70%, transparent);
+    font-size: 0.9em;
+    background-color: color-mix(in srgb, var(--muted) 50%, transparent);
     border-radius: 0.25rem;
     padding: 0.1em 0.35em;
   }
@@ -608,9 +547,9 @@
   }
 
   /* Code blocks: elevated card panel; shiki paints the tokens. */
-  .prose pre {
+  .prose pre:not(:where(.not-prose, .not-prose *)) {
     background-color: var(--card);
-    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border: 1px solid var(--border);
     border-radius: calc(var(--radius) + 2px);
     padding: 1rem 1.25rem;
     font-size: 0.8125rem;
@@ -618,10 +557,23 @@
   }
   /* Long lines clip on the ~582px prose measure, so code gets a modest
      breakout past it — the same courtesy DemoFrame's `bleed` extends to
-     demos. Below 768px, pre stays on the measure and scrolls horizontally. */
+     demos. Below 768px there's no room to break out, and a sideways scroll
+     can end on a space and hide the rest of a line without a hint, so code
+     wraps instead. The hanging indent keeps a wrapped line reading as the
+     continuation of the one above. */
   @media (min-width: 768px) {
-    .prose pre {
+    .prose pre:not(:where(.not-prose, .not-prose *)) {
       margin-inline: -2rem;
+    }
+  }
+  @media (width < 768px) {
+    .prose pre:not(:where(.not-prose, .not-prose *)) {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .prose pre [data-line] {
+      padding-inline-start: 4ch;
+      text-indent: -4ch;
     }
   }
   .prose pre code {
@@ -634,26 +586,43 @@
      needed per theme. Miss the light one and code silently renders as flat
      body text in light mode. */
   .prose pre code span {
-    /* Vitesse targets a different paper color. Mix toward our ink so even
-       comments keep body-text contrast on this warmer code background. */
-    color: color-mix(in srgb, var(--shiki-light) 50%, var(--foreground));
+    /* Vitesse targets a different paper and ships some tokens (quotes,
+       punctuation, comments) semi-transparent. Pulling each one this far
+       toward our ink keeps every token at 4.5:1 or more on the code card. */
+    color: color-mix(in srgb, var(--shiki-light) 38%, var(--foreground));
   }
   .dark .prose pre code span {
-    color: color-mix(in srgb, var(--shiki-dark) 70%, var(--foreground));
+    color: color-mix(in srgb, var(--shiki-dark) 60%, var(--foreground));
   }
 
-  .prose figcaption,
-  .prose time {
+  .prose figcaption:not(:where(.not-prose, .not-prose *)),
+  .prose time:not(:where(.not-prose, .not-prose *)) {
     font-family: var(--font-mono);
     font-size: 0.75rem;
+    font-weight: 500;
+  }
+  /* A caption runs a line or two: balanced, so it never ends on a lone
+     word. Synced captions wrap their text in a <p>, so that gets it too. */
+  .prose figcaption:not(:where(.not-prose, .not-prose *)),
+  .prose figcaption:not(:where(.not-prose, .not-prose *)) p {
+    text-wrap: balance;
   }
 
-  .prose :is(img, video) {
+  .prose :is(img, video):not(:where(.not-prose, .not-prose *)) {
     border-radius: calc(var(--radius) + 2px);
+  }
+  /* A 1px inset edge so a photo's pale sky can't dissolve into the paper.
+     Transparent artwork sits in not-prose figures and is left alone. */
+  .prose img:not(:where(.not-prose, .not-prose *)) {
+    outline: 1px solid #0000001a;
+    outline-offset: -1px;
+  }
+  .dark .prose img:not(:where(.not-prose, .not-prose *)) {
+    outline-color: #ffffff1a;
   }
   /* Video carries width and height for its aspect ratio; scale it to the
      column like an image. */
-  .prose video {
+  .prose video:not(:where(.not-prose, .not-prose *)) {
     width: 100%;
     height: auto;
   }

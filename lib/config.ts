@@ -16,7 +16,7 @@ export const siteConfig = {
 
   // The homepage reads this directly, so the introduction has one source.
   tagline:
-    "I’m a founder, engineer and team leader. I like making complicated things feel simple.",
+    "Founder, product engineer, tireless autodidact. I like making complicated things feel simple: the business behind a product, the people using it, and the details that make it feel right. I ship fast, and I build the checks that keep it safe.",
 
   links: {
     x: "https://x.com/valeriohq",

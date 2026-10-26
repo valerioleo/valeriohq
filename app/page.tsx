@@ -2,7 +2,7 @@ import { allPosts, allProjects } from "content-collections"
 
 import { listedWork } from "@/lib/work"
 import { publishedPosts } from "@/lib/writing"
-import { IntroExpand } from "@/components/intro-expand"
+import { Intro } from "@/components/intro"
 import { Section } from "@/components/section"
 import { WorkList } from "@/components/work/work-list"
 import { PostList } from "@/components/writing/post-list"
@@ -13,7 +13,7 @@ export default function Home() {
 
   return (
     <div className="pb-4 pt-8 sm:pt-12">
-      <IntroExpand />
+      <Intro />
 
       <Section title="work">
         <WorkList projects={work} />

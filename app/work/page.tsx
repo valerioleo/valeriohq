@@ -3,19 +3,22 @@ import type { Metadata } from "next"
 import { allProjects } from "content-collections"
 
 import { listedWork } from "@/lib/work"
+import { pageMetadata } from "@/lib/metadata"
 import { WorkList } from "@/components/work/work-list"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Work",
-  description: "Product and engineering at Raycash, previously at Zama, and the open source tools built along the way.",
-}
+  description:
+    "Product and engineering at Raycash, previously at Zama, and the open source tools built along the way.",
+  path: "/work",
+})
 
 export default function WorkPage() {
   const projects = listedWork(allProjects)
 
   return (
     <div className="pb-8 pt-8 sm:pt-10">
-      <h1 className="text-[1.1875rem] font-medium tracking-[-0.01875rem]">Work</h1>
+      <h1 className="text-title">Work</h1>
       <div className="prose mt-4 max-w-none">
         <p>
           I like working where product and engineering meet: deciding what
@@ -32,8 +35,8 @@ export default function WorkPage() {
           friends and colleagues. Hopefully I’ll be back on the road soon.
         </p>
         <p>
-          I also like NFT engineering as a tool for creativity.
-          <Link href="/work/chain-double"> Chain-double</Link> lets an L1
+          I also like NFT engineering as a tool for creativity.{" "}
+          <Link href="/work/chain-double">chain-double</Link> lets an L1
           NFT read its URI from L2 storage, with IPFS as transport. It won
           an award at HackFS in 2022.
         </p>

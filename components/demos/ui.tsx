@@ -107,7 +107,7 @@ export const Bubble = ({
   <div
     className={cn(
       "max-w-[85%] rounded-lg border border-border px-3 py-2",
-      mine ? "ml-auto" : "mr-auto",
+      mine ? "ms-auto" : "me-auto",
       className
     )}
   >
@@ -122,7 +122,7 @@ export const Cursor = ({ x, y, visible }: { x: number; y: number; visible: boole
     aria-hidden
     viewBox="0 0 16 16"
     className={cn(
-      "pointer-events-none absolute z-10 size-4 text-foreground motion-safe:transition-all motion-safe:duration-500",
+      "pointer-events-none absolute z-10 size-4 text-foreground motion-safe:transition-[left,top,opacity] motion-safe:duration-500",
       visible ? "opacity-100" : "opacity-0"
     )}
     style={{ left: `${x}%`, top: `${y}%` }}
@@ -173,17 +173,17 @@ export const Step = ({
 }) => (
   <li
     className={cn(
-      "relative pb-3 pl-6",
+      "relative pb-3 ps-6",
       status === "pending"
-        ? "opacity-0 translate-y-1 motion-safe:transition-all motion-safe:duration-300"
-        : "opacity-100 translate-y-0 motion-safe:transition-all motion-safe:duration-300"
+        ? "opacity-0 translate-y-1 motion-safe:transition-[opacity,translate] motion-safe:duration-300"
+        : "opacity-100 translate-y-0 motion-safe:transition-[opacity,translate] motion-safe:duration-300"
     )}
   >
-    {!last && <span aria-hidden className="absolute bottom-0 left-[5px] top-4 w-px bg-border" />}
+    {!last && <span aria-hidden className="absolute bottom-0 start-[5px] top-4 w-px bg-border" />}
     <span
       aria-hidden
       className={cn(
-        "absolute left-0 top-1 size-[11px] rounded-full border transition-colors",
+        "absolute start-0 top-1 size-[11px] rounded-full border transition-colors",
         status === "active" ? "border-brand bg-brand" : "border-border bg-muted"
       )}
     />
@@ -194,7 +194,7 @@ export const Step = ({
       <div className="mt-0.5 font-mono text-[11px] text-muted-foreground">{description}</div>
     )}
     {details && (
-      <ul className="mt-1 space-y-0.5 border-l border-border pl-3 font-mono text-[11px] text-muted-foreground">
+      <ul className="mt-1 space-y-0.5 border-s border-border ps-3 font-mono text-[11px] text-muted-foreground">
         {details.map(d => (
           <li key={d}>{d}</li>
         ))}

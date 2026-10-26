@@ -19,9 +19,15 @@ const Table = (props: React.ComponentProps<"table">) => (
   </div>
 )
 
+// A comparison table's empty corner is a plain cell, not a header with no
+// name for the column of row labels beneath it.
+const Th = ({ children, ...props }: React.ComponentProps<"th">) =>
+  children ? <th {...props}>{children}</th> : <td {...props} />
+
 const components = {
   Image,
   table: Table,
+  th: Th,
   CrowdDiagram,
   // Interactive demos. Registered here → usable by name in any post's MDX.
   DemoFrame,

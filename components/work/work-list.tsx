@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { BrandIcon } from "@/components/project-logo"
-import { ROW, ROWS } from "@/components/rows"
+import { ROW, ROW_TITLE, ROWS } from "@/components/rows"
 
 type Item = {
   url: string
@@ -18,11 +18,14 @@ export const WorkList = ({ projects }: { projects: Item[] }) => (
     {projects.map(project => (
       <li key={project.url}>
         <Link href={project.url} className={cn(ROW, "flex items-start gap-2.5")}>
-          <BrandIcon slug={project.slug} className="mt-px size-[18px]" />
+          {/* The icon fades with its row; a brand mark carries no text, so
+              it can drop further than the title does. */}
+          <BrandIcon
+            slug={project.slug}
+            className="mt-px size-[18px] transition-opacity sm:group-hover/list:opacity-50 group-hover:!opacity-100"
+          />
           <span className="flex min-w-0 flex-wrap gap-x-3">
-            <span className="transition-colors group-hover:text-brand">
-              {project.title}
-            </span>
+            <span className={ROW_TITLE}>{project.title}</span>
             {project.summary && (
               <span className="text-muted-foreground">{project.summary}</span>
             )}

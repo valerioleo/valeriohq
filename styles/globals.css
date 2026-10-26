@@ -157,70 +157,6 @@
   /* Text is visible on the first frame, including before hydration. */
   animation: route-rise 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-@keyframes intro-shimmer {
-  0% {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 100% 0;
-  }
-}
-@keyframes intro-copy-in {
-  from {
-    opacity: 0.35;
-    transform: translateY(-3px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-/* The reduced-motion version: the same arrival without the movement. */
-@keyframes intro-copy-fade {
-  from {
-    opacity: 0.35;
-  }
-}
-/* The "More about me" caption rests at the muted grey (4.89:1 on paper, the
-   floor for control text) and the glare lifts it to body ink as it passes. */
-.intro-shimmer {
-  --caption: var(--muted-foreground);
-  display: inline-block;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background: linear-gradient(
-      90deg,
-      var(--caption) 0 35%,
-      var(--foreground) 50%,
-      var(--caption) 65% 100%
-    )
-    0 0 / 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  /* Two passes, then it rests: motion that starts on its own stays under
-     WCAG's five seconds. */
-  animation: intro-shimmer 1.5s ease-in-out 2;
-}
-@media (hover: hover) {
-  .intro-expand-handle:hover .intro-shimmer {
-    color: var(--brand);
-    -webkit-text-fill-color: var(--brand);
-    background: none;
-    -webkit-background-clip: unset;
-    background-clip: unset;
-  }
-}
-/* Each longer bio arrives with a short rise; under reduced motion it only
-   fades, so the swap still reads as a change. */
-.intro-copy {
-  animation: intro-copy-fade 0.32s ease-out both;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .intro-copy {
-    animation-name: intro-copy-in;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-}
 
 /*
  * Night falls on the sky disc itself — and lifts again at dawn.
@@ -408,14 +344,8 @@ a:focus-visible .logo-lid-blink {
   .logo-eyelid-upper,
   .logo-eyelid-lower,
   .logo-lid-blink,
-  .dark .logo-star,
-  .intro-shimmer {
+  .dark .logo-star {
     animation: none !important;
-  }
-  .intro-shimmer {
-    color: var(--caption);
-    -webkit-text-fill-color: var(--caption);
-    background: none;
   }
   /* Stars and night sky still appear in dark mode — features, not motion.
      These need explicit overrides because the rules above carry !important
